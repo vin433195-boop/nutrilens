@@ -1,0 +1,9 @@
+Xin chào {{ user.name }},
+
+Bạn vừa yêu cầu đặt lại mật khẩu {{ site_name }}. Mở link sau trong vòng 60 phút:
+
+{{ link }}
+
+Nếu bạn không yêu cầu, hãy bỏ qua email này. Mật khẩu của bạn vẫn an toàn.
+
+{{ site_name }}

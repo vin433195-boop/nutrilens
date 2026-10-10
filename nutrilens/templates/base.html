@@ -101,6 +101,18 @@
     {% endif %}
   {% endwith %}
 
+  {% if current_user.is_authenticated and not current_user.email_verified and request.endpoint not in ("auth.verify_email",) and not (request.endpoint or "").startswith("admin.") %}
+    <div class="verify-bar" role="status">
+      <div class="container">
+        {{ icon("mail", 16) }}<span>Hãy xác thực email <b>{{ current_user.email }}</b> để bảo vệ tài khoản và lấy lại mật khẩu khi cần.</span>
+        <form method="post" action="{{ url_for('auth.resend_verification') }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <input type="hidden" name="next" value="{{ request.path }}">
+          <button class="btn btn-sm btn-outline" type="submit">Gửi lại email xác thực</button>
+        </form>
+      </div>
+    </div>
+  {% endif %}
   <main id="main">
     {% block content %}{% endblock %}
   </main>

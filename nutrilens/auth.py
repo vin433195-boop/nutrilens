@@ -14,8 +14,8 @@ from sqlalchemy.exc import IntegrityError
 from flask_limiter.util import get_remote_address
 
 from .extensions import db, limiter, login_manager
-from .mail import mail_configured, send_mail
-from .models import DiaryEntry, Recognition, User
+from .mail import mail_configured, send_template
+from .models import DiaryEntry, Recognition, User, utcnow
 
 bp = Blueprint("auth", __name__)
 
@@ -99,6 +99,20 @@ def verify_reset_token(token: str) -> User | None:
     return user
 
 
+def _verify_serializer() -> URLSafeTimedSerializer:
+    return URLSafeTimedSerializer(current_app.config["SECRET_KEY"], salt="verify-email")
+
+
+def send_verification_email(user: User) -> bool:
+    token = _verify_serializer().dumps({"uid": user.id, "email": user.email})
+    link = url_for("auth.verify_email", token=token, _external=True)
+    return send_template(user.email, "Xác thực email NutriLens", "verify", user=user, link=link)
+
+
+def _dev_mail_note() -> str:
+    return "" if mail_configured() else " (Máy chủ chưa cấu hình email: link được in ra cửa sổ dòng lệnh đang chạy website.)"
+
+
 def _start_session(user: User, remember: bool) -> None:
     # Làm mới session khi đăng nhập để chống session fixation
     session.clear()
@@ -145,7 +159,8 @@ def register():
                 errors["email"] = "Email này đã được đăng ký."
             else:
                 _start_session(user, remember=False)
-                flash(f"Chào mừng {user.name}! Tài khoản của bạn đã được tạo.", "success")
+                send_verification_email(user)
+                flash(f"Chào mừng {user.name}! Chúng tôi đã gửi link xác thực tới {user.email}.{_dev_mail_note()}", "success")
                 return redirect(next_url or url_for("main.diary"))
 
     status = 422 if errors else 200
@@ -204,16 +219,11 @@ def forgot_password():
             user = db.session.scalar(select(User).where(User.email == email))
             if user is not None and user.active:
                 link = url_for("auth.reset_password", token=make_reset_token(user), _external=True)
-                body = (f"Xin chào {user.name},\n\n"
-                        f"Bạn vừa yêu cầu đặt lại mật khẩu NutriLens. Mở link sau trong vòng 60 phút:\n\n"
-                        f"{link}\n\nNếu bạn không yêu cầu, hãy bỏ qua email này.\n\nNutriLens")
-                send_mail(user.email, "Đặt lại mật khẩu NutriLens", body)
+                send_template(user.email, "Đặt lại mật khẩu NutriLens", "reset", user=user, link=link)
                 current_app.logger.info("Password reset requested for user %s", user.id)
             # Luôn trả về cùng một thông báo để không lộ email nào đã đăng ký
-            msg = "Nếu email đã đăng ký, chúng tôi đã gửi link đặt lại mật khẩu. Link có hiệu lực 60 phút."
-            if not mail_configured():
-                msg += " (Máy chủ chưa cấu hình email: link được in ra cửa sổ dòng lệnh đang chạy website.)"
-            flash(msg, "info")
+            flash("Nếu email đã đăng ký, chúng tôi đã gửi link đặt lại mật khẩu. Link có hiệu lực 60 phút."
+                  + _dev_mail_note(), "info")
             return redirect(url_for("auth.login"))
     return render_template("auth/forgot.html", email=email, error=error), 422 if error else 200
 
@@ -239,6 +249,41 @@ def reset_password(token):
             flash("Đã đặt lại mật khẩu và đăng xuất khỏi mọi thiết bị. Hãy đăng nhập bằng mật khẩu mới.", "success")
             return redirect(url_for("auth.login"))
     return render_template("auth/reset.html", errors=errors, token=token), 422 if errors else 200
+
+
+# ── Xác thực email ───────────────────────────────────────────
+@bp.route("/xac-thuc-email/<token>")
+def verify_email(token):
+    try:
+        data = _verify_serializer().loads(token, max_age=current_app.config["EMAIL_VERIFY_MAX_AGE"])
+    except SignatureExpired:
+        flash("Link xác thực đã hết hạn. Hãy đăng nhập và bấm “Gửi lại email xác thực”.", "error")
+        return redirect(url_for("auth.account" if current_user.is_authenticated else "auth.login"))
+    except BadSignature:
+        flash("Link xác thực không hợp lệ.", "error")
+        return redirect(url_for("main.index"))
+    user = db.session.get(User, data.get("uid"))
+    if user is None or user.email != data.get("email"):
+        flash("Link xác thực không hợp lệ.", "error")
+        return redirect(url_for("main.index"))
+    if not user.email_verified:
+        user.email_verified_at = utcnow()
+        db.session.commit()
+    flash("Email của bạn đã được xác thực. Cảm ơn bạn!", "success")
+    return redirect(url_for("auth.account" if current_user.is_authenticated else "auth.login"))
+
+
+@bp.post("/tai-khoan/gui-lai-xac-thuc")
+@login_required
+@limiter.limit("3 per hour")
+def resend_verification():
+    if current_user.email_verified:
+        flash("Email của bạn đã được xác thực rồi.", "info")
+    else:
+        send_verification_email(current_user)
+        flash(f"Đã gửi lại email xác thực tới {current_user.email}.{_dev_mail_note()}", "success")
+    target = safe_next(request.form.get("next"))
+    return redirect(target or url_for("auth.account"))
 
 
 # ── Tài khoản ────────────────────────────────────────────────

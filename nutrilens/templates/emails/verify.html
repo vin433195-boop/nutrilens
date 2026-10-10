@@ -1,0 +1,7 @@
+{% extends "emails/_base.html" %}
+{% block body %}
+<p>Xin chào <strong>{{ user.name }}</strong>,</p>
+<p>Cảm ơn bạn đã đăng ký {{ site_name }}. Hãy xác nhận địa chỉ email để bảo vệ tài khoản và có thể lấy lại mật khẩu khi cần.</p>
+{% with label = "Xác thực email", link = link %}{% include "emails/_button.html" %}{% endwith %}
+<p style="font-size:13px;color:#66746d">Link có hiệu lực trong 3 ngày.</p>
+{% endblock %}

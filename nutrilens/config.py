@@ -59,11 +59,13 @@ class Config:
     RATELIMIT_ENABLED = _bool("RATELIMIT_ENABLED", "1")
     RATELIMIT_STORAGE_URI = os.environ.get("RATELIMIT_STORAGE_URI", "memory://")
     PASSWORD_RESET_MAX_AGE = 3600  # giây
+    EMAIL_VERIFY_MAX_AGE = 3 * 24 * 3600
 
     # ── Email (để trống MAIL_SERVER thì email được in ra log, dùng khi phát triển) ──
     MAIL_SERVER = os.environ.get("MAIL_SERVER", "")
     MAIL_PORT = int(os.environ.get("MAIL_PORT", 587))
     MAIL_USE_TLS = _bool("MAIL_USE_TLS", "1")
+    MAIL_USE_SSL = _bool("MAIL_USE_SSL", "0")  # Cổng 465
     MAIL_USERNAME = os.environ.get("MAIL_USERNAME", "")
     MAIL_PASSWORD = os.environ.get("MAIL_PASSWORD", "")
     MAIL_SENDER = os.environ.get("MAIL_SENDER", "NutriLens <no-reply@nutrilens.local>")

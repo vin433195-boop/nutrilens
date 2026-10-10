@@ -14,7 +14,7 @@ from sqlalchemy import create_engine, select, text
 from sqlalchemy.engine import make_url
 
 from .extensions import db
-from .models import User
+from .models import User, utcnow
 from .seed import seed_all
 
 
@@ -79,5 +79,19 @@ def register(app):
             user.set_password(password)
             db.session.add(user)
         user.role = "admin"
+        user.email_verified_at = user.email_verified_at or utcnow()
         db.session.commit()
         click.echo(f"Tài khoản {email} đã có quyền quản trị.")
+
+    @app.cli.command("send-test-email")
+    @click.argument("to")
+    def send_test_email(to):
+        """Gửi email thử để kiểm tra cấu hình SMTP trong .env."""
+        _utf8_console()
+        from .mail import mail_configured, send_template
+        if not mail_configured():
+            raise click.ClickException("Chưa cấu hình MAIL_SERVER trong file .env.")
+        if send_template(to, "Email thử từ NutriLens", "test"):
+            click.echo(f"Đã gửi email thử tới {to}.")
+        else:
+            raise click.ClickException("Gửi thất bại, xem chi tiết lỗi phía trên.")

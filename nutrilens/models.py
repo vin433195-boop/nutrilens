@@ -35,6 +35,7 @@ class User(UserMixin, db.Model):
     active: Mapped[bool] = mapped_column(Boolean, default=True)
     # Tăng lên mỗi khi đổi mật khẩu hoặc bấm "đăng xuất mọi thiết bị": mọi phiên cũ hết hiệu lực
     session_version: Mapped[int] = mapped_column(Integer, default=1, server_default="1")
+    email_verified_at: Mapped[datetime | None] = mapped_column(DateTime)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)
     last_login_at: Mapped[datetime | None] = mapped_column(DateTime)
 
@@ -49,6 +50,10 @@ class User(UserMixin, db.Model):
     @property
     def is_active(self) -> bool:
         return bool(self.active)
+
+    @property
+    def email_verified(self) -> bool:
+        return self.email_verified_at is not None
 
     @property
     def is_admin(self) -> bool:

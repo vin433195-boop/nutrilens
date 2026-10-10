@@ -308,6 +308,43 @@ class SecurityTests(AppTestCase):
         self.assertEqual(codes[5], 429)
 
 
+class EmailVerificationTests(AppTestCase):
+    def outbox(self):
+        return self.app.extensions.get("mail_outbox", [])
+
+    def register(self):
+        token = self.csrf("/dang-ky")
+        self.client.post("/dang-ky", data={"csrf_token": token, "name": "Lê Chi", "email": "chi@example.com",
+                                           "password": PASSWORD, "confirm": PASSWORD, "agree": "1"})
+        return db.session.scalar(select(User).where(User.email == "chi@example.com"))
+
+    def test_register_sends_verification_and_link_verifies(self):
+        user = self.register()
+        self.assertFalse(user.email_verified)
+        mail = self.outbox()[-1]
+        self.assertEqual(mail["to"], "chi@example.com")
+        self.assertIn("Xác thực email", mail["html"])
+        link = re.search(r"http://localhost(/xac-thuc-email/\S+)", mail["text"]).group(1)
+        self.assertIn("Hãy xác thực email", self.client.get("/").get_data(as_text=True))
+        self.client.get(link)
+        self.assertTrue(db.session.get(User, user.id).email_verified)
+        self.assertNotIn("Hãy xác thực email", self.client.get("/").get_data(as_text=True))
+
+    def test_resend_and_invalid_token(self):
+        self.register()
+        before = len(self.outbox())
+        self.client.post("/tai-khoan/gui-lai-xac-thuc", data={"csrf_token": self.csrf()})
+        self.assertEqual(len(self.outbox()), before + 1)
+        res = self.client.get("/xac-thuc-email/token-gia", follow_redirects=True)
+        self.assertIn("không hợp lệ", res.get_data(as_text=True))
+
+    def test_reset_email_is_html(self):
+        self.make_user()
+        token = self.csrf("/quen-mat-khau")
+        self.client.post("/quen-mat-khau", data={"csrf_token": token, "email": "an@example.com"})
+        self.assertIn("Đặt lại mật khẩu", self.outbox()[-1]["html"])
+
+
 class PasswordResetTests(AppTestCase):
     def setUp(self):
         super().setUp()
@@ -601,7 +638,8 @@ class AdminTests(AppTestCase):
         self.assertTrue(food.image_path.startswith("uploads/foods/bun_cha-"))
         path = Path(self.app.static_folder) / food.image_path
         self.assertTrue(path.exists())
-        self.assertEqual(Image.open(path).format, "WEBP")
+        with Image.open(path) as im:
+            self.assertEqual(im.format, "WEBP")
         path.unlink()
 
     def test_food_validation(self):

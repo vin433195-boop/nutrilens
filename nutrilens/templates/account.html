@@ -17,7 +17,9 @@
       <span class="avatar lg" aria-hidden="true">{{ user.initials }}</span>
       <div>
         <h1>{{ user.name }}</h1>
-        <p>{{ user.email }} · Thành viên từ {{ user.created_at.strftime("%d/%m/%Y") }}</p>
+        <p>{{ user.email }}
+          {% if user.email_verified %}<span class="badge badge-good">{{ icon("check", 12) }} Đã xác thực</span>{% else %}<span class="badge badge-ok">Chưa xác thực</span>{% endif %}
+          · Thành viên từ {{ user.created_at.strftime("%d/%m/%Y") }}</p>
       </div>
     </div>
   </div>

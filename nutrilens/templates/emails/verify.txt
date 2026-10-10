@@ -1,0 +1,9 @@
+Xin chào {{ user.name }},
+
+Cảm ơn bạn đã đăng ký {{ site_name }}. Mở link sau để xác thực email (hiệu lực 3 ngày):
+
+{{ link }}
+
+Nếu bạn không đăng ký, hãy bỏ qua email này.
+
+{{ site_name }}

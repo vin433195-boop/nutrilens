@@ -1,0 +1,7 @@
+{% extends "emails/_base.html" %}
+{% block body %}
+<p>Xin chào <strong>{{ user.name }}</strong>,</p>
+<p>Bạn vừa yêu cầu đặt lại mật khẩu {{ site_name }}. Bấm nút dưới đây để chọn mật khẩu mới.</p>
+{% with label = "Đặt lại mật khẩu", link = link %}{% include "emails/_button.html" %}{% endwith %}
+<p style="font-size:13px;color:#66746d">Link có hiệu lực trong 60 phút và chỉ dùng được một lần. Nếu bạn không yêu cầu, mật khẩu của bạn vẫn an toàn.</p>
+{% endblock %}

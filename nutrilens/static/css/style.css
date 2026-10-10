@@ -742,3 +742,9 @@ code { font-family: ui-monospace, Consolas, monospace; font-size: .85em; backgro
   .admin-form { grid-template-columns: 1fr; }
   .admin-form-side { position: static; }
 }
+
+/* ── Nhắc xác thực email ─────────────────────────────────── */
+.verify-bar { background: var(--ok-soft); border-bottom: 1px solid color-mix(in srgb, var(--ok) 30%, var(--border)); font-size: .9rem; }
+.verify-bar .container { display: flex; align-items: center; gap: 10px; padding-top: 10px; padding-bottom: 10px; flex-wrap: wrap; }
+.verify-bar .icon { color: var(--ok); }
+.verify-bar form { margin-left: auto; }
