@@ -1,0 +1,16 @@
+{% extends "auth/_layout.html" %}
+{% from "partials/macros.html" import icon with context %}
+{% from "partials/forms.html" import password_field with context %}
+
+{% block title %}Đặt lại mật khẩu · {{ site_name }}{% endblock %}
+
+{% block form %}
+<h1>Đặt mật khẩu mới</h1>
+<p class="sub">Mật khẩu mới sẽ thay thế mật khẩu cũ ngay lập tức.</p>
+<form method="post" novalidate>
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  {{ password_field("password", "Mật khẩu mới", errors.password, "new-password", meter=True, hint="Ít nhất 8 ký tự, gồm cả chữ và số.") }}
+  {{ password_field("confirm", "Nhập lại mật khẩu mới", errors.confirm, "new-password") }}
+  <button class="btn btn-primary btn-lg btn-block" type="submit">Lưu mật khẩu mới</button>
+</form>
+{% endblock %}

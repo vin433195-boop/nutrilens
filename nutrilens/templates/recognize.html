@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% from "partials/macros.html" import icon with context %}
+
+{% block title %}Nhận dạng món ăn bằng AI · {{ site_name }}{% endblock %}
+{% block description %}Tải ảnh món ăn lên để AI nhận dạng và trả về lượng calo, protein, carbohydrate, chất béo ngay lập tức.{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+  <div class="container">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="{{ url_for('main.index') }}">Trang chủ</a>{{ icon("chevron-right", 14) }}<span>Nhận dạng AI</span></nav>
+    <h1>Nhận dạng món ăn bằng AI</h1>
+    <p>Tải lên ảnh món ăn, mô hình CNN sẽ đoán món và hiển thị thông tin dinh dưỡng. Ảnh chỉ được dùng để phân tích, không được lưu trên máy chủ.</p>
+  </div>
+</section>
+
+<section class="section-sm">
+  <div class="container recognize-layout" data-recognizer data-status="{{ model_status }}" data-endpoint="{{ url_for('api.predict') }}">
+    <div>
+      <div class="dropzone" data-dropzone>
+        <input type="file" accept="image/jpeg,image/png,image/webp" data-file aria-label="Chọn ảnh món ăn">
+        <div class="dz-empty">
+          <div class="dz-icon">{{ icon("upload", 32) }}</div>
+          <h3>Kéo thả ảnh vào đây</h3>
+          <p class="muted">hoặc bấm để chọn ảnh từ máy, tối đa 8 MB<br>JPG, PNG, WEBP</p>
+          <span class="btn btn-primary" style="margin-top: 8px">{{ icon("camera", 18) }} Chọn ảnh</span>
+        </div>
+        <img class="preview" alt="Ảnh món ăn đã chọn" data-preview>
+        <div class="dz-scan"></div>
+      </div>
+      <div class="upload-actions">
+        <label class="switch" title="Test-Time Augmentation: phân tích 5 biến thể của ảnh rồi lấy trung bình">
+          <input type="checkbox" data-tta> Chế độ chính xác cao (TTA)
+        </label>
+        <div style="display:flex; gap:8px">
+          <button class="btn btn-ghost btn-sm" type="button" data-reset hidden>{{ icon("refresh", 16) }} Chọn ảnh khác</button>
+          <button class="btn btn-primary" type="button" data-analyze disabled>{{ icon("sparkles", 18) }} Phân tích</button>
+        </div>
+      </div>
+
+      {% if model_status == "missing" %}
+        <div class="notice error" style="margin-top:16px">{{ icon("info") }}<span>Chưa tìm thấy file <b>food_model.h5</b> trên máy chủ nên tính năng nhận dạng đang tạm tắt. Bạn vẫn có thể tra cứu trong <a href="{{ url_for('main.foods') }}">thư viện món ăn</a>.</span></div>
+      {% elif model_status == "error" %}
+        <div class="notice error" style="margin-top:16px">{{ icon("info") }}<span>Không nạp được mô hình nhận dạng. Vui lòng kiểm tra cài đặt TensorFlow trên máy chủ.</span></div>
+      {% elif model_status == "idle" %}
+        <div class="notice" style="margin-top:16px">{{ icon("info") }}<span>Lần phân tích đầu tiên có thể mất vài giây để khởi động mô hình AI.</span></div>
+      {% endif %}
+    </div>
+
+    <div class="card" data-result-card aria-live="polite">
+      <div class="result-empty" data-result-empty>
+        <div class="big">🍽️</div>
+        <h3>Kết quả sẽ hiển thị ở đây</h3>
+        <p>Chọn một ảnh rồi bấm <b>Phân tích</b>. Mô hình có thể nhận dạng {{ dish_count }} món:</p>
+        <div class="chips" style="justify-content:center; margin-top:12px">
+          {% for f in foods %}<span class="tag">{{ f.emoji }} {{ f.name_vi }}</span>{% endfor %}
+        </div>
+      </div>
+      <div data-result hidden></div>
+    </div>
+  </div>
+</section>
+
+<section class="section-sm">
+  <div class="container grid grid-2">
+    <div class="card">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; gap:12px">
+        <h2 class="card-title" style="margin:0">{{ icon("clock") }} Lịch sử nhận dạng</h2>
+        <button class="btn btn-ghost btn-sm" type="button" data-clear-history hidden>{{ icon("trash", 16) }} Xóa tất cả</button>
+      </div>
+      <div class="history-list" data-history></div>
+      <p class="muted small" data-history-empty>Chưa có lần nhận dạng nào.{% if not current_user.is_authenticated %} Lịch sử chỉ lưu trên trình duyệt này, <a href="{{ url_for('auth.login', next=request.path) }}">đăng nhập</a> để lưu vào tài khoản.{% endif %}</p>
+    </div>
+    <div class="card">
+      <h2 class="card-title">{{ icon("info") }} Mẹo chụp ảnh để AI nhận dạng tốt hơn</h2>
+      <ul class="check-list">
+        <li>{{ icon("check", 18) }}<span>Chụp từ trên xuống hoặc góc 45°, món ăn chiếm phần lớn khung hình.</span></li>
+        <li>{{ icon("check", 18) }}<span>Đủ ánh sáng, tránh ngược sáng và bóng đổ đậm.</span></li>
+        <li>{{ icon("check", 18) }}<span>Mỗi ảnh chỉ nên có một món chính.</span></li>
+        <li>{{ icon("check", 18) }}<span>Bật chế độ TTA khi kết quả chưa chắc chắn.</span></li>
+      </ul>
+      <div class="notice warn" style="margin-top:18px">{{ icon("info") }}<span>Mô hình CNN cơ bản đạt độ chính xác khoảng 40% trên tập kiểm thử. Hãy xem cả 3 dự đoán và chọn món đúng nhất.</span></div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}<script src="{{ url_for('static', filename='js/recognize.js') }}"></script>{% endblock %}

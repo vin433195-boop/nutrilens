@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% from "partials/macros.html" import icon, article_card with context %}
+
+{% block title %}Kiến thức dinh dưỡng · {{ site_name }}{% endblock %}
+{% block description %}Bài viết dễ hiểu về calo, chất đa lượng, đường, muối và cách xây dựng bữa ăn cân bằng.{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+  <div class="container">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="{{ url_for('main.index') }}">Trang chủ</a>{{ icon("chevron-right", 14) }}<span>Kiến thức</span></nav>
+    <h1>Kiến thức dinh dưỡng</h1>
+    <p>Những bài viết ngắn gọn, dễ áp dụng giúp bạn hiểu cơ thể và lựa chọn thực phẩm tốt hơn mỗi ngày.</p>
+  </div>
+</section>
+
+<section class="section-sm">
+  <div class="container" data-article-filter>
+    <div class="chips" role="group" aria-label="Lọc theo chủ đề" style="margin-bottom: 28px">
+      <button class="chip active" type="button" data-category="">Tất cả</button>
+      {% for c in categories %}<button class="chip" type="button" data-category="{{ c }}">{{ c }}</button>{% endfor %}
+    </div>
+    <div class="grid grid-3">
+      {% for a in articles %}{{ article_card(a) }}{% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

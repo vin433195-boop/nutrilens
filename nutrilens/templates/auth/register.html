@@ -1,0 +1,39 @@
+{% extends "auth/_layout.html" %}
+{% from "partials/macros.html" import icon with context %}
+{% from "partials/forms.html" import password_field with context %}
+
+{% block title %}Đăng ký tài khoản · {{ site_name }}{% endblock %}
+{% block side_title %}Bắt đầu hành trình ăn uống lành mạnh{% endblock %}
+
+{% macro err(name) %}{% if errors.get(name) %}<p class="field-error" id="err-{{ name }}">{{ errors[name] }}</p>{% endif %}{% endmacro %}
+
+{% block form %}
+<h1>Tạo tài khoản</h1>
+<p class="sub">Miễn phí, chỉ mất chưa đến một phút.</p>
+
+<form method="post" novalidate>
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  {% if next_url %}<input type="hidden" name="next" value="{{ next_url }}">{% endif %}
+  <div class="field {{ 'has-error' if errors.name }}">
+    <label for="name">Họ tên</label>
+    <input class="input" id="name" name="name" value="{{ form.name }}" required maxlength="80" autocomplete="name" autofocus
+           {% if errors.name %}aria-invalid="true" aria-describedby="err-name"{% endif %}>
+    {{ err("name") }}
+  </div>
+  <div class="field {{ 'has-error' if errors.email }}">
+    <label for="email">Email</label>
+    <input class="input" id="email" name="email" type="email" value="{{ form.email }}" required maxlength="255" autocomplete="email"
+           {% if errors.email %}aria-invalid="true" aria-describedby="err-email"{% endif %}>
+    {{ err("email") }}
+  </div>
+  {{ password_field("password", "Mật khẩu", errors.password, "new-password", meter=True, hint="Ít nhất 8 ký tự, gồm cả chữ và số.") }}
+  {{ password_field("confirm", "Nhập lại mật khẩu", errors.confirm, "new-password") }}
+  <div class="field {{ 'has-error' if errors.agree }}">
+    <label class="check"><input type="checkbox" name="agree" value="1" required {% if errors.agree %}aria-invalid="true" aria-describedby="err-agree"{% endif %}>
+      <span>Tôi đồng ý để NutriLens xử lý dữ liệu sức khỏe tôi nhập theo <a href="{{ url_for('main.privacy') }}" target="_blank" rel="noopener">chính sách quyền riêng tư</a>.</span></label>
+    {{ err("agree") }}
+  </div>
+  <button class="btn btn-primary btn-lg btn-block" type="submit">Tạo tài khoản</button>
+</form>
+<p class="switch-link">Đã có tài khoản? <a href="{{ url_for('auth.login', next=next_url) }}">Đăng nhập</a></p>
+{% endblock %}

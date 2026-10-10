@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% from "partials/macros.html" import icon with context %}
+
+{% block title %}Nhật ký ăn uống · {{ site_name }}{% endblock %}
+{% block description %}Ghi lại các bữa ăn trong ngày, theo dõi calo và macro so với mục tiêu, xem biểu đồ 7 ngày gần nhất.{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+  <div class="container">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="{{ url_for('main.index') }}">Trang chủ</a>{{ icon("chevron-right", 14) }}<span>Nhật ký</span></nav>
+    <h1>Nhật ký ăn uống</h1>
+    <p>Ghi lại từng bữa để biết bạn đã nạp bao nhiêu năng lượng mỗi ngày và theo dõi xu hướng cả tuần.</p>
+  </div>
+</section>
+
+<section class="section-sm">
+  <div class="container" data-diary>
+    {% if current_user.is_authenticated %}
+      <div class="sync-note ok">{{ icon("shield", 18) }}<span>Nhật ký được lưu vào tài khoản <b>{{ current_user.email }}</b> và đồng bộ trên mọi thiết bị.</span></div>
+    {% else %}
+      <div class="sync-note">{{ icon("info", 18) }}<span>Bạn đang dùng chế độ khách, nhật ký chỉ lưu trên trình duyệt này. <a href="{{ url_for('auth.login', next=request.path) }}">Đăng nhập</a> hoặc <a href="{{ url_for('auth.register', next=request.path) }}">tạo tài khoản</a> để lưu lâu dài, dữ liệu hiện có sẽ được chuyển sang tự động.</span></div>
+    {% endif %}
+    <div class="diary-head">
+      <div class="date-nav">
+        <button class="icon-btn" type="button" data-day="-1" aria-label="Ngày trước">{{ icon("chevron-left", 18) }}</button>
+        <div class="current" data-date-label aria-live="polite">Hôm nay</div>
+        <button class="icon-btn" type="button" data-day="1" aria-label="Ngày sau">{{ icon("chevron-right", 18) }}</button>
+        <button class="btn btn-ghost btn-sm" type="button" data-today>Hôm nay</button>
+      </div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap">
+        <a class="btn btn-outline btn-sm" href="{{ url_for('main.recognize') }}">{{ icon("camera", 16) }} Nhận dạng ảnh</a>
+        <button class="btn btn-ghost btn-sm" type="button" data-clear-day>{{ icon("trash", 16) }} Xóa ngày này</button>
+      </div>
+    </div>
+
+    <div class="diary-layout">
+      <div data-meals></div>
+
+      <aside class="stack">
+        <div class="card center">
+          <div class="summary-ring" data-ring>
+            <div class="inner"><strong data-total>0</strong><span data-target-label>/ 2.000 kcal</span></div>
+          </div>
+          <p style="margin:0" data-remaining></p>
+          <p class="muted small" style="margin:6px 0 0">Đặt mục tiêu riêng bằng <a href="{{ url_for('main.calculator') }}">công cụ tính</a>, mặc định 2.000 kcal.</p>
+        </div>
+        <div class="card">
+          <h2 class="card-title">{{ icon("activity") }} Macro hôm nay</h2>
+          <div class="macro-bars" data-macros></div>
+        </div>
+        <div class="card">
+          <h2 class="card-title">{{ icon("flame") }} 7 ngày gần nhất</h2>
+          <div class="week-chart" data-week></div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>window.NL_FOODS = {{ foods_data|tojson }};</script>
+<script src="{{ url_for('static', filename='js/diary.js') }}"></script>
+{% endblock %}

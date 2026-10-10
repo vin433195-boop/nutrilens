@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% from "partials/macros.html" import icon with context %}
+
+{% block title %}Chính sách quyền riêng tư · {{ site_name }}{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+  <div class="container">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="{{ url_for('main.index') }}">Trang chủ</a>{{ icon("chevron-right", 14) }}<span>Quyền riêng tư</span></nav>
+    <h1>Chính sách quyền riêng tư</h1>
+    <p>NutriLens thu thập ít dữ liệu nhất có thể và chỉ dùng để phục vụ chính bạn.</p>
+  </div>
+</section>
+
+<section class="section-sm">
+  <div class="container">
+    <article class="prose">
+      <h2>Dữ liệu chúng tôi lưu</h2>
+      <ul>
+        <li><strong>Tài khoản:</strong> họ tên, email và mật khẩu đã được mã hóa một chiều. Chúng tôi không thể đọc mật khẩu của bạn.</li>
+        <li><strong>Dữ liệu sức khỏe:</strong> chỉ số cơ thể, mục tiêu dinh dưỡng và nhật ký ăn uống mà bạn tự nhập. Đây là dữ liệu cá nhân nhạy cảm theo Nghị định 13/2023/NĐ-CP, nên chỉ được xử lý khi bạn đồng ý lúc đăng ký.</li>
+        <li><strong>Nhận dạng ảnh:</strong> ảnh chỉ được dùng để phân tích rồi bỏ đi, không lưu trên máy chủ. Chúng tôi chỉ lưu tên món dự đoán, độ tin cậy và món bạn chọn sửa lại để cải thiện mô hình.</li>
+        <li><strong>Liên hệ và bản tin:</strong> nội dung tin nhắn và email bạn gửi.</li>
+      </ul>
+
+      <h2>Chúng tôi dùng dữ liệu để làm gì</h2>
+      <ul>
+        <li>Hiển thị nhật ký, mục tiêu và lịch sử nhận dạng của bạn trên mọi thiết bị.</li>
+        <li>Thống kê ẩn danh độ chính xác của mô hình AI để cải thiện kết quả nhận dạng.</li>
+        <li>Gửi email đặt lại mật khẩu và bản tin nếu bạn đăng ký.</li>
+      </ul>
+      <p>Chúng tôi không bán, không chia sẻ dữ liệu cá nhân cho bên thứ ba và không dùng cho quảng cáo.</p>
+
+      <h2>Quyền của bạn</h2>
+      <ul>
+        <li>Xem và sửa thông tin trong trang <a href="{{ url_for('auth.account') }}">Tài khoản</a>.</li>
+        <li>Xóa từng mục nhật ký, lịch sử nhận dạng hoặc xóa toàn bộ tài khoản. Khi xóa tài khoản, mọi dữ liệu liên quan bị xóa vĩnh viễn.</li>
+        <li>Dùng NutriLens mà không cần tài khoản. Khi đó nhật ký chỉ lưu trên trình duyệt của bạn.</li>
+      </ul>
+
+      <h2>Bảo mật</h2>
+      <p>Mật khẩu được băm bằng thuật toán scrypt. Phiên đăng nhập dùng cookie HttpOnly, form được bảo vệ chống giả mạo yêu cầu (CSRF), và tài khoản tạm khóa 15 phút sau 5 lần đăng nhập sai.</p>
+
+      <blockquote><p>Thông tin dinh dưỡng trên NutriLens chỉ mang tính tham khảo, không thay thế tư vấn của bác sĩ hoặc chuyên gia dinh dưỡng.</p></blockquote>
+      <p>Mọi câu hỏi về quyền riêng tư, vui lòng gửi qua trang <a href="{{ url_for('main.contact') }}">Liên hệ</a>.</p>
+    </article>
+  </div>
+</section>
+{% endblock %}

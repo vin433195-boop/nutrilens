@@ -1,0 +1,170 @@
+{% from "partials/macros.html" import icon with context %}
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{{ site_name }} · {{ site_tagline }}{% endblock %}</title>
+  <meta name="description" content="{% block description %}NutriLens giúp bạn nhận dạng món ăn bằng AI, tra cứu calo và dinh dưỡng, tính nhu cầu năng lượng và theo dõi nhật ký ăn uống mỗi ngày.{% endblock %}">
+  <meta name="theme-color" content="#1f7a4d">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  <meta property="og:site_name" content="{{ site_name }}">
+  <meta property="og:title" content="{{ self.title() }}">
+  <meta property="og:description" content="{{ self.description() }}">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="{{ url_for('static', filename='img/favicon.svg') }}" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <script>
+    (function () {
+      try { var t = localStorage.getItem("nl-theme"); if (t) document.documentElement.setAttribute("data-theme", t); } catch (e) {}
+    })();
+  </script>
+  {% block head %}{% endblock %}
+</head>
+<body data-auth="{{ 1 if current_user.is_authenticated else 0 }}">
+  <a class="skip-link" href="#main">Bỏ qua đến nội dung chính</a>
+
+  {% set nav = [
+    ("main.foods", "Món ăn"),
+    ("main.recognize", "Nhận dạng AI"),
+    ("main.calculator", "Công cụ tính"),
+    ("main.diary", "Nhật ký"),
+    ("main.compare", "So sánh"),
+    ("main.article_list", "Kiến thức"),
+  ] %}
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="{{ url_for('main.index') }}" aria-label="{{ site_name }} trang chủ">
+        <span class="brand-mark">{{ icon("leaf", 20) }}</span>
+        <span>Nutri<b>Lens</b></span>
+      </a>
+      <nav class="main-nav" id="main-nav" aria-label="Điều hướng chính">
+        {% for endpoint, label in nav %}
+          {% set active = request.endpoint == endpoint or (endpoint == "main.foods" and request.endpoint == "main.food_detail") or (endpoint == "main.article_list" and request.endpoint == "main.article_detail") %}
+          <a href="{{ url_for(endpoint) }}" class="{{ 'active' if active }}" {% if active %}aria-current="page"{% endif %}>{{ label }}</a>
+        {% endfor %}
+        <div class="nav-auth">
+          {% if current_user.is_authenticated %}
+            <a href="{{ url_for('auth.account') }}">{{ icon("user", 16) }} Tài khoản của tôi</a>
+          {% else %}
+            <a href="{{ url_for('auth.login', next=request.path) }}">Đăng nhập</a>
+            <a class="btn btn-primary" href="{{ url_for('auth.register') }}">Đăng ký miễn phí</a>
+          {% endif %}
+        </div>
+      </nav>
+      <div class="header-actions">
+        <button class="icon-btn theme-toggle" type="button" data-theme-toggle aria-label="Đổi giao diện sáng/tối">
+          {{ icon("sun", 18, "icon-sun") }}{{ icon("moon", 18, "icon-moon") }}
+        </button>
+        {% if current_user.is_authenticated %}
+          <details class="user-menu" data-user-menu>
+            <summary aria-label="Menu tài khoản">
+              <span class="avatar" aria-hidden="true">{{ current_user.initials }}</span>
+              <span class="user-name">{{ current_user.name }}</span>
+            </summary>
+            <div class="menu-panel">
+              <div class="menu-head"><strong>{{ current_user.name }}</strong><span>{{ current_user.email }}</span></div>
+              <a href="{{ url_for('auth.account') }}">{{ icon("user", 16) }} Tài khoản</a>
+              <a href="{{ url_for('main.diary') }}">{{ icon("clipboard", 16) }} Nhật ký của tôi</a>
+              <a href="{{ url_for('main.recognize') }}">{{ icon("camera", 16) }} Nhận dạng món ăn</a>
+              <form method="post" action="{{ url_for('auth.logout') }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit">{{ icon("log-out", 16) }} Đăng xuất</button>
+              </form>
+            </div>
+          </details>
+        {% else %}
+          <a class="btn btn-ghost btn-sm header-cta" href="{{ url_for('auth.login', next=request.path if request.endpoint not in ('auth.login', 'auth.register') else none) }}">Đăng nhập</a>
+          <a class="btn btn-primary btn-sm header-cta" href="{{ url_for('auth.register') }}">Đăng ký</a>
+        {% endif %}
+        <button class="icon-btn nav-toggle" type="button" data-nav-toggle aria-controls="main-nav" aria-expanded="false" aria-label="Mở menu">
+          {{ icon("menu", 20) }}
+        </button>
+      </div>
+    </div>
+  </header>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-wrap" role="status">
+        {% for category, message in messages %}
+          <div class="flash flash-{{ category }}">
+            <span>{{ message }}</span>
+            <button type="button" data-dismiss aria-label="Đóng">{{ icon("x", 16) }}</button>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <main id="main">
+    {% block content %}{% endblock %}
+  </main>
+
+  {% block newsletter %}
+  <section class="section-sm">
+    <div class="container">
+      <div class="cta-band reveal">
+        <div>
+          <h2>Mỗi tuần một mẹo ăn uống lành mạnh</h2>
+          <p>Nhận công thức, kiến thức dinh dưỡng và tính năng mới của NutriLens. Không spam, hủy bất cứ lúc nào.</p>
+        </div>
+        <form class="newsletter" method="post" action="{{ url_for('main.subscribe') }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <input type="hidden" name="next" value="{{ request.path }}">
+          <label class="sr-only" for="nl-email">Email của bạn</label>
+          <input class="input" id="nl-email" type="email" name="email" placeholder="email@cua-ban.com" required maxlength="120">
+          <button class="btn" type="submit">Đăng ký</button>
+        </form>
+      </div>
+    </div>
+  </section>
+  {% endblock %}
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-about">
+          <a class="brand" href="{{ url_for('main.index') }}"><span class="brand-mark">{{ icon("leaf", 20) }}</span><span>Nutri<b>Lens</b></span></a>
+          <p>Nền tảng ẩm thực và dinh dưỡng giúp bạn hiểu rõ từng món ăn, nhận dạng món bằng AI và xây dựng thói quen ăn uống lành mạnh.</p>
+        </div>
+        <div>
+          <h4>Khám phá</h4>
+          <ul>
+            <li><a href="{{ url_for('main.foods') }}">Thư viện món ăn</a></li>
+            <li><a href="{{ url_for('main.compare') }}">So sánh món ăn</a></li>
+            <li><a href="{{ url_for('main.article_list') }}">Kiến thức dinh dưỡng</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Công cụ</h4>
+          <ul>
+            <li><a href="{{ url_for('main.recognize') }}">Nhận dạng món ăn</a></li>
+            <li><a href="{{ url_for('main.calculator') }}">Tính BMI và TDEE</a></li>
+            <li><a href="{{ url_for('main.diary') }}">Nhật ký ăn uống</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>NutriLens</h4>
+          <ul>
+            <li><a href="{{ url_for('main.about') }}">Giới thiệu</a></li>
+            <li><a href="{{ url_for('main.contact') }}">Liên hệ</a></li>
+            <li><a href="{{ url_for('main.privacy') }}">Quyền riêng tư</a></li>
+            <li><a href="{{ url_for('api.list_foods') }}">API dữ liệu</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© {{ current_year }} {{ site_name }}. Dự án học tập Python Web.</span>
+        <span>Thông tin chỉ mang tính tham khảo, không thay thế tư vấn y tế.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

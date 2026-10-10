@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% from "partials/macros.html" import icon with context %}
+
+{% block title %}Giới thiệu · {{ site_name }}{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+  <div class="container">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="{{ url_for('main.index') }}">Trang chủ</a>{{ icon("chevron-right", 14) }}<span>Giới thiệu</span></nav>
+    <h1>Về NutriLens</h1>
+    <p>Chúng tôi tin rằng ai cũng có thể ăn uống lành mạnh hơn khi hiểu rõ món ăn của mình.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container grid grid-2" style="align-items:center; gap:48px">
+    <div class="prose">
+      <span class="eyebrow">Sứ mệnh</span>
+      <h2 style="margin-top:0">Biến thông tin dinh dưỡng thành điều dễ hiểu</h2>
+      <p>NutriLens bắt đầu từ một dự án học tập về mạng nơ-ron tích chập (CNN) nhận dạng món ăn. Từ mô hình đó, chúng tôi xây dựng một website hoàn chỉnh để mọi người có thể tra cứu, so sánh và theo dõi dinh dưỡng một cách trực quan.</p>
+      <p>Thay vì những bảng số khô khan, mỗi món ăn được trình bày bằng biểu đồ, điểm sức khỏe và gợi ý cụ thể để ăn ngon mà vẫn cân bằng.</p>
+    </div>
+    <div class="grid grid-2">
+      <div class="card"><div class="feature-icon">{{ icon("sparkles", 24) }}</div><h3>AI minh bạch</h3><p class="muted small" style="margin:0">Luôn hiển thị độ tin cậy và top-3 dự đoán để bạn tự đánh giá.</p></div>
+      <div class="card"><div class="feature-icon orange">{{ icon("shield", 24) }}</div><h3>Tôn trọng riêng tư</h3><p class="muted small" style="margin:0">Ảnh không được lưu. Nhật ký chỉ nằm trên trình duyệt của bạn.</p></div>
+      <div class="card"><div class="feature-icon blue">{{ icon("book", 24) }}</div><h3>Dựa trên khoa học</h3><p class="muted small" style="margin:0">Công thức Mifflin-St Jeor, khuyến nghị của WHO về muối và đường.</p></div>
+      <div class="card"><div class="feature-icon purple">{{ icon("heart", 24) }}</div><h3>Không phán xét</h3><p class="muted small" style="margin:0">Không có món ăn xấu, chỉ có lựa chọn phù hợp hơn với bạn.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt">
+  <div class="container">
+    <div class="section-head"><div><span class="eyebrow">Công nghệ</span><h2>Bên trong NutriLens</h2></div></div>
+    <div class="grid grid-3">
+      <div class="card"><h3>Mô hình nhận dạng</h3><p class="muted">CNN 3 tầng Conv2D với L2 Regularization và Dropout, xây dựng bằng TensorFlow/Keras, huấn luyện trên 20 lớp của bộ dữ liệu Food-101. Độ chính xác khoảng 40% trên 5.000 ảnh kiểm thử.</p></div>
+      <div class="card"><h3>Website</h3><p class="muted">Python Flask, Jinja2, SQLite. Giao diện viết bằng HTML, CSS và JavaScript thuần, hỗ trợ chế độ tối và hiển thị tốt trên điện thoại.</p></div>
+      <div class="card"><h3>API mở</h3><p class="muted">Dữ liệu món ăn có sẵn qua <a href="{{ url_for('api.list_foods') }}">/api/foods</a> và nhận dạng ảnh qua <code>POST /api/predict</code>.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section-sm">
+  <div class="container">
+    <div class="notice warn">{{ icon("info") }}<span><b>Lưu ý y tế.</b> Thông tin trên NutriLens chỉ mang tính tham khảo và giáo dục. Giá trị dinh dưỡng là ước tính cho một khẩu phần điển hình. Nếu bạn có bệnh lý hoặc nhu cầu dinh dưỡng đặc biệt, hãy tham khảo ý kiến bác sĩ hoặc chuyên gia dinh dưỡng.</span></div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% from "partials/macros.html" import icon with context %}
+
+{% block newsletter %}{% endblock %}
+
+{% block content %}
+<section class="auth-page">
+  <div class="auth-side">
+    <h2>{% block side_title %}Ăn uống chủ động hơn mỗi ngày{% endblock %}</h2>
+    <p>Tài khoản NutriLens giúp bạn lưu nhật ký, mục tiêu và lịch sử nhận dạng trên mọi thiết bị.</p>
+    <ul>
+      <li><span>📒</span>Nhật ký ăn uống đồng bộ trên điện thoại và máy tính</li>
+      <li><span>🎯</span>Lưu chỉ số cơ thể và mục tiêu calo cá nhân</li>
+      <li><span>📸</span>Xem lại lịch sử nhận dạng món ăn bằng AI</li>
+      <li><span>🔒</span>Mật khẩu được mã hóa, bạn có thể xóa dữ liệu bất cứ lúc nào</li>
+    </ul>
+  </div>
+  <div class="auth-main">
+    <div class="auth-card">
+      {% block form %}{% endblock %}
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}<script src="{{ url_for('static', filename='js/auth.js') }}"></script>{% endblock %}

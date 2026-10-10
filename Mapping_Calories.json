@@ -1,0 +1,122 @@
+{
+  "apple_pie": {
+    "calories": 237,
+    "carbohydrate": 34,
+    "protein": 2,
+    "lipid": 11
+  },
+  "caesar_salad": {
+    "calories": 190,
+    "carbohydrate": 8,
+    "protein": 6,
+    "lipid": 15
+  },
+  "cheesecake": {
+    "calories": 321,
+    "carbohydrate": 25,
+    "protein": 6,
+    "lipid": 22
+  },
+  "chicken_curry": {
+    "calories": 260,
+    "carbohydrate": 10,
+    "protein": 18,
+    "lipid": 16
+  },
+  "cup_cakes": {
+    "calories": 305,
+    "carbohydrate": 42,
+    "protein": 3,
+    "lipid": 14
+  },
+  "donuts": {
+    "calories": 452,
+    "carbohydrate": 51,
+    "protein": 5,
+    "lipid": 25
+  },
+  "fried_rice": {
+    "calories": 333,
+    "carbohydrate": 45,
+    "protein": 7,
+    "lipid": 12
+  },
+  "hamburger": {
+    "calories": 295,
+    "carbohydrate": 33,
+    "protein": 17,
+    "lipid": 12
+  },
+  "hot_dog": {
+    "calories": 290,
+    "carbohydrate": 28,
+    "protein": 10,
+    "lipid": 17
+  },
+  "ice_cream": {
+    "calories": 207,
+    "carbohydrate": 24,
+    "protein": 3,
+    "lipid": 11
+  },
+  "omelette": {
+    "calories": 154,
+    "carbohydrate": 2,
+    "protein": 11,
+    "lipid": 11
+  },
+  "pizza": {
+    "calories": 266,
+    "carbohydrate": 33,
+    "protein": 11,
+    "lipid": 10
+  },
+  "pho": {
+    "calories": 350,
+    "carbohydrate": 45,
+    "protein": 20,
+    "lipid": 8
+  },
+  "ramen": {
+    "calories": 436,
+    "carbohydrate": 54,
+    "protein": 15,
+    "lipid": 17
+  },
+  "spaghetti_bolognese": {
+    "calories": 375,
+    "carbohydrate": 50,
+    "protein": 18,
+    "lipid": 12
+  },
+  "spring_rolls": {
+    "calories": 140,
+    "carbohydrate": 18,
+    "protein": 4,
+    "lipid": 6
+  },
+  "steak": {
+    "calories": 271,
+    "carbohydrate": 0,
+    "protein": 26,
+    "lipid": 18
+  },
+  "sushi": {
+    "calories": 200,
+    "carbohydrate": 28,
+    "protein": 9,
+    "lipid": 5
+  },
+  "tacos": {
+    "calories": 226,
+    "carbohydrate": 20,
+    "protein": 12,
+    "lipid": 12
+  },
+  "waffles": {
+    "calories": 291,
+    "carbohydrate": 37,
+    "protein": 6,
+    "lipid": 13
+  }
+}

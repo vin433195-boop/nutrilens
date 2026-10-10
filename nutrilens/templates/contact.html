@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% from "partials/macros.html" import icon with context %}
+
+{% block title %}Liên hệ · {{ site_name }}{% endblock %}
+
+{% macro field_error(name) %}{% if errors.get(name) %}<p class="field-error" id="err-{{ name }}">{{ errors[name] }}</p>{% endif %}{% endmacro %}
+
+{% block content %}
+<section class="page-hero">
+  <div class="container">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="{{ url_for('main.index') }}">Trang chủ</a>{{ icon("chevron-right", 14) }}<span>Liên hệ</span></nav>
+    <h1>Liên hệ với chúng tôi</h1>
+    <p>Góp ý, báo lỗi nhận dạng hay muốn đề xuất thêm món ăn? Chúng tôi luôn sẵn lòng lắng nghe.</p>
+  </div>
+</section>
+
+<section class="section-sm">
+  <div class="container calc-layout contact-layout">
+    <div class="stack">
+      <div class="card"><h3 class="card-title">{{ icon("mail") }} Email</h3><p class="muted" style="margin:0">hello@nutrilens.local</p></div>
+      <div class="card"><h3 class="card-title">{{ icon("clock") }} Thời gian phản hồi</h3><p class="muted" style="margin:0">Trong vòng 1–2 ngày làm việc.</p></div>
+      <div class="card"><h3 class="card-title">{{ icon("sparkles") }} Đề xuất món mới</h3><p class="muted" style="margin:0">Món được đề xuất nhiều sẽ được ưu tiên bổ sung vào thư viện và huấn luyện cho mô hình AI.</p></div>
+    </div>
+
+    <form class="card" method="post" novalidate>
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <div class="form-row">
+        <div class="field {{ 'has-error' if errors.name }}">
+          <label for="name">Họ tên</label>
+          <input class="input" id="name" name="name" value="{{ form.name }}" required maxlength="80" autocomplete="name" {% if errors.name %}aria-invalid="true" aria-describedby="err-name"{% endif %}>
+          {{ field_error("name") }}
+        </div>
+        <div class="field {{ 'has-error' if errors.email }}">
+          <label for="email">Email</label>
+          <input class="input" id="email" name="email" type="email" value="{{ form.email }}" required maxlength="120" autocomplete="email" {% if errors.email %}aria-invalid="true" aria-describedby="err-email"{% endif %}>
+          {{ field_error("email") }}
+        </div>
+      </div>
+      <div class="field {{ 'has-error' if errors.topic }}">
+        <label for="topic">Chủ đề</label>
+        <select class="input" id="topic" name="topic">
+          {% for t in topics %}<option {{ 'selected' if t == form.topic }}>{{ t }}</option>{% endfor %}
+        </select>
+        {{ field_error("topic") }}
+      </div>
+      <div class="field {{ 'has-error' if errors.body }}">
+        <label for="body">Nội dung</label>
+        <textarea class="input" id="body" name="body" required maxlength="3000" {% if errors.body %}aria-invalid="true" aria-describedby="err-body"{% endif %}>{{ form.body }}</textarea>
+        {{ field_error("body") }}
+      </div>
+      <button class="btn btn-primary btn-lg" type="submit">{{ icon("mail", 18) }} Gửi tin nhắn</button>
+    </form>
+  </div>
+</section>
+{% endblock %}

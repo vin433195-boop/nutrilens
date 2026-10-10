@@ -1,0 +1,16 @@
+{% from "partials/macros.html" import icon with context %}
+
+{% macro password_field(name, label, error=None, autocomplete="current-password", meter=False, hint=None) -%}
+<div class="field {{ 'has-error' if error }}">
+  <label for="{{ name }}">{{ label }}</label>
+  <div class="pw-wrap">
+    <input class="input" id="{{ name }}" name="{{ name }}" type="password" required maxlength="128"
+           autocomplete="{{ autocomplete }}" {% if meter %}data-pw-meter{% endif %}
+           {% if error %}aria-invalid="true" aria-describedby="err-{{ name }}"{% elif hint %}aria-describedby="hint-{{ name }}"{% endif %}>
+    <button class="pw-toggle" type="button" data-pw-toggle aria-label="Hiện mật khẩu">{{ icon("eye", 16) }}</button>
+  </div>
+  {% if meter %}<div class="pw-meter" aria-hidden="true"><i></i></div>{% endif %}
+  {% if error %}<p class="field-error" id="err-{{ name }}">{{ error }}</p>
+  {% elif hint %}<p class="hint" id="hint-{{ name }}">{{ hint }}</p>{% endif %}
+</div>
+{%- endmacro %}

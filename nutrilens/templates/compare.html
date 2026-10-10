@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% from "partials/macros.html" import icon, macro_donut, health_badge, tile_class with context %}
+
+{% block title %}So sánh {{ a.name_vi }} và {{ b.name_vi }} · {{ site_name }}{% endblock %}
+{% block description %}So sánh calo, protein, carbohydrate, chất béo, chất xơ, đường và natri giữa {{ a.name_vi }} và {{ b.name_vi }}.{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+  <div class="container">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="{{ url_for('main.index') }}">Trang chủ</a>{{ icon("chevron-right", 14) }}<span>So sánh</span></nav>
+    <h1>So sánh hai món ăn</h1>
+    <p>Đặt hai món cạnh nhau để chọn lựa phù hợp hơn với mục tiêu dinh dưỡng của bạn.</p>
+  </div>
+</section>
+
+<section class="section-sm">
+  <div class="container">
+    <form class="compare-pick" method="get" data-autosubmit>
+      <div><label for="cmp-a">Món thứ nhất</label>
+        <select class="input" id="cmp-a" name="a">{% for f in foods %}<option value="{{ f.slug }}" {{ 'selected' if f.slug == a.slug }}>{{ f.emoji }} {{ f.name_vi }}</option>{% endfor %}</select>
+      </div>
+      <div class="vs">VS</div>
+      <div><label for="cmp-b">Món thứ hai</label>
+        <select class="input" id="cmp-b" name="b">{% for f in foods %}<option value="{{ f.slug }}" {{ 'selected' if f.slug == b.slug }}>{{ f.emoji }} {{ f.name_vi }}</option>{% endfor %}</select>
+      </div>
+      <noscript><button class="btn btn-primary" type="submit">So sánh</button></noscript>
+    </form>
+
+    <div class="card">
+      <div class="compare-heads">
+        {% for f in [a, b] %}
+          <div class="compare-head">
+            <div class="e {{ tile_class(f) }}" aria-hidden="true">{{ f.emoji }}</div>
+            <div>
+              <h2><a href="{{ url_for('main.food_detail', slug=f.slug) }}" style="color:inherit">{{ f.name_vi }}</a></h2>
+              <div class="muted small">{{ f.serving }}</div>
+              <div style="margin-top:6px">{{ health_badge(f) }} <span class="muted small">Điểm {{ f.health_score }}/10</span></div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+      {% set rows = [
+        ("calories", "Năng lượng", "kcal", "low"),
+        ("protein", "Protein", "g", "high"),
+        ("carbohydrate", "Carbohydrate", "g", ""),
+        ("lipid", "Chất béo", "g", "low"),
+        ("fiber", "Chất xơ", "g", "high"),
+        ("sugar", "Đường", "g", "low"),
+        ("sodium", "Natri", "mg", "low"),
+      ] %}
+      {% for key, name, unit, better in rows %}
+        {% set va = a[key] %}{% set vb = b[key] %}
+        {% set mx = [va, vb, 0.0001]|max %}
+        {% set a_win = (better == "low" and va < vb) or (better == "high" and va > vb) %}
+        {% set b_win = (better == "low" and vb < va) or (better == "high" and vb > va) %}
+        <div class="compare-row">
+          <div class="side left"><b class="{{ 'win' if a_win }}">{{ va|num(1) }} {{ unit }}</b><div class="track"><i style="width: {{ (va / mx * 100)|round(1) }}%"></i></div></div>
+          <div class="name">{{ name }}</div>
+          <div class="side right"><b class="{{ 'win' if b_win }}">{{ vb|num(1) }} {{ unit }}</b><div class="track"><i style="width: {{ (vb / mx * 100)|round(1) }}%"></i></div></div>
+        </div>
+      {% endfor %}
+      <p class="muted small" style="margin:16px 0 0">Số màu xanh là lựa chọn tốt hơn ở chỉ số đó: ít calo, chất béo, đường, natri hơn hoặc nhiều protein, chất xơ hơn. Số liệu tính theo một khẩu phần của mỗi món.</p>
+    </div>
+
+    <div class="grid grid-2" style="margin-top:24px">
+      {% for f in [a, b] %}
+        <div class="card"><h3 class="card-title">{{ f.emoji }} {{ f.name_vi }}</h3>{{ macro_donut(f, "sm") }}</div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

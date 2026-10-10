@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% from "partials/macros.html" import icon with context %}
+{% from "partials/forms.html" import password_field with context %}
+
+{% block title %}Tài khoản · {{ site_name }}{% endblock %}
+{% block newsletter %}{% endblock %}
+
+{% macro err(name) %}{% if errors.get(name) %}<p class="field-error" id="err-{{ name }}">{{ errors[name] }}</p>{% endif %}{% endmacro %}
+
+{% block content %}
+{% set user = current_user %}
+{% set p = user.profile %}
+<section class="page-hero">
+  <div class="container">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="{{ url_for('main.index') }}">Trang chủ</a>{{ icon("chevron-right", 14) }}<span>Tài khoản</span></nav>
+    <div class="account-head">
+      <span class="avatar lg" aria-hidden="true">{{ user.initials }}</span>
+      <div>
+        <h1>{{ user.name }}</h1>
+        <p>{{ user.email }} · Thành viên từ {{ user.created_at.strftime("%d/%m/%Y") }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-sm">
+  <div class="container account-layout">
+    <div class="stack">
+      <form class="card" method="post" novalidate>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="action" value="profile">
+        <h2 class="card-title">{{ icon("user") }} Thông tin cá nhân</h2>
+        <div class="form-row">
+          <div class="field {{ 'has-error' if errors.name }}">
+            <label for="name">Họ tên</label>
+            <input class="input" id="name" name="name" value="{{ request.form.name if action == 'profile' else user.name }}" required maxlength="80" autocomplete="name"
+                   {% if errors.name %}aria-invalid="true" aria-describedby="err-name"{% endif %}>
+            {{ err("name") }}
+          </div>
+          <div class="field">
+            <label for="email-ro">Email</label>
+            <input class="input" id="email-ro" value="{{ user.email }}" disabled>
+          </div>
+        </div>
+        <button class="btn btn-primary" type="submit">{{ icon("check", 18) }} Lưu thay đổi</button>
+      </form>
+
+      <form class="card" method="post" novalidate>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="action" value="password">
+        <h2 class="card-title">{{ icon("lock") }} Đổi mật khẩu</h2>
+        {{ password_field("current", "Mật khẩu hiện tại", errors.current) }}
+        <div class="form-row">
+          {{ password_field("password", "Mật khẩu mới", errors.password, "new-password", meter=True, hint="Ít nhất 8 ký tự, gồm cả chữ và số.") }}
+          {{ password_field("confirm", "Nhập lại mật khẩu mới", errors.confirm, "new-password") }}
+        </div>
+        <button class="btn btn-primary" type="submit">Đổi mật khẩu</button>
+      </form>
+
+      <form class="card danger-card" method="post" novalidate data-confirm="Xóa vĩnh viễn tài khoản và toàn bộ nhật ký? Thao tác này không thể hoàn tác.">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="action" value="delete">
+        <h2 class="card-title">{{ icon("trash") }} Xóa tài khoản</h2>
+        <p class="muted">Toàn bộ hồ sơ, nhật ký ăn uống và lịch sử nhận dạng sẽ bị xóa vĩnh viễn khỏi cơ sở dữ liệu.</p>
+        <div class="form-row">
+          {{ password_field("current_delete", "Mật khẩu", errors.current_delete) }}
+          <div class="field {{ 'has-error' if errors.confirm_text }}">
+            <label for="confirm_text">Gõ XOA để xác nhận</label>
+            <input class="input" id="confirm_text" name="confirm_text" autocomplete="off" {% if errors.confirm_text %}aria-invalid="true" aria-describedby="err-confirm_text"{% endif %}>
+            {{ err("confirm_text") }}
+          </div>
+        </div>
+        <button class="btn btn-danger" type="submit">{{ icon("trash", 18) }} Xóa tài khoản vĩnh viễn</button>
+      </form>
+    </div>
+
+    <aside>
+      <div class="card">
+        <h2 class="card-title">{{ icon("activity") }} Hoạt động</h2>
+        <div class="stat-grid">
+          <div><strong>{{ stats.days }}</strong><span>ngày ghi nhật ký</span></div>
+          <div><strong>{{ stats.entries }}</strong><span>món đã ghi</span></div>
+          <div><strong>{{ stats.recognitions }}</strong><span>lần nhận dạng</span></div>
+        </div>
+        <a class="btn btn-outline btn-block" style="margin-top:16px" href="{{ url_for('main.diary') }}">{{ icon("clipboard", 18) }} Mở nhật ký</a>
+      </div>
+      <div class="card">
+        <h2 class="card-title">{{ icon("target") }} Mục tiêu dinh dưỡng</h2>
+        {% if p %}
+          <dl class="kv">
+            <div><dt>Calo mỗi ngày</dt><dd>{{ p.target_kcal|num }} kcal</dd></div>
+            <div><dt>Protein</dt><dd>{{ p.target_protein }} g</dd></div>
+            <div><dt>Carbohydrate</dt><dd>{{ p.target_carb }} g</dd></div>
+            <div><dt>Chất béo</dt><dd>{{ p.target_fat }} g</dd></div>
+            {% if p.weight_kg %}<div><dt>Cân nặng · chiều cao</dt><dd>{{ p.weight_kg|num(1) }} kg · {{ p.height_cm|num }} cm</dd></div>{% endif %}
+          </dl>
+        {% else %}
+          <p class="muted small">Bạn chưa đặt mục tiêu. Mặc định nhật ký dùng 2.000 kcal mỗi ngày.</p>
+        {% endif %}
+        <a class="btn btn-accent btn-block" style="margin-top:16px" href="{{ url_for('main.calculator') }}">{{ icon("calculator", 18) }} Tính lại mục tiêu</a>
+      </div>
+      <form method="post" action="{{ url_for('auth.logout') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button class="btn btn-ghost btn-block" type="submit">{{ icon("log-out", 18) }} Đăng xuất</button>
+      </form>
+    </aside>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}<script src="{{ url_for('static', filename='js/auth.js') }}"></script>{% endblock %}

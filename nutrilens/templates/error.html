@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% from "partials/macros.html" import icon with context %}
+
+{% block title %}{{ error.code if error else 500 }} · {{ site_name }}{% endblock %}
+{% block newsletter %}{% endblock %}
+
+{% block content %}
+{% set code = error.code if error else 500 %}
+<section class="error-page">
+  <div class="container">
+    <div class="code">{{ code }}</div>
+    {% if code == 404 %}
+      <h1 style="font-size:1.8rem">Ôi, món này không có trong thực đơn</h1>
+      <p class="muted">{{ error.description if error and error.description and "requested URL" not in error.description else "Trang bạn tìm không tồn tại hoặc đã được chuyển đi." }}</p>
+    {% elif code == 413 %}
+      <h1 style="font-size:1.8rem">Ảnh quá lớn</h1>
+      <p class="muted">Vui lòng chọn ảnh nhỏ hơn 8 MB.</p>
+    {% elif code < 500 %}
+      <h1 style="font-size:1.8rem">Yêu cầu chưa hợp lệ</h1>
+      <p class="muted">{{ error.description }}</p>
+    {% else %}
+      <h1 style="font-size:1.8rem">Bếp đang gặp sự cố</h1>
+      <p class="muted">Đã có lỗi xảy ra phía máy chủ. Vui lòng thử lại sau ít phút.</p>
+    {% endif %}
+    <div class="hero-actions" style="justify-content:center; margin-top:24px">
+      <a class="btn btn-primary" href="{{ url_for('main.index') }}">Về trang chủ</a>
+      <a class="btn btn-outline" href="{{ url_for('main.foods') }}">{{ icon("search", 18) }} Tìm món ăn</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

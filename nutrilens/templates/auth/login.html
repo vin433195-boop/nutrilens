@@ -1,0 +1,28 @@
+{% extends "auth/_layout.html" %}
+{% from "partials/macros.html" import icon with context %}
+{% from "partials/forms.html" import password_field with context %}
+
+{% block title %}Đăng nhập · {{ site_name }}{% endblock %}
+
+{% block form %}
+<h1>Đăng nhập</h1>
+<p class="sub">Chào mừng bạn quay lại NutriLens.</p>
+
+{% if error %}<div class="form-alert" role="alert">{{ icon("info", 18) }}<span>{{ error }}</span></div>{% endif %}
+
+<form method="post" novalidate>
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  {% if next_url %}<input type="hidden" name="next" value="{{ next_url }}">{% endif %}
+  <div class="field">
+    <label for="email">Email</label>
+    <input class="input" id="email" name="email" type="email" value="{{ email }}" required maxlength="255" autocomplete="email" autofocus>
+  </div>
+  {{ password_field("password", "Mật khẩu") }}
+  <div class="field-row">
+    <label class="check"><input type="checkbox" name="remember" value="1"> Ghi nhớ đăng nhập 30 ngày</label>
+    <a href="{{ url_for('auth.forgot_password') }}" class="small">Quên mật khẩu?</a>
+  </div>
+  <button class="btn btn-primary btn-lg btn-block" type="submit">Đăng nhập</button>
+</form>
+<p class="switch-link">Chưa có tài khoản? <a href="{{ url_for('auth.register', next=next_url) }}">Đăng ký miễn phí</a></p>
+{% endblock %}

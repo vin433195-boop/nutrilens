@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Bí mật và dữ liệu chạy
+.env
+instance/
+logs/
+backups/
+nutrilens/static/uploads/
+history.json
+
+# Bản sao cũ của project gốc (đã có repository riêng)
+food-recognition-cnn/

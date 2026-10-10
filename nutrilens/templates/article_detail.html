@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% from "partials/macros.html" import icon with context %}
+
+{% block title %}{{ article.title }} · {{ site_name }}{% endblock %}
+{% block description %}{{ article.excerpt }}{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+  <div class="container">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="{{ url_for('main.index') }}">Trang chủ</a>{{ icon("chevron-right", 14) }}
+      <a href="{{ url_for('main.article_list') }}">Kiến thức</a>{{ icon("chevron-right", 14) }}
+      <span>{{ article.category }}</span>
+    </nav>
+    <span class="eyebrow">{{ article.emoji }} {{ article.category }}</span>
+    <h1 style="max-width: 860px">{{ article.title }}</h1>
+    <p>{{ article.excerpt }}</p>
+    <div class="article-meta" style="margin-top:18px">{{ icon("clock", 16) }}<span>{{ article.read_time }} phút đọc</span><span>·</span><span>Cập nhật {{ article.date_vi }}</span></div>
+  </div>
+</section>
+
+<section class="section-sm">
+  <div class="container article-layout">
+    <article class="prose">{{ article.html }}</article>
+    <aside>
+      <div class="card">
+        <h3 class="card-title">{{ icon("book") }} Đọc tiếp</h3>
+        {% for a in more %}
+          <a class="mini-link" href="{{ url_for('main.article_detail', slug=a.slug) }}">
+            <span class="e tile-{{ loop.index + 1 }}" aria-hidden="true">{{ a.emoji }}</span>
+            <span><strong>{{ a.title }}</strong><span>{{ a.read_time }} phút đọc</span></span>
+          </a>
+        {% endfor %}
+      </div>
+      <div class="card">
+        <h3 class="card-title">{{ icon("calculator") }} Áp dụng ngay</h3>
+        <p class="muted small">Tính nhu cầu calo của bạn rồi theo dõi từng bữa trong nhật ký.</p>
+        <a class="btn btn-primary btn-block" href="{{ url_for('main.calculator') }}">Tính TDEE</a>
+      </div>
+    </aside>
+  </div>
+</section>
+{% endblock %}

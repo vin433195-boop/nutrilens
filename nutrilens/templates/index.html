@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+{% from "partials/macros.html" import icon, food_card, article_card with context %}
+
+{% block content %}
+<section class="hero">
+  <div class="container hero-grid">
+    <div>
+      <span class="eyebrow">{{ icon("sparkles", 16) }} Ẩm thực thông minh cùng AI</span>
+      <h1>Chụp một tấm ảnh,<br>hiểu ngay <span class="hl">món bạn ăn</span></h1>
+      <p class="lead">NutriLens nhận dạng món ăn từ hình ảnh, cho bạn biết lượng calo, protein, carb, chất béo và gợi ý cách ăn lành mạnh hơn. Tất cả miễn phí, ngay trên trình duyệt.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary btn-lg" href="{{ url_for('main.recognize') }}">{{ icon("camera", 18) }} Nhận dạng món ăn</a>
+        <a class="btn btn-outline btn-lg" href="{{ url_for('main.foods') }}">Khám phá thư viện {{ icon("arrow-right", 18) }}</a>
+      </div>
+      <div class="hero-trust">
+        <div><strong>{{ dish_count }}</strong><span>món ăn quốc tế</span></div>
+        <div><strong>7</strong><span>chỉ số dinh dưỡng</span></div>
+        <div><strong>4</strong><span>công cụ sức khỏe</span></div>
+      </div>
+    </div>
+
+    {% if hero %}
+    {% set hp = hero.macro_percent %}
+    {% set run = hero.exercise|selectattr("key", "equalto", "run")|first %}
+    <div class="hero-visual" aria-hidden="true">
+      <div class="hero-card hero-card-main">
+        <div class="hero-result">
+          <span class="badge badge-good">{{ icon("check", 14) }} Đã nhận dạng</span>
+          <span class="muted small">Ví dụ kết quả</span>
+        </div>
+        <div class="hero-photo"><span>{{ hero.emoji }}</span><div class="scan"></div></div>
+        <div class="hero-result">
+          <div><h3>{{ hero.name_vi }}</h3><span class="muted small">{{ hero.serving }} · {{ hero.cuisine }}</span></div>
+          <div class="donut sm" style="--c: {{ hp.carbohydrate }}; --p: {{ hp.protein }};"><div class="donut-center"><strong>{{ hero.calories|num }}</strong><span>kcal</span></div></div>
+        </div>
+      </div>
+      <div class="hero-card hero-chip c1"><span class="dot" style="background: var(--good-soft)">💪</span><span>{{ hero.protein|num }} g protein<small>{{ hero.daily_percent("protein") }}% nhu cầu ngày</small></span></div>
+      <div class="hero-card hero-chip c2"><span class="dot" style="background: var(--accent-soft)">🏃</span><span>{{ run.minutes }} phút chạy bộ<small>để đốt {{ hero.calories|num }} kcal</small></span></div>
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+<section class="section section-alt">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">Tính năng</span>
+        <h2>Mọi thứ bạn cần để ăn uống chủ động</h2>
+      </div>
+      <p>Từ nhận dạng món ăn đến lập kế hoạch dinh dưỡng, NutriLens gom tất cả vào một nơi đơn giản và dễ dùng.</p>
+    </div>
+    <div class="grid grid-4">
+      <a class="card feature reveal" href="{{ url_for('main.recognize') }}">
+        <div class="feature-icon">{{ icon("camera", 24) }}</div>
+        <h3>Nhận dạng bằng AI</h3>
+        <p>Tải ảnh lên, mô hình CNN dự đoán món ăn và trả về top-3 kết quả kèm độ tin cậy.</p>
+        <span class="more">Thử ngay {{ icon("arrow-right", 16) }}</span>
+      </a>
+      <a class="card feature reveal" href="{{ url_for('main.foods') }}">
+        <div class="feature-icon orange">{{ icon("book", 24) }}</div>
+        <h3>Thư viện món ăn</h3>
+        <p>Tra cứu calo, macro, chất xơ, đường, natri và mẹo ăn lành mạnh cho từng món.</p>
+        <span class="more">Xem thư viện {{ icon("arrow-right", 16) }}</span>
+      </a>
+      <a class="card feature reveal" href="{{ url_for('main.calculator') }}">
+        <div class="feature-icon blue">{{ icon("calculator", 24) }}</div>
+        <h3>Tính BMI và TDEE</h3>
+        <p>Biết cơ thể cần bao nhiêu calo mỗi ngày và chia macro theo mục tiêu của bạn.</p>
+        <span class="more">Tính ngay {{ icon("arrow-right", 16) }}</span>
+      </a>
+      <a class="card feature reveal" href="{{ url_for('main.diary') }}">
+        <div class="feature-icon purple">{{ icon("clipboard", 24) }}</div>
+        <h3>Nhật ký ăn uống</h3>
+        <p>Ghi lại từng bữa, theo dõi tổng calo so với mục tiêu và xem biểu đồ cả tuần.</p>
+        <span class="more">Mở nhật ký {{ icon("arrow-right", 16) }}</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">Thư viện</span>
+        <h2>Món ăn nổi bật</h2>
+      </div>
+      <a class="btn btn-outline" href="{{ url_for('main.foods') }}">Xem tất cả {{ dish_count }} món {{ icon("arrow-right", 16) }}</a>
+    </div>
+    <div class="chips" style="margin-bottom: 28px">
+      {% for c in categories %}
+        <a class="chip" href="{{ url_for('main.foods', **{'danh-muc': c}) }}">{{ c }}</a>
+      {% endfor %}
+    </div>
+    <div class="grid grid-3">
+      {% for food in featured %}{{ food_card(food) }}{% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">Cách hoạt động</span>
+        <h2>Ba bước để hiểu món ăn</h2>
+      </div>
+    </div>
+    <div class="grid grid-3 steps">
+      <div class="step reveal">
+        <div class="step-num">1</div>
+        <h3>Chụp hoặc tải ảnh</h3>
+        <p>Chụp món ăn trước mặt hoặc chọn ảnh có sẵn. Hỗ trợ JPG, PNG và WEBP.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">2</div>
+        <h3>AI phân tích</h3>
+        <p>Mạng nơ-ron tích chập (CNN) được huấn luyện trên bộ dữ liệu Food-101 nhận dạng món ăn trong vài giây.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">3</div>
+        <h3>Nhận thông tin dinh dưỡng</h3>
+        <p>Xem calo, phân bổ macro, thời gian vận động tương đương và lưu ngay vào nhật ký.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">Kiến thức</span>
+        <h2>Bài viết mới nhất</h2>
+      </div>
+      <a class="btn btn-outline" href="{{ url_for('main.article_list') }}">Tất cả bài viết {{ icon("arrow-right", 16) }}</a>
+    </div>
+    <div class="grid grid-3">
+      {% for a in latest_articles %}{{ article_card(a) }}{% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

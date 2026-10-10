@@ -1,0 +1,21 @@
+{% extends "auth/_layout.html" %}
+{% from "partials/macros.html" import icon with context %}
+{% from "partials/forms.html" import password_field with context %}
+
+{% block title %}Quên mật khẩu · {{ site_name }}{% endblock %}
+
+{% block form %}
+<h1>Quên mật khẩu?</h1>
+<p class="sub">Nhập email đã đăng ký, chúng tôi sẽ gửi link để bạn đặt mật khẩu mới.</p>
+<form method="post" novalidate>
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <div class="field {{ 'has-error' if error }}">
+    <label for="email">Email</label>
+    <input class="input" id="email" name="email" type="email" value="{{ email }}" required maxlength="255" autocomplete="email" autofocus
+           {% if error %}aria-invalid="true" aria-describedby="err-email"{% endif %}>
+    {% if error %}<p class="field-error" id="err-email">{{ error }}</p>{% endif %}
+  </div>
+  <button class="btn btn-primary btn-lg btn-block" type="submit">{{ icon("mail", 18) }} Gửi link đặt lại</button>
+</form>
+<p class="switch-link"><a href="{{ url_for('auth.login') }}">Quay lại đăng nhập</a></p>
+{% endblock %}

@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% from "partials/macros.html" import icon, food_card, macro_donut, health_badge, tile_class with context %}
+
+{% block title %}{{ food.name_vi }}: {{ food.calories|num }} kcal và thông tin dinh dưỡng · {{ site_name }}{% endblock %}
+{% block description %}{{ food.name_vi }} ({{ food.serving }}) chứa {{ food.calories|num }} kcal, {{ food.protein|num }} g protein, {{ food.carbohydrate|num }} g carbohydrate và {{ food.lipid|num }} g chất béo. {{ food.description }}{% endblock %}
+
+{% block content %}
+{% set label, level = food.health_label %}
+<section class="page-hero">
+  <div class="container">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="{{ url_for('main.index') }}">Trang chủ</a>{{ icon("chevron-right", 14) }}
+      <a href="{{ url_for('main.foods') }}">Món ăn</a>{{ icon("chevron-right", 14) }}
+      <span>{{ food.name_vi }}</span>
+    </nav>
+    <div class="dish-hero">
+      <div class="dish-photo {{ tile_class(food) }}" aria-hidden="true">
+        {{ health_badge(food) }}
+        <span>{{ food.emoji }}</span>
+      </div>
+      <div>
+        <span class="eyebrow">{{ food.category }} · {{ food.cuisine }}</span>
+        <h1>{{ food.name_vi }}</h1>
+        <p class="lead">{{ food.description }}</p>
+        <div class="dish-facts">
+          <span class="tag">🍽️ {{ food.serving }}</span>
+          <span class="tag">🌐 {{ food.name_en }}</span>
+          {% for t in food.tags %}<span class="tag">#{{ t }}</span>{% endfor %}
+        </div>
+        <div class="dish-stats">
+          {% for key, name, unit, color in [("calories", "Năng lượng", "kcal", "var(--accent)"), ("protein", "Protein", "g", "var(--protein)"), ("carbohydrate", "Carb", "g", "var(--carb)"), ("lipid", "Chất béo", "g", "var(--lipid)")] %}
+            {% set pct = food.daily_percent(key) %}
+            <div class="stat">
+              <div class="label">{{ name }}</div>
+              <div class="value">{{ food[key]|num }}<small>{{ unit }}</small></div>
+              <div class="bar" title="{{ pct }}% nhu cầu hằng ngày"><i style="width: {{ [pct, 100]|min }}%; background: {{ color }}"></i></div>
+            </div>
+          {% endfor %}
+        </div>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="{{ url_for('main.diary', them=food.slug) }}">{{ icon("plus", 18) }} Thêm vào nhật ký</a>
+          <a class="btn btn-outline" href="{{ url_for('main.compare', a=food.slug, b=related[0].slug) }}">{{ icon("scale", 18) }} So sánh với món khác</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-sm">
+  <div class="container dish-layout">
+    <div class="stack">
+      <div class="card">
+        <h2 class="card-title">{{ icon("activity") }} Phân bổ năng lượng</h2>
+        {{ macro_donut(food) }}
+        <p class="muted small" style="margin: 18px 0 0">Mỗi gram carbohydrate và protein cung cấp 4 kcal, mỗi gram chất béo cung cấp 9 kcal. Biểu đồ cho biết bao nhiêu phần trăm năng lượng của món đến từ mỗi nhóm chất.</p>
+      </div>
+
+      <div class="grid grid-2">
+        <div class="card">
+          <h2 class="card-title">{{ icon("heart") }} Điểm cộng</h2>
+          <ul class="check-list">
+            {% for h in food.highlights %}<li>{{ icon("check", 18) }}<span>{{ h }}</span></li>{% endfor %}
+          </ul>
+        </div>
+        <div class="card">
+          <h2 class="card-title">{{ icon("leaf") }} Ăn lành mạnh hơn</h2>
+          <ul class="check-list tips">
+            {% for t in food.tips %}<li>{{ icon("sparkles", 18) }}<span>{{ t }}</span></li>{% endfor %}
+          </ul>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 class="card-title">{{ icon("flame") }} Vận động bao lâu để đốt {{ food.calories|num }} kcal?</h2>
+        <div class="burn-list" style="grid-template-columns: repeat(auto-fit, minmax(130px, 1fr))">
+          {% for ex in food.exercise %}
+            <div class="burn"><div class="e" aria-hidden="true">{{ ex.icon }}</div><strong>{{ ex.minutes }} phút</strong><span>{{ ex.label }}</span></div>
+          {% endfor %}
+        </div>
+        <p class="muted small" style="margin: 14px 0 0">Ước tính cho người nặng 60 kg theo hệ số MET. Thời gian thực tế phụ thuộc cân nặng và cường độ.</p>
+      </div>
+    </div>
+
+    <aside>
+      <div class="card" style="display:flex; gap:16px; align-items:center">
+        <div class="score-ring {{ level }}" style="--s: {{ food.health_score * 10 }}"><span>{{ food.health_score }}</span></div>
+        <div>
+          <strong>Điểm sức khỏe: {{ label }}</strong>
+          <p class="muted small" style="margin:4px 0 0">Tính từ tỉ lệ chất béo, protein, lượng đường, natri và chất xơ. Chỉ mang tính tham khảo.</p>
+        </div>
+      </div>
+
+      <div class="nutri-label">
+        <h3>Thông tin dinh dưỡng</h3>
+        <div class="serving">Khẩu phần: {{ food.serving }}</div>
+        <div class="cal-row"><span>Calo</span><strong>{{ food.calories|num }}</strong></div>
+        <table>
+          <thead><tr><th colspan="2">% Giá trị hằng ngày*</th></tr></thead>
+          <tbody>
+            <tr><td><b>Chất béo</b> {{ food.lipid|num }} g</td><td>{{ food.daily_percent("lipid") }}%</td></tr>
+            <tr><td><b>Natri</b> {{ food.sodium|num }} mg</td><td>{{ food.daily_percent("sodium") }}%</td></tr>
+            <tr><td><b>Carbohydrate</b> {{ food.carbohydrate|num }} g</td><td>{{ food.daily_percent("carbohydrate") }}%</td></tr>
+            <tr><td class="sub">Chất xơ {{ food.fiber|num(1) }} g</td><td>{{ food.daily_percent("fiber") }}%</td></tr>
+            <tr><td class="sub">Đường {{ food.sugar|num(1) }} g</td><td>{{ food.daily_percent("sugar") }}%</td></tr>
+            <tr><td><b>Protein</b> {{ food.protein|num }} g</td><td>{{ food.daily_percent("protein") }}%</td></tr>
+          </tbody>
+        </table>
+        <p class="foot">* Dựa trên chế độ ăn 2.000 kcal mỗi ngày. Chất xơ, đường và natri là số liệu ước tính, có thể thay đổi theo công thức chế biến.</p>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<section class="section-sm">
+  <div class="container">
+    <div class="section-head"><h2>Món ăn tương tự</h2></div>
+    <div class="grid grid-4">
+      {% for f in related %}{{ food_card(f) }}{% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

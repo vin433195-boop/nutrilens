@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% from "partials/macros.html" import icon, food_card with context %}
+
+{% block title %}Thư viện món ăn · {{ site_name }}{% endblock %}
+{% block description %}Tra cứu calo, protein, carbohydrate, chất béo, chất xơ, đường và natri của {{ dish_count }} món ăn phổ biến.{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+  <div class="container">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="{{ url_for('main.index') }}">Trang chủ</a>{{ icon("chevron-right", 14) }}<span>Món ăn</span></nav>
+    <h1>Thư viện món ăn</h1>
+    <p>{{ dish_count }} món ăn quen thuộc với đầy đủ thông tin dinh dưỡng cho mỗi khẩu phần, điểm sức khỏe và mẹo ăn lành mạnh.</p>
+  </div>
+</section>
+
+<section class="section-sm">
+  <div class="container" data-food-filter>
+    <div class="toolbar">
+      <div class="search-box">
+        {{ icon("search", 18) }}
+        <label class="sr-only" for="food-search">Tìm món ăn</label>
+        <input class="input" id="food-search" type="search" placeholder="Tìm phở, sushi, ít carb..." value="{{ query }}" autocomplete="off">
+      </div>
+      <div style="display:flex; gap:10px; align-items:center">
+        <label for="food-sort" class="muted small" style="margin:0">Sắp xếp</label>
+        <select class="input" id="food-sort" style="width:auto">
+          <option value="name">Tên A–Z</option>
+          <option value="cal-asc">Calo thấp → cao</option>
+          <option value="cal-desc">Calo cao → thấp</option>
+          <option value="protein">Protein nhiều nhất</option>
+          <option value="score">Điểm sức khỏe</option>
+        </select>
+      </div>
+    </div>
+    <div class="chips" role="group" aria-label="Lọc theo danh mục" style="margin-bottom: 28px">
+      <button class="chip {{ 'active' if not active_category }}" type="button" data-category="">Tất cả</button>
+      {% for c in categories %}
+        <button class="chip {{ 'active' if active_category == c }}" type="button" data-category="{{ c }}">{{ c }}</button>
+      {% endfor %}
+    </div>
+    <p class="muted small" data-count aria-live="polite"></p>
+    <div class="grid grid-3" data-grid>
+      {% for food in foods %}{{ food_card(food) }}{% endfor %}
+    </div>
+    <div class="empty" data-empty hidden>
+      <div class="big">🔍</div>
+      <h3>Không tìm thấy món phù hợp</h3>
+      <p>Thử từ khóa khác hoặc <a href="{{ url_for('main.contact') }}">đề xuất thêm món mới</a> cho chúng tôi.</p>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}<script src="{{ url_for('static', filename='js/foods.js') }}"></script>{% endblock %}
