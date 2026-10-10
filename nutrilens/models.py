@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import date, datetime, timedelta, timezone
+from datetime import date, datetime, timezone
 
 import markdown
 from flask_login import UserMixin
@@ -33,8 +33,8 @@ class User(UserMixin, db.Model):
     name: Mapped[str] = mapped_column(String(80))
     role: Mapped[str] = mapped_column(String(20), default="user")
     active: Mapped[bool] = mapped_column(Boolean, default=True)
-    failed_logins: Mapped[int] = mapped_column(Integer, default=0)
-    locked_until: Mapped[datetime | None] = mapped_column(DateTime)
+    # Tăng lên mỗi khi đổi mật khẩu hoặc bấm "đăng xuất mọi thiết bị": mọi phiên cũ hết hiệu lực
+    session_version: Mapped[int] = mapped_column(Integer, default=1, server_default="1")
     created_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)
     last_login_at: Mapped[datetime | None] = mapped_column(DateTime)
 
@@ -65,18 +65,14 @@ class User(UserMixin, db.Model):
     def check_password(self, password: str) -> bool:
         return check_password_hash(self.password_hash, password)
 
-    def is_locked(self) -> bool:
-        return bool(self.locked_until and self.locked_until > utcnow())
+    def get_id(self) -> str:
+        # Flask-Login lưu giá trị này trong session và cookie ghi nhớ đăng nhập
+        return f"{self.id}:{self.session_version or 1}"
 
-    def register_failed_login(self, max_attempts: int, lock_minutes: int) -> None:
-        self.failed_logins = (self.failed_logins or 0) + 1
-        if self.failed_logins >= max_attempts:
-            self.locked_until = utcnow() + timedelta(minutes=lock_minutes)
-            self.failed_logins = 0
+    def revoke_sessions(self) -> None:
+        self.session_version = (self.session_version or 1) + 1
 
     def register_login(self) -> None:
-        self.failed_logins = 0
-        self.locked_until = None
         self.last_login_at = utcnow()
 
 

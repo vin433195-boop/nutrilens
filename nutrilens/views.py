@@ -8,7 +8,7 @@ from flask_login import current_user
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 
-from .extensions import db
+from .extensions import db, limiter
 from .models import ContactMessage, Subscriber
 
 bp = Blueprint("main", __name__)
@@ -124,6 +124,7 @@ def privacy():
 
 
 @bp.route("/lien-he", methods=["GET", "POST"])
+@limiter.limit("5 per hour", methods=["POST"])
 def contact():
     form = {"name": "", "email": "", "topic": CONTACT_TOPICS[0], "body": ""}
     if current_user.is_authenticated:
@@ -150,6 +151,7 @@ def contact():
 
 
 @bp.route("/dang-ky-ban-tin", methods=["POST"])
+@limiter.limit("10 per hour")
 def subscribe():
     email = request.form.get("email", "").strip().lower()
     if not EMAIL_RE.match(email) or len(email) > 255:

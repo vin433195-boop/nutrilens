@@ -55,8 +55,9 @@ class Config:
     REMEMBER_COOKIE_SAMESITE = "Lax"
     REMEMBER_COOKIE_SECURE = _bool("COOKIE_SECURE")
 
-    LOGIN_MAX_ATTEMPTS = 5
-    LOGIN_LOCK_MINUTES = 15
+    # ── Giới hạn số request (Flask-Limiter) ──
+    RATELIMIT_ENABLED = _bool("RATELIMIT_ENABLED", "1")
+    RATELIMIT_STORAGE_URI = os.environ.get("RATELIMIT_STORAGE_URI", "memory://")
     PASSWORD_RESET_MAX_AGE = 3600  # giây
 
     # ── Email (để trống MAIL_SERVER thì email được in ra log, dùng khi phát triển) ──
@@ -70,6 +71,7 @@ class Config:
 
 class TestConfig(Config):
     TESTING = True
+    RATELIMIT_ENABLED = False
     SECRET_KEY = "test-secret"
     PRELOAD_MODEL = False
     SQLALCHEMY_DATABASE_URI = "sqlite://"

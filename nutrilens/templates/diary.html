@@ -59,6 +59,6 @@
 {% endblock %}
 
 {% block scripts %}
-<script>window.NL_FOODS = {{ foods_data|tojson }};</script>
+<script nonce="{{ csp_nonce() }}">window.NL_FOODS = {{ foods_data|tojson }};</script>
 <script src="{{ url_for('static', filename='js/diary.js') }}"></script>
 {% endblock %}

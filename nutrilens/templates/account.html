@@ -99,6 +99,15 @@
         {% endif %}
         <a class="btn btn-accent btn-block" style="margin-top:16px" href="{{ url_for('main.calculator') }}">{{ icon("calculator", 18) }} Tính lại mục tiêu</a>
       </div>
+      <div class="card">
+        <h2 class="card-title">{{ icon("shield") }} Bảo mật</h2>
+        <p class="muted small">Nếu bạn từng đăng nhập trên máy lạ, hãy đăng xuất khỏi mọi thiết bị khác. Thiết bị này vẫn giữ đăng nhập.</p>
+        <form method="post">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <input type="hidden" name="action" value="revoke">
+          <button class="btn btn-outline btn-block" type="submit">Đăng xuất mọi thiết bị khác</button>
+        </form>
+      </div>
       <form method="post" action="{{ url_for('auth.logout') }}">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <button class="btn btn-ghost btn-block" type="submit">{{ icon("log-out", 18) }} Đăng xuất</button>

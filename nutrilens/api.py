@@ -9,7 +9,7 @@ from flask_login import current_user, login_required
 from PIL import Image, UnidentifiedImageError
 from sqlalchemy import delete, func, select
 
-from .extensions import db
+from .extensions import db, limiter
 from .models import DiaryEntry, Profile, Recognition
 from .predictor import PredictorUnavailable
 
@@ -108,6 +108,7 @@ def _confidence_level(conf: float) -> tuple[str, str]:
 
 
 @bp.post("/predict")
+@limiter.limit("20 per minute; 300 per day")
 def predict():
     file = request.files.get("image")
     if file is None or not file.filename:

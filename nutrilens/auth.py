@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import math
 import re
 
 from flask import (Blueprint, current_app, flash, jsonify, redirect, render_template, request,
@@ -12,9 +11,11 @@ from itsdangerous import BadSignature, SignatureExpired, URLSafeTimedSerializer
 from sqlalchemy import func, select
 from sqlalchemy.exc import IntegrityError
 
-from .extensions import db, login_manager
+from flask_limiter.util import get_remote_address
+
+from .extensions import db, limiter, login_manager
 from .mail import mail_configured, send_mail
-from .models import DiaryEntry, Recognition, User, utcnow
+from .models import DiaryEntry, Recognition, User
 
 bp = Blueprint("auth", __name__)
 
@@ -25,7 +26,19 @@ GENERIC_LOGIN_ERROR = "Email hoặc mật khẩu không đúng."
 # ── Flask-Login ──────────────────────────────────────────────
 @login_manager.user_loader
 def load_user(user_id: str):
-    return db.session.get(User, int(user_id)) if user_id.isdigit() else None
+    uid, _, version = user_id.partition(":")
+    if not uid.isdigit() or not version.isdigit():
+        return None
+    user = db.session.get(User, int(uid))
+    # Phiên cũ (trước khi đổi mật khẩu / đăng xuất mọi thiết bị) bị từ chối
+    if user is None or str(user.session_version or 1) != version:
+        return None
+    return user
+
+
+def _login_key() -> str:
+    """Giới hạn theo cặp IP + email: chặn dò mật khẩu mà không khóa được tài khoản của người khác."""
+    return f"{get_remote_address()}|{request.form.get('email', '').strip().lower()}"
 
 
 @login_manager.unauthorized_handler
@@ -95,6 +108,7 @@ def _start_session(user: User, remember: bool) -> None:
 
 # ── Đăng ký ──────────────────────────────────────────────────
 @bp.route("/dang-ky", methods=["GET", "POST"])
+@limiter.limit("5 per hour; 20 per day", methods=["POST"])
 def register():
     if current_user.is_authenticated:
         return redirect(url_for("main.index"))
@@ -140,6 +154,8 @@ def register():
 
 # ── Đăng nhập / đăng xuất ───────────────────────────────────
 @bp.route("/dang-nhap", methods=["GET", "POST"])
+@limiter.limit("10 per minute; 60 per hour", methods=["POST"])
+@limiter.limit("5 per 15 minutes", methods=["POST"], key_func=_login_key)
 def login():
     if current_user.is_authenticated:
         return redirect(url_for("main.index"))
@@ -148,18 +164,11 @@ def login():
     next_url = safe_next(request.values.get("next"))
 
     if request.method == "POST":
-        cfg = current_app.config
         email = request.form.get("email", "").strip().lower()
         password = request.form.get("password", "")
         user = db.session.scalar(select(User).where(User.email == email)) if email else None
 
-        if user is not None and user.is_locked():
-            minutes = math.ceil((user.locked_until - utcnow()).total_seconds() / 60)
-            error = f"Tài khoản tạm khóa do đăng nhập sai nhiều lần. Vui lòng thử lại sau {minutes} phút."
-        elif user is None or not user.check_password(password):
-            if user is not None:
-                user.register_failed_login(cfg["LOGIN_MAX_ATTEMPTS"], cfg["LOGIN_LOCK_MINUTES"])
-                db.session.commit()
+        if user is None or not user.check_password(password):
             error = GENERIC_LOGIN_ERROR
         elif not user.active:
             error = "Tài khoản này đã bị vô hiệu hóa."
@@ -184,6 +193,7 @@ def logout():
 
 # ── Quên / đặt lại mật khẩu ──────────────────────────────────
 @bp.route("/quen-mat-khau", methods=["GET", "POST"])
+@limiter.limit("5 per hour", methods=["POST"])
 def forgot_password():
     email = ""
     error = None
@@ -224,10 +234,9 @@ def reset_password(token):
             errors["confirm"] = "Mật khẩu nhập lại không khớp."
         if not errors:
             user.set_password(password)
-            user.failed_logins = 0
-            user.locked_until = None
+            user.revoke_sessions()
             db.session.commit()
-            flash("Đã đặt lại mật khẩu. Hãy đăng nhập bằng mật khẩu mới.", "success")
+            flash("Đã đặt lại mật khẩu và đăng xuất khỏi mọi thiết bị. Hãy đăng nhập bằng mật khẩu mới.", "success")
             return redirect(url_for("auth.login"))
     return render_template("auth/reset.html", errors=errors, token=token), 422 if errors else 200
 
@@ -262,10 +271,18 @@ def account():
             errors["confirm"] = "Mật khẩu nhập lại không khớp."
         if not errors:
             user.set_password(new)
+            user.revoke_sessions()
             db.session.commit()
             _start_session(user, remember=False)
-            flash("Đã đổi mật khẩu.", "success")
+            flash("Đã đổi mật khẩu. Các thiết bị khác đã được đăng xuất.", "success")
             return redirect(url_for("auth.account"))
+
+    elif action == "revoke":
+        user.revoke_sessions()
+        db.session.commit()
+        _start_session(user, remember=False)
+        flash("Đã đăng xuất khỏi mọi thiết bị khác.", "success")
+        return redirect(url_for("auth.account"))
 
     elif action == "delete":
         if not user.check_password(request.form.get("current_delete", "")):

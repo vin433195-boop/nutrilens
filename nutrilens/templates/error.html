@@ -12,6 +12,9 @@
     {% if code == 404 %}
       <h1 style="font-size:1.8rem">Ôi, món này không có trong thực đơn</h1>
       <p class="muted">{{ error.description if error and error.description and "requested URL" not in error.description else "Trang bạn tìm không tồn tại hoặc đã được chuyển đi." }}</p>
+    {% elif code == 429 %}
+      <h1 style="font-size:1.8rem">Chậm lại một chút nhé</h1>
+      <p class="muted">{{ error.description }}</p>
     {% elif code == 413 %}
       <h1 style="font-size:1.8rem">Ảnh quá lớn</h1>
       <p class="muted">Vui lòng chọn ảnh nhỏ hơn 8 MB.</p>

@@ -13,7 +13,7 @@ from werkzeug.exceptions import HTTPException, ServiceUnavailable
 from . import cli, security
 from .catalog import ArticleStore, Catalog
 from .config import Config
-from .extensions import db, login_manager, migrate
+from .extensions import db, limiter, login_manager, migrate
 from .nutrition import DAILY_VALUES
 from .predictor import Predictor
 
@@ -27,6 +27,7 @@ def create_app(config_object=Config, predictor=None) -> Flask:
     db.init_app(app)
     migrate.init_app(app, db, directory=str(Path(app.root_path).parent / "migrations"))
     login_manager.init_app(app)
+    limiter.init_app(app)
     login_manager.session_protection = "basic"
     from . import models  # noqa: F401  Đăng ký các bảng với SQLAlchemy và Alembic
 
@@ -55,6 +56,7 @@ def create_app(config_object=Config, predictor=None) -> Flask:
             "site_name": app.config["SITE_NAME"],
             "site_tagline": app.config["SITE_TAGLINE"],
             "csrf_token": security.csrf_token,
+            "csp_nonce": security.csp_nonce,
             "current_year": date.today().year,
             "daily_values": DAILY_VALUES,
             "dish_count": catalog.count(),
@@ -80,6 +82,8 @@ def create_app(config_object=Config, predictor=None) -> Flask:
 
     @app.errorhandler(HTTPException)
     def handle_http_error(err: HTTPException):
+        if err.code == 429:
+            err.description = "Bạn thao tác quá nhanh. Vui lòng đợi một lát rồi thử lại."
         if request.path.startswith("/api/"):
             return jsonify(error=err.description, status=err.code), err.code
         try:

@@ -53,12 +53,24 @@ class AppTestCase(unittest.TestCase):
         import json
         names = json.loads(Path(TestConfig.CLASSES_PATH).read_text(encoding="utf-8"))
         self.model = FakeModel(names)
-        self.app = create_app(TestConfig, predictor=Predictor(Path("missing.h5"), names, model=self.model))
+        self.app = self.build_app(TestConfig, names)
         self.ctx = self.app.app_context()
         self.ctx.push()
         db.create_all()
         seed_all()
         self.client = self.app.test_client()
+
+    def build_app(self, config, names):
+        app = create_app(config, predictor=Predictor(Path("missing.h5"), names, model=self.model))
+
+        # Test giữ một app context suốt bài test nên mọi request dùng chung `g`.
+        # Xóa người dùng đã cache để mỗi request tự xác thực lại như khi chạy thật.
+        @app.before_request
+        def _fresh_request_state():
+            from flask import g
+            g.pop("_login_user", None)
+            g.pop("csp_nonce", None)
+        return app
 
     def tearDown(self):
         db.session.remove()
@@ -231,12 +243,22 @@ class LoginTests(AppTestCase):
         res = self.login(email="khongco@example.com")
         self.assertIn("Email hoặc mật khẩu không đúng", res.get_data(as_text=True))
 
-    def test_lockout_after_five_failures(self):
-        for _ in range(5):
+    def test_wrong_passwords_do_not_lock_the_account(self):
+        # Không khóa theo tài khoản: kẻ xấu không thể khóa tài khoản của người khác
+        for _ in range(8):
             self.login(password="sai123456")
-        res = self.login()  # Mật khẩu đúng nhưng đang bị khóa
-        self.assertEqual(res.status_code, 401)
-        self.assertIn("tạm khóa", res.get_data(as_text=True))
+        self.assertEqual(self.login().status_code, 302)
+
+    def test_old_sessions_revoked_after_password_change(self):
+        self.login()
+        other = self.app.test_client()  # Thiết bị thứ hai
+        token = re.search(r'csrf-token" content="([^"]+)', other.get("/dang-nhap").get_data(as_text=True)).group(1)
+        other.post("/dang-nhap", data={"csrf_token": token, "email": "an@example.com", "password": PASSWORD})
+        self.assertEqual(other.get("/tai-khoan").status_code, 200)
+        self.client.post("/tai-khoan", data={"csrf_token": self.csrf("/tai-khoan"), "action": "password",
+                                             "current": PASSWORD, "password": "moi123456", "confirm": "moi123456"})
+        self.assertEqual(self.client.get("/tai-khoan").status_code, 200)  # Thiết bị đang dùng vẫn đăng nhập
+        self.assertEqual(other.get("/tai-khoan").status_code, 302)        # Thiết bị kia bị đăng xuất
 
     def test_inactive_user_cannot_login(self):
         self.user.active = False
@@ -258,6 +280,32 @@ class LoginTests(AppTestCase):
         res = self.client.get("/tai-khoan")
         self.assertEqual(res.status_code, 302)
         self.assertIn("/dang-nhap", res.headers["Location"])
+
+
+class SecurityTests(AppTestCase):
+    def test_security_headers_and_nonce(self):
+        res = self.client.get("/")
+        csp = res.headers["Content-Security-Policy"]
+        nonce = re.search(r"'nonce-([^']+)'", csp).group(1)
+        self.assertIn(f'nonce="{nonce}"', res.get_data(as_text=True))
+        self.assertEqual(res.headers["X-Content-Type-Options"], "nosniff")
+
+    def test_rate_limit_on_login(self):
+        class LimitedConfig(TestConfig):
+            RATELIMIT_ENABLED = True
+
+        app = self.build_app(LimitedConfig, self.model.class_names)
+        client = app.test_client()
+        with app.app_context():
+            db.create_all()
+            self.make_user()
+            html = client.get("/dang-nhap").get_data(as_text=True)
+            token = re.search(r'csrf-token" content="([^"]+)', html).group(1)
+            codes = [client.post("/dang-nhap", data={"csrf_token": token, "email": "an@example.com",
+                                                    "password": "sai123456"}).status_code for _ in range(6)]
+            db.drop_all()
+        self.assertEqual(codes[:5], [401] * 5)
+        self.assertEqual(codes[5], 429)
 
 
 class PasswordResetTests(AppTestCase):
