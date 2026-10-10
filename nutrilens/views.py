@@ -2,8 +2,7 @@
 
 import re
 
-from flask import (Blueprint, Response, abort, current_app, flash, redirect,
-                   render_template, request, url_for)
+from flask import Blueprint, Response, abort, current_app, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
@@ -91,7 +90,7 @@ def compare():
 def recognize():
     predictor = current_app.extensions["predictor"]
     labels = catalog().class_names
-    foods = [f for f in (catalog().by_label(l) for l in labels) if f]
+    foods = [f for f in (catalog().by_label(label) for label in labels) if f]
     return render_template("recognize.html", model_status=predictor.status,
                            foods=sorted(foods, key=lambda f: f.name_vi))
 

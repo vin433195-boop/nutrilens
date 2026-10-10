@@ -95,3 +95,17 @@ def register(app):
             click.echo(f"Đã gửi email thử tới {to}.")
         else:
             raise click.ClickException("Gửi thất bại, xem chi tiết lỗi phía trên.")
+
+    @app.cli.command("backup-db")
+    @click.option("--keep", type=int, default=None, help="Số bản sao lưu giữ lại (mặc định BACKUP_KEEP).")
+    def backup_db(keep):
+        """Sao lưu CSDL MySQL ra thư mục backups/ (file .sql.gz)."""
+        _utf8_console()
+        from pathlib import Path
+
+        from .ops import backup_database
+        try:
+            path = backup_database(Path(current_app.config["BACKUP_DIR"]), keep or current_app.config["BACKUP_KEEP"])
+        except RuntimeError as exc:
+            raise click.ClickException(str(exc)) from exc
+        click.echo(f"Đã sao lưu: {path} ({path.stat().st_size // 1024} KB)")

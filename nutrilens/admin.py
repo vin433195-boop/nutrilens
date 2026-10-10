@@ -8,15 +8,26 @@ import re
 from datetime import date, timedelta
 from functools import wraps
 
-from flask import (Blueprint, Response, abort, current_app, flash, redirect, render_template, request,
-                   url_for)
+from flask import Blueprint, Response, abort, current_app, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 from sqlalchemy import case, func, or_, select
 
 from .extensions import db
 from .images import ImageError, delete_image, save_image
-from .models import (Article, Category, ContactMessage, DiaryEntry, Food, FoodNote, ModelLabel,
-                     Recognition, Subscriber, Tag, User, utcnow)
+from .models import (
+    Article,
+    Category,
+    ContactMessage,
+    DiaryEntry,
+    Food,
+    FoodNote,
+    ModelLabel,
+    Recognition,
+    Subscriber,
+    Tag,
+    User,
+    utcnow,
+)
 from .seed import slugify
 
 bp = Blueprint("admin", __name__)
@@ -176,8 +187,10 @@ def _apply_food(food: Food, data: dict) -> None:
         category = Category(name=cat_name, slug=slugify(cat_name), position=99)
         db.session.add(category)
     for key in ("slug", "name_vi", "name_en", "cuisine", "serving", "serving_grams", "description",
-                "is_published", "is_featured", "image_credit", "image_license", "image_source", "source"):
-        setattr(food, key, data[key] if data[key] != "" else None if key.startswith(("image_", "source")) else data[key])
+                "is_published", "is_featured"):
+        setattr(food, key, data[key])
+    for key in ("image_credit", "image_license", "image_source", "source"):  # Trường tùy chọn: rỗng thì lưu NULL
+        setattr(food, key, data[key] or None)
     food.emoji = data["emoji"] or "🍽️"
     food.name_en = data["name_en"] or data["name_vi"]
     food.cuisine = data["cuisine"] or "Quốc tế"
@@ -216,7 +229,8 @@ def _handle_image_upload(food: Food) -> str | None:
 def _render_food_form(food, data, errors, status=200):
     categories = db.session.scalars(select(Category.name).order_by(Category.position, Category.name)).all()
     used = select(ModelLabel.label).where(ModelLabel.food_id != (food.id if food else -1))
-    labels = [l for l in current_app.extensions["catalog"].class_names if l not in set(db.session.scalars(used))]
+    taken = set(db.session.scalars(used))
+    labels = [label for label in current_app.extensions["catalog"].class_names if label not in taken]
     return render_template("admin/food_form.html", food=food, form=data, errors=errors,
                            categories=categories, labels=labels, nutrients=NUTRIENTS), status
 
@@ -429,10 +443,11 @@ def users():
         stmt = stmt.where(or_(User.email.ilike(f"%{q}%"), User.name.ilike(f"%{q}%")))
     page = paginate(stmt)
     ids = [u.id for u in page.items]
-    counts = dict(db.session.execute(select(DiaryEntry.user_id, func.count(DiaryEntry.id))
-                                     .where(DiaryEntry.user_id.in_(ids)).group_by(DiaryEntry.user_id)).all()) if ids else {}
+    counts = {}
+    if ids:
+        counts = dict(db.session.execute(select(DiaryEntry.user_id, func.count(DiaryEntry.id))
+                                         .where(DiaryEntry.user_id.in_(ids)).group_by(DiaryEntry.user_id)).all())
     return render_template("admin/users.html", page=page, q=q, counts=counts)
-    return render_template("admin/users.html", page=page, q=q)
 
 
 @bp.post("/nguoi-dung/<int:user_id>")
@@ -455,7 +470,8 @@ def user_update(user_id):
         user.role = "user"
         flash(f"Đã bỏ quyền quản trị của {user.email}.", "success")
     db.session.commit()
-    return redirect(request.referrer if (request.referrer or "").startswith(request.host_url) else url_for("admin.users"))
+    back = request.referrer or ""
+    return redirect(back if back.startswith(request.host_url) else url_for("admin.users"))
 
 
 # ════════════════════════════════════════════════════════════

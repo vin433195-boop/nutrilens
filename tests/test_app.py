@@ -307,6 +307,13 @@ class LoginTests(AppTestCase):
         self.assertIn("/dang-nhap", res.headers["Location"])
 
 
+class OpsTests(AppTestCase):
+    def test_healthz(self):
+        res = self.client.get("/healthz")
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(res.get_json()["database"], "ok")
+
+
 class SecurityTests(AppTestCase):
     def test_security_headers_and_nonce(self):
         res = self.client.get("/")

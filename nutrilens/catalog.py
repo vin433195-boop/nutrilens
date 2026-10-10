@@ -32,7 +32,8 @@ class ListPage:
     def iter_pages(self, left_edge=1, left_current=2, right_current=2, right_edge=1):
         last = 0
         for n in range(1, self.pages + 1):
-            if n <= left_edge or self.page - left_current <= n <= self.page + right_current or n > self.pages - right_edge:
+            near_current = self.page - left_current <= n <= self.page + right_current
+            if n <= left_edge or near_current or n > self.pages - right_edge:
                 if last + 1 != n:
                     yield None
                 yield n

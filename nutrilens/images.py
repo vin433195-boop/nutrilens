@@ -40,7 +40,7 @@ def process_image(data: bytes, max_width: int = 1200, quality: int = 82) -> byte
 def save_image(data: bytes, folder: str, basename: str, **kwargs) -> str:
     """Lưu ảnh vào static/<folder>/ và trả về đường dẫn tương đối dùng cho url_for('static', ...)."""
     webp = process_image(data, **kwargs)
-    digest = hashlib.sha1(webp).hexdigest()[:10]
+    digest = hashlib.sha1(webp, usedforsecurity=False).hexdigest()[:10]  # Chỉ để đặt tên file
     safe = "".join(c if c.isalnum() or c in "-_" else "-" for c in basename.lower())[:60] or "image"
     rel = f"{folder}/{safe}-{digest}.webp"
     path = Path(current_app.static_folder) / rel

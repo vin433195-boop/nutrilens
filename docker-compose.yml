@@ -1,0 +1,48 @@
+# Chạy toàn bộ hệ thống: docker compose up -d --build
+# Bật HTTPS tự động với tên miền thật: DOMAIN=nutrilens.vn docker compose --profile https up -d
+services:
+  db:
+    image: mariadb:10.11
+    restart: unless-stopped
+    environment:
+      MARIADB_DATABASE: nutrilens
+      MARIADB_USER: nutrilens
+      MARIADB_PASSWORD: ${DB_PASSWORD:?Đặt DB_PASSWORD trong file .env}
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:?Đặt DB_ROOT_PASSWORD trong file .env}
+    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci"]
+    volumes: [dbdata:/var/lib/mysql]
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      retries: 10
+
+  web:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DATABASE_URL: mysql+pymysql://nutrilens:${DB_PASSWORD}@db:3306/nutrilens?charset=utf8mb4
+      COOKIE_SECURE: ${COOKIE_SECURE:-0}
+    depends_on:
+      db: { condition: service_healthy }
+    ports: ["8000:8000"]
+    volumes:
+      - uploads:/app/nutrilens/static/uploads
+      - ./logs:/app/logs
+      - ./backups:/app/backups
+
+  caddy:
+    image: caddy:2
+    profiles: [https]
+    restart: unless-stopped
+    environment: { DOMAIN: "${DOMAIN:-localhost}" }
+    ports: ["80:80", "443:443"]
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddydata:/data
+    depends_on: [web]
+
+volumes:
+  dbdata:
+  uploads:
+  caddydata:

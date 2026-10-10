@@ -1,0 +1,12 @@
+.git
+.env
+.venv
+venv
+__pycache__
+*.pyc
+instance/
+logs/
+backups/
+nutrilens/static/uploads/
+food-recognition-cnn/
+legacy/

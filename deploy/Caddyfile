@@ -1,0 +1,10 @@
+# Caddy tự xin và gia hạn chứng chỉ HTTPS (Let's Encrypt) cho tên miền trong biến DOMAIN
+{$DOMAIN} {
+	encode gzip zstd
+	header {
+		-Server
+	}
+	@static path /static/*
+	header @static Cache-Control "public, max-age=604800"
+	reverse_proxy web:8000
+}

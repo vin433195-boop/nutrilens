@@ -1,121 +1,127 @@
 # NutriLens: website ẩm thực và dinh dưỡng
 
-Website Flask giúp người dùng nhận dạng món ăn bằng AI, tra cứu dinh dưỡng, tính nhu cầu calo và theo dõi nhật ký ăn uống. Dữ liệu lưu trên MySQL/MariaDB, có đăng ký và đăng nhập. Phát triển từ dự án nhận dạng món ăn bằng CNN (Project 7).
+Website Flask giúp người dùng tra cứu dinh dưỡng của 35 món Việt Nam và quốc tế, nhận dạng món ăn bằng AI, tính nhu cầu calo, ghi nhật ký ăn uống và theo dõi cân nặng. Dữ liệu lưu trên MySQL/MariaDB, số liệu dinh dưỡng lấy từ USDA FoodData Central, ảnh món ăn từ Wikimedia Commons.
 
-## Cài đặt lần đầu (XAMPP trên Windows)
+## Cài đặt trên máy (Windows + XAMPP)
 
-1. Mở XAMPP Control Panel và bấm **Start** ở dòng MySQL.
+1. Mở XAMPP Control Panel, bấm **Start** ở dòng MySQL.
 2. Cài thư viện:
    ```bash
-   pip install -r requirements.txt
+   pip install -r requirements-ml.txt     # có AI nhận dạng (TensorFlow, ~500 MB)
+   pip install -r requirements.txt        # hoặc chỉ website, không có AI
    ```
-3. Tạo file cấu hình: sao chép `.env.example` thành `.env`, điền `SECRET_KEY`. Mặc định kết nối `root` không mật khẩu của XAMPP.
-4. Tạo database, bảng và nạp dữ liệu mẫu bằng một lệnh:
+3. Sao chép `.env.example` thành `.env`, điền `SECRET_KEY` và `DATABASE_URL`.
+4. Tạo database, bảng và dữ liệu mẫu:
    ```bash
    flask --app app setup-db
+   flask --app app create-admin          # tạo hoặc nâng quyền tài khoản quản trị
    ```
 5. Chạy website rồi mở http://127.0.0.1:5000:
    ```bash
    python app.py
    ```
 
-Database `nutrilens` sẽ xuất hiện trong phpMyAdmin tại http://localhost/phpmyadmin.
+## Tính năng
+
+| Nhóm | Nội dung |
+|---|---|
+| Thư viện món ăn | 35 món, ảnh thật, tìm kiếm không dấu, lọc danh mục, sắp xếp, phân trang, món yêu thích |
+| Trang món ăn | Nhãn dinh dưỡng, tỉ lệ macro, điểm sức khỏe, bảng thành phần kèm link tra cứu USDA, dữ liệu schema.org |
+| Nhận dạng AI | 20 món, top-3, chế độ TTA, người dùng chọn lại món đúng để làm dữ liệu huấn luyện |
+| Nhật ký | Ghi theo khẩu phần hoặc gram, món tự thêm, mục tiêu cá nhân, đồng bộ từ trình duyệt khi đăng nhập |
+| Báo cáo | Calo 7/30/90 ngày, macro trung bình, món ăn nhiều nhất, biểu đồ cân nặng |
+| Tài khoản | Đăng ký, xác thực email, quên mật khẩu, đăng xuất mọi thiết bị, tải dữ liệu JSON/CSV, xóa tài khoản |
+| Quản trị `/quan-tri` | Món ăn (kèm tải ảnh), bài viết, tin nhắn, người dùng, thống kê độ chính xác AI, xuất CSV |
+
+## Bảo mật
+
+- Mật khẩu băm scrypt, phiên dùng cookie HttpOnly, chống CSRF trên mọi form và API ghi dữ liệu.
+- Giới hạn request theo IP cho đăng nhập, đăng ký, quên mật khẩu, nhận dạng, liên hệ.
+- Đăng nhập sai bị giới hạn theo cặp IP và email, không khóa tài khoản nên không thể lợi dụng để khóa người khác.
+- Đổi hoặc đặt lại mật khẩu sẽ đăng xuất mọi thiết bị khác.
+- Header Content-Security-Policy dùng nonce, X-Frame-Options, Permissions-Policy, HSTS khi chạy HTTPS.
+- Dùng tài khoản MySQL riêng chỉ có quyền trên database `nutrilens`.
+
+## Số liệu dinh dưỡng
+
+`scripts/build_nutrition.py` đọc công thức trong `nutrilens/data/nutrition_spec.json` và dữ liệu USDA (FNDDS 2021–2023, SR Legacy) để tạo `nutrilens/data/nutrition.json`. Website và lệnh seed chỉ đọc file kết quả, không cần dữ liệu USDA khi chạy. Cách tính được giải thích tại trang `/phuong-phap`.
+
+Thêm hoặc sửa món qua trang quản trị, hoặc sửa file dữ liệu rồi chạy `flask --app app seed`. Thêm `--overwrite` để ghi đè dữ liệu đã có.
+
+## Email
+
+Để trống `MAIL_SERVER` thì link xác thực và đặt lại mật khẩu được in ra cửa sổ dòng lệnh. Dùng Gmail: bật xác minh 2 bước, tạo mật khẩu ứng dụng, điền vào `.env` theo hướng dẫn trong `.env.example`, rồi kiểm tra:
+
+```bash
+flask --app app send-test-email ban@gmail.com
+```
+
+## Vận hành
+
+| Việc | Cách làm |
+|---|---|
+| Chạy production | `waitress-serve --port=8000 --threads=8 app:app` |
+| Kiểm tra sức khỏe | `GET /healthz` trả về trạng thái CSDL và model |
+| Log | `logs/nutrilens.log`, tự xoay vòng 5 file × 5 MB |
+| Theo dõi lỗi | Cài `sentry-sdk[flask]` và đặt `SENTRY_DSN` |
+| Sao lưu | `flask --app app backup-db`, lưu `.sql.gz` vào `backups/`, giữ 14 bản |
+| Sao lưu tự động trên Windows | Xem lệnh `schtasks` trong `deploy/backup_windows.bat` |
+
+### Docker và HTTPS
+
+```bash
+# Điền DB_PASSWORD, DB_ROOT_PASSWORD, SECRET_KEY trong .env
+docker compose up -d --build
+# Có tên miền thật: Caddy tự cấp chứng chỉ HTTPS
+DOMAIN=nutrilens.vn COOKIE_SECURE=1 docker compose --profile https up -d
+```
+
+Build nhẹ hơn, không có AI: `docker compose build --build-arg WITH_ML=0`.
+
+## Kiểm thử
+
+```bash
+pip install -r requirements-dev.txt
+ruff check .
+python -m unittest discover -s tests -v
+```
+
+Test dùng SQLite trong bộ nhớ và model giả nên không cần MySQL hay TensorFlow. GitHub Actions tự chạy Ruff và test mỗi lần push, xem `.github/workflows/ci.yml`.
 
 ## Lệnh quản trị
 
 | Lệnh | Tác dụng |
 |---|---|
-| `flask --app app setup-db` | Tạo database nếu chưa có, chạy migration, nạp dữ liệu mẫu. Chạy lại nhiều lần vẫn an toàn |
-| `flask --app app seed` | Nạp món ăn và bài viết mới từ file. Thêm `--overwrite` để ghi đè dữ liệu đã sửa trong CSDL |
+| `flask --app app setup-db` | Tạo database, chạy migration, nạp dữ liệu mẫu |
+| `flask --app app seed [--overwrite]` | Nạp món ăn, ảnh, bài viết từ file |
 | `flask --app app create-admin` | Tạo tài khoản quản trị |
-| `flask --app app db migrate -m "mô tả"` | Sinh migration sau khi sửa `nutrilens/models.py` |
-| `flask --app app db upgrade` | Áp dụng migration vào database |
-
-## Cơ sở dữ liệu
-
-| Bảng | Nội dung |
-|---|---|
-| `users` | Tài khoản: email, mật khẩu đã băm scrypt, vai trò, đếm lần đăng nhập sai |
-| `profiles` | Chỉ số cơ thể và mục tiêu calo, macro của từng người |
-| `categories`, `tags`, `food_tags` | Danh mục và thẻ món ăn |
-| `foods`, `food_notes` | Món ăn, dinh dưỡng mỗi khẩu phần, điểm cộng và mẹo ăn lành mạnh |
-| `model_labels` | Ánh xạ nhãn của model AI sang món ăn |
-| `articles` | Bài viết, nội dung Markdown |
-| `diary_entries` | Nhật ký ăn uống, lưu lại dinh dưỡng tại thời điểm ghi |
-| `recognitions` | Lịch sử nhận dạng và món người dùng sửa lại. Ảnh không được lưu |
-| `contact_messages`, `subscribers` | Tin nhắn liên hệ và đăng ký bản tin |
-
-Các file trong `nutrilens/data/` cùng `Mapping_Calories.json` chỉ là **dữ liệu khởi tạo** cho lệnh `seed`. Khi website chạy, mọi dữ liệu được đọc từ MySQL. File `class_names.json` vẫn cần vì nó quy định thứ tự đầu ra của file model.
-
-## Tài khoản người dùng
-
-- **Đăng ký:** họ tên, email, mật khẩu ít nhất 8 ký tự gồm chữ và số, đồng ý chính sách quyền riêng tư.
-- **Đăng nhập:** tùy chọn ghi nhớ 30 ngày. Tài khoản bị khóa 15 phút sau 5 lần nhập sai mật khẩu.
-- **Quên mật khẩu:** gửi link có hiệu lực 60 phút. Link tự hết hiệu lực khi mật khẩu đã đổi. Khi chưa cấu hình email, link được in ra cửa sổ dòng lệnh đang chạy website.
-- **Trang tài khoản:** đổi tên, đổi mật khẩu, xem thống kê, xóa tài khoản kèm toàn bộ dữ liệu.
-- **Đồng bộ:** khách vẫn dùng được nhật ký, dữ liệu lưu trên trình duyệt. Sau khi đăng nhập, dữ liệu đó tự chuyển vào tài khoản.
-
-## Trang và API
-
-| Trang | Đường dẫn |
-|---|---|
-| Trang chủ, thư viện, chi tiết món | `/`, `/mon-an`, `/mon-an/<slug>` |
-| Nhận dạng AI, công cụ tính, nhật ký, so sánh | `/nhan-dang`, `/cong-cu`, `/nhat-ky`, `/so-sanh` |
-| Kiến thức, giới thiệu, liên hệ, quyền riêng tư | `/kien-thuc`, `/gioi-thieu`, `/lien-he`, `/chinh-sach-quyen-rieng-tu` |
-| Tài khoản | `/dang-ky`, `/dang-nhap`, `/quen-mat-khau`, `/tai-khoan` |
-
-API JSON, các request ghi dữ liệu cần header `X-CSRF-Token`:
-
-- `GET /api/foods`, `GET /api/foods/<slug>`, `GET /api/status`
-- `POST /api/predict`: gửi `image`, tùy chọn `tta=1`
-- Cần đăng nhập: `GET|POST|DELETE /api/diary`, `PATCH|DELETE /api/diary/<id>`, `GET /api/diary/summary`, `POST /api/diary/import`, `GET|PUT /api/profile`, `GET|DELETE /api/recognitions`, `PATCH|DELETE /api/recognitions/<id>`
-
-## Biến môi trường (file `.env`)
-
-| Biến | Mặc định | Ý nghĩa |
-|---|---|---|
-| `DATABASE_URL` | MySQL XAMPP, database `nutrilens` | Chuỗi kết nối SQLAlchemy |
-| `SECRET_KEY` | tự tạo trong `instance/secret_key` | Khóa ký phiên đăng nhập, nên đặt cố định |
-| `COOKIE_SECURE` | `0` | Đặt `1` khi chạy HTTPS |
-| `MAIL_SERVER`, `MAIL_PORT`, `MAIL_USERNAME`, `MAIL_PASSWORD`, `MAIL_SENDER` | trống | SMTP để gửi email quên mật khẩu |
-| `PRELOAD_MODEL` | `1` | Nạp model AI ở nền khi khởi động |
-| `MODEL_PATH` | `food_model.h5` | Đường dẫn file model |
-
-## Kiểm thử
-
-```bash
-python -m unittest discover -s tests -v
-```
-
-Bộ test dùng SQLite trong bộ nhớ và model giả, không cần bật MySQL hay TensorFlow.
+| `flask --app app send-test-email <email>` | Kiểm tra cấu hình SMTP |
+| `flask --app app backup-db` | Sao lưu MySQL |
+| `flask --app app db migrate -m "..."` / `db upgrade` | Tạo và áp dụng migration |
 
 ## Cấu trúc
 
 ```
-app.py                  Điểm khởi chạy
-.env.example            Mẫu cấu hình
-migrations/             Migration Alembic cho cấu trúc bảng
+app.py                    Điểm khởi chạy
 nutrilens/
-  __init__.py           App factory, xử lý lỗi
-  config.py             Cấu hình, đọc .env
-  extensions.py         SQLAlchemy, Migrate, LoginManager
-  models.py             Các bảng dữ liệu
-  catalog.py            Truy vấn món ăn và bài viết
-  nutrition.py          Tính % nhu cầu ngày, điểm sức khỏe, quy đổi vận động
-  auth.py               Đăng ký, đăng nhập, quên mật khẩu, tài khoản
-  api.py                API JSON
-  views.py              Các trang
-  seed.py, cli.py       Nạp dữ liệu và lệnh quản trị
-  mail.py, security.py  Gửi email, CSRF, header bảo mật
-  predictor.py          Model AI
-  data/                 Dữ liệu khởi tạo
-  templates/, static/   Giao diện
-tests/                  Unit test
-legacy/                 Bản Streamlit cũ
+  __init__.py, config.py  App factory, cấu hình đọc từ .env
+  models.py               Các bảng dữ liệu
+  auth.py, admin.py       Tài khoản, trang quản trị
+  api.py, views.py        API JSON, các trang
+  catalog.py, nutrition.py  Truy vấn món ăn, tính toán dinh dưỡng
+  seed.py, cli.py         Nạp dữ liệu, lệnh quản trị
+  ops.py, security.py     Healthcheck, log, sao lưu, CSRF, header bảo mật
+  mail.py, images.py      Email, xử lý ảnh tải lên
+  predictor.py            Model AI
+  data/                   foods.json, nutrition.json, images.json, bài viết
+  static/, templates/     Giao diện
+migrations/               Migration Alembic
+scripts/                  Dựng số liệu dinh dưỡng từ USDA
+deploy/                   Caddyfile, script sao lưu Windows
+tests/                    Unit test
 ```
 
-## Về mô hình
+## Giấy phép dữ liệu
 
-CNN 3 tầng Conv2D, L2 Regularization và Dropout (TensorFlow/Keras), huấn luyện trên 20 lớp của Food-101. Độ chính xác khoảng 40% trên 5.000 ảnh kiểm thử. Giao diện luôn hiển thị top-3 và cho phép người dùng chọn lại món đúng. Các lần chọn lại được lưu trong bảng `recognitions` để làm dữ liệu huấn luyện về sau.
-
-Số liệu chất xơ, đường và natri là ước tính tham khảo. Thông tin trên website không thay thế tư vấn y tế.
+- Số liệu dinh dưỡng: USDA FoodData Central, thuộc phạm vi công cộng.
+- Ảnh món ăn: Wikimedia Commons, giấy phép CC0, CC BY hoặc CC BY-SA. Tác giả và giấy phép từng ảnh nằm trong `nutrilens/data/images.json` và hiển thị dưới ảnh trên trang món ăn.

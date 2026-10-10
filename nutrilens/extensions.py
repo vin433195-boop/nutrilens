@@ -19,5 +19,6 @@ NAMING = {
 db = SQLAlchemy(metadata=MetaData(naming_convention=NAMING))
 migrate = Migrate()
 login_manager = LoginManager()
-# Giới hạn số request theo địa chỉ IP. Mặc định lưu trong bộ nhớ, đặt RATELIMIT_STORAGE_URI=redis://... khi chạy nhiều tiến trình
+# Giới hạn số request theo địa chỉ IP. Mặc định lưu trong bộ nhớ;
+# khi chạy nhiều tiến trình hãy đặt RATELIMIT_STORAGE_URI=redis://...
 limiter = Limiter(key_func=get_remote_address, headers_enabled=True)

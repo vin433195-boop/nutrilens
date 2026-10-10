@@ -5,7 +5,7 @@ import secrets
 
 from flask import abort, current_app, g, request, session
 
-TOKEN_KEY = "_csrf_token"
+TOKEN_KEY = "_csrf_token"  # noqa: S105 - tên khóa trong session, không phải mật khẩu
 
 
 def csrf_token() -> str:

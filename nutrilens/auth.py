@@ -2,20 +2,17 @@
 
 from __future__ import annotations
 
-import re
-
 import csv
 import io
 import json
+import re
 
-from flask import (Blueprint, Response, current_app, flash, jsonify, redirect, render_template, request,
-                   session, url_for)
+from flask import Blueprint, Response, current_app, flash, jsonify, redirect, render_template, request, session, url_for
+from flask_limiter.util import get_remote_address
 from flask_login import current_user, login_required, login_user, logout_user
 from itsdangerous import BadSignature, SignatureExpired, URLSafeTimedSerializer
 from sqlalchemy import func, select
 from sqlalchemy.exc import IntegrityError
-
-from flask_limiter.util import get_remote_address
 
 from .extensions import db, limiter, login_manager
 from .mail import mail_configured, send_template
@@ -114,7 +111,9 @@ def send_verification_email(user: User) -> bool:
 
 
 def _dev_mail_note() -> str:
-    return "" if mail_configured() else " (Máy chủ chưa cấu hình email: link được in ra cửa sổ dòng lệnh đang chạy website.)"
+    if mail_configured():
+        return ""
+    return " (Máy chủ chưa cấu hình email: link được in ra cửa sổ dòng lệnh đang chạy website.)"
 
 
 def _start_session(user: User, remember: bool) -> None:
@@ -164,7 +163,8 @@ def register():
             else:
                 _start_session(user, remember=False)
                 send_verification_email(user)
-                flash(f"Chào mừng {user.name}! Chúng tôi đã gửi link xác thực tới {user.email}.{_dev_mail_note()}", "success")
+                flash(f"Chào mừng {user.name}! Chúng tôi đã gửi link xác thực tới {user.email}."
+                      f"{_dev_mail_note()}", "success")
                 return redirect(next_url or url_for("main.diary"))
 
     status = 422 if errors else 200

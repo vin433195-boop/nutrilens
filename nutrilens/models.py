@@ -3,19 +3,30 @@
 from __future__ import annotations
 
 from datetime import date, datetime, timezone
-
 from functools import lru_cache
 
 import markdown
 from flask_login import UserMixin
 from markupsafe import Markup
-from sqlalchemy import (Boolean, Column, Date, DateTime, Float, ForeignKey, Index, Integer,
-                        String, Table, Text, UniqueConstraint)
+from sqlalchemy import (
+    Boolean,
+    Column,
+    Date,
+    DateTime,
+    Float,
+    ForeignKey,
+    Index,
+    Integer,
+    String,
+    Table,
+    Text,
+    UniqueConstraint,
+)
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from .nutrition import NutritionMixin
 from .extensions import db
+from .nutrition import NutritionMixin
 
 
 def utcnow() -> datetime:
@@ -41,15 +52,15 @@ class User(UserMixin, db.Model):
     created_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)
     last_login_at: Mapped[datetime | None] = mapped_column(DateTime)
 
-    profile: Mapped["Profile | None"] = relationship(back_populates="user", uselist=False,
+    profile: Mapped[Profile | None] = relationship(back_populates="user", uselist=False,
                                                      cascade="all, delete-orphan")
-    diary_entries: Mapped[list["DiaryEntry"]] = relationship(back_populates="user",
+    diary_entries: Mapped[list[DiaryEntry]] = relationship(back_populates="user",
                                                              cascade="all, delete-orphan")
-    recognitions: Mapped[list["Recognition"]] = relationship(back_populates="user",
+    recognitions: Mapped[list[Recognition]] = relationship(back_populates="user",
                                                              cascade="all, delete-orphan")
-    custom_foods: Mapped[list["CustomFood"]] = relationship(cascade="all, delete-orphan")
-    weight_logs: Mapped[list["WeightLog"]] = relationship(cascade="all, delete-orphan")
-    favorites: Mapped[list["Favorite"]] = relationship(cascade="all, delete-orphan")
+    custom_foods: Mapped[list[CustomFood]] = relationship(cascade="all, delete-orphan")
+    weight_logs: Mapped[list[WeightLog]] = relationship(cascade="all, delete-orphan")
+    favorites: Mapped[list[Favorite]] = relationship(cascade="all, delete-orphan")
 
     # Flask-Login dùng is_active để chặn tài khoản bị vô hiệu hóa
     @property
@@ -173,10 +184,10 @@ class Food(NutritionMixin, db.Model):
     updated_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow, onupdate=utcnow)
 
     category_ref: Mapped[Category] = relationship(lazy="joined")
-    notes: Mapped[list["FoodNote"]] = relationship(order_by="FoodNote.position", lazy="selectin",
+    notes: Mapped[list[FoodNote]] = relationship(order_by="FoodNote.position", lazy="selectin",
                                                    cascade="all, delete-orphan")
     tag_objs: Mapped[list[Tag]] = relationship(secondary=food_tags, lazy="selectin")
-    ingredients: Mapped[list["FoodIngredient"]] = relationship(order_by="FoodIngredient.position", lazy="selectin",
+    ingredients: Mapped[list[FoodIngredient]] = relationship(order_by="FoodIngredient.position", lazy="selectin",
                                                                cascade="all, delete-orphan")
 
     # Giữ nguyên giao diện cũ để template và API không phải thay đổi
@@ -265,7 +276,7 @@ class Article(db.Model):
     @property
     def html(self) -> Markup:
         # Nội dung do biên tập viên soạn, không phải dữ liệu người dùng gửi lên
-        return Markup(_render_markdown(self.body_md))
+        return Markup(_render_markdown(self.body_md))  # noqa: S704 - chỉ admin được sửa bài viết
 
     @property
     def date_vi(self) -> str:
@@ -299,16 +310,16 @@ class DiaryEntry(db.Model):
 
     user: Mapped[User] = relationship(back_populates="diary_entries")
     food: Mapped[Food | None] = relationship(lazy="joined")
-    custom_food: Mapped["CustomFood | None"] = relationship(lazy="joined")
+    custom_food: Mapped[CustomFood | None] = relationship(lazy="joined")
 
     @classmethod
-    def from_food(cls, user: User, food: Food, day: date, meal: str, servings: float) -> "DiaryEntry":
+    def from_food(cls, user: User, food: Food, day: date, meal: str, servings: float) -> DiaryEntry:
         return cls(user=user, food=food, entry_date=day, meal=meal, servings=servings, name=food.name_vi,
                    serving_label=food.serving, kcal=food.calories, carb=food.carbohydrate,
                    protein=food.protein, fat=food.lipid)
 
     @classmethod
-    def from_custom(cls, user: User, item: "CustomFood", day: date, meal: str, servings: float) -> "DiaryEntry":
+    def from_custom(cls, user: User, item: CustomFood, day: date, meal: str, servings: float) -> DiaryEntry:
         return cls(user=user, custom_food=item, entry_date=day, meal=meal, servings=servings, name=item.name,
                    serving_label=item.serving, kcal=item.calories, carb=item.carbohydrate,
                    protein=item.protein, fat=item.lipid)

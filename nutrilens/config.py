@@ -71,10 +71,19 @@ class Config:
     MAIL_SENDER = os.environ.get("MAIL_SENDER", "NutriLens <no-reply@nutrilens.local>")
 
 
+    # ── Vận hành ──
+    ENVIRONMENT = os.environ.get("ENVIRONMENT", "development")
+    TRUST_PROXY = _bool("TRUST_PROXY")                      # Bật khi chạy sau Nginx/Caddy
+    LOG_DIR = os.environ.get("LOG_DIR", str(PROJECT_DIR / "logs"))
+    SENTRY_DSN = os.environ.get("SENTRY_DSN", "")
+    BACKUP_DIR = os.environ.get("BACKUP_DIR", str(PROJECT_DIR / "backups"))
+    BACKUP_KEEP = int(os.environ.get("BACKUP_KEEP", 14))
+
+
 class TestConfig(Config):
     TESTING = True
     RATELIMIT_ENABLED = False
-    SECRET_KEY = "test-secret"
+    SECRET_KEY = "test-secret"  # noqa: S105 - chỉ dùng khi chạy test
     PRELOAD_MODEL = False
     SQLALCHEMY_DATABASE_URI = "sqlite://"
     # Một kết nối dùng chung để CSDL trong bộ nhớ không bị mất giữa các truy vấn

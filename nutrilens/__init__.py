@@ -10,7 +10,7 @@ from flask import Flask, jsonify, render_template, request
 from sqlalchemy.exc import OperationalError
 from werkzeug.exceptions import HTTPException, ServiceUnavailable
 
-from . import cli, security
+from . import cli, ops, security
 from .catalog import ArticleStore, Catalog
 from .config import Config
 from .extensions import db, limiter, login_manager, migrate
@@ -50,6 +50,8 @@ def create_app(config_object=Config, predictor=None) -> Flask:
     app.register_blueprint(auth_bp)
     app.register_blueprint(api_bp, url_prefix="/api")
     app.register_blueprint(admin_bp, url_prefix="/quan-tri")
+    app.register_blueprint(ops.bp)
+    ops.setup(app)
     cli.register(app)
 
     @app.context_processor
@@ -136,5 +138,5 @@ def _schedule_preload(app: Flask) -> None:
 def _safe_preload(predictor: Predictor):
     try:
         predictor.load()
-    except Exception:  # noqa: BLE001 - lỗi đã được ghi log trong predictor
-        pass
+    except Exception:  # noqa: BLE001 - chi tiết lỗi đã được ghi log trong predictor
+        logging.getLogger(__name__).debug("Model preload failed", exc_info=True)
