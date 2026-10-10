@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import csv
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -61,6 +62,7 @@ def load(base: Path, wanted: set[int]) -> dict[int, dict]:
 
 
 def main() -> None:
+    sys.stdout.reconfigure(encoding="utf-8")
     if len(sys.argv) != 2:
         sys.exit(__doc__)
     spec = {k: v for k, v in json.loads(SPEC.read_text(encoding="utf-8")).items() if not k.startswith("_")}
@@ -89,8 +91,10 @@ def main() -> None:
         per_serving = {k: round(v, 1) if k != "sodium" else round(v) for k, v in totals.items()}
         per_serving["calories"] = round(totals["calories"])
         method = "trực tiếp từ" if len(dish["items"]) == 1 else "tính theo công thức từ"
+        # Nhãn khẩu phần luôn khớp tổng khối lượng thành phần, ví dụ "1 ổ (~203 g)"
+        serving = re.sub(r"~\d+ g", f"~{round(grams)} g", dish["serving"])
         out[slug] = {
-            "serving": dish["serving"],
+            "serving": serving,
             "serving_grams": round(grams),
             "nutrition": per_serving,
             "per100": {k: round(v * 100 / grams, 1) for k, v in totals.items()},

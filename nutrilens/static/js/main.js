@@ -52,6 +52,15 @@
   const DEFAULT_TARGET = { calories: 2000, protein: 75, carb: 250, fat: 67 };
   const foodsBySlug = () => Object.fromEntries((window.NL_FOODS || []).map((f) => [f.slug, f]));
 
+  // Đổi lượng nhập (số khẩu phần, hoặc {grams}) sang số khẩu phần
+  function toServings(amount, food) {
+    if (amount && typeof amount === "object" && amount.grams) {
+      if (!food || !food.serving_grams) throw new Error("Món này chưa có khối lượng khẩu phần nên không nhập theo gram được.");
+      return Math.max(0.25, Math.round((amount.grams / food.serving_grams) * 100) / 100);
+    }
+    return Math.min(20, Math.max(0.25, Number(amount) || 1));
+  }
+
   const localDiary = {
     _all() { return store.get(DIARY_KEY, {}); },
     _save(date, items) {
@@ -64,17 +73,21 @@
       const foods = foodsBySlug();
       return this._raw(date).filter((it) => foods[it.slug]).map((it) => {
         const f = foods[it.slug], n = f.nutrition;
-        return { id: it.id, slug: f.slug, name: f.name_vi, emoji: f.emoji, image: f.image, serving: f.serving, meal: it.meal,
+        return { id: it.id, slug: f.slug, name: f.name_vi, emoji: f.emoji, image: f.image, serving: f.serving,
+                 serving_grams: f.serving_grams, meal: it.meal,
                  servings: it.qty, kcal: n.calories, carb: n.carbohydrate, protein: n.protein, fat: n.lipid };
       });
     },
-    async add(slug, meal, servings, date) {
+    async add(ref, meal, amount, date) {
+      const slug = typeof ref === "string" ? ref : ref.slug;
+      if (!slug) throw new Error("Món tự thêm chỉ dùng được khi đã đăng nhập.");
       const items = this._raw(date);
-      items.push({ id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6), slug, meal, qty: Number(servings) || 1 });
+      items.push({ id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6), slug, meal,
+                   qty: toServings(amount, foodsBySlug()[slug]) });
       this._save(date, items);
     },
-    async update(id, servings, date) {
-      this._save(date, this._raw(date).map((it) => (it.id === id ? { ...it, qty: servings } : it)));
+    async update(id, amount, date) {
+      this._save(date, this._raw(date).map((it) => (it.id === id ? { ...it, qty: toServings(amount, foodsBySlug()[it.slug]) } : it)));
     },
     async remove(id, date) { this._save(date, this._raw(date).filter((it) => it.id !== id)); },
     async clear(date) { this._save(date, []); },
@@ -97,8 +110,16 @@
 
   const serverDiary = {
     async day(date) { return (await api("GET", `/api/diary?date=${date}`)).entries; },
-    async add(slug, meal, servings, date) { await api("POST", "/api/diary", { slug, meal, servings, date }); },
-    async update(id, servings) { await api("PATCH", `/api/diary/${id}`, { servings }); },
+    async add(ref, meal, amount, date) {
+      const body = { meal, date, ...(typeof ref === "string" ? { slug: ref } : ref) };
+      if (amount && typeof amount === "object" && amount.grams) body.grams = amount.grams;
+      else body.servings = Number(amount) || 1;
+      await api("POST", "/api/diary", body);
+    },
+    async update(id, amount) {
+      const body = amount && typeof amount === "object" && amount.grams ? { grams: amount.grams } : { servings: Number(amount) || 1 };
+      await api("PATCH", `/api/diary/${id}`, body);
+    },
     async remove(id) { await api("DELETE", `/api/diary/${id}`); },
     async clear(date) { await api("DELETE", `/api/diary?date=${date}`); },
     async week(end, days = 7) { return (await api("GET", `/api/diary/summary?end=${fmt.isoDate(end)}&days=${days}`)).days; },
@@ -231,4 +252,20 @@
         .catch(() => { /* thử lại ở lần tải trang sau */ });
     }
   }
+
+  // ── Nút yêu thích (trang chi tiết món) ──
+  document.querySelectorAll("[data-favorite]").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const on = btn.getAttribute("aria-pressed") !== "true";
+      btn.disabled = true;
+      try {
+        await api(on ? "POST" : "DELETE", `/api/favorites/${encodeURIComponent(btn.dataset.favorite)}`);
+        btn.setAttribute("aria-pressed", String(on));
+        btn.classList.toggle("is-fav", on);
+        btn.querySelector("span").textContent = on ? "Đã yêu thích" : "Yêu thích";
+        toast(on ? "Đã thêm vào món yêu thích." : "Đã bỏ khỏi món yêu thích.");
+      } catch (err) { toast(err.message, "error"); }
+      btn.disabled = false;
+    });
+  });
 })();

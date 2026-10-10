@@ -1,9 +1,9 @@
 /* Nhật ký ăn uống: lưu trên MySQL khi đã đăng nhập, trên trình duyệt khi là khách */
-(function () {
+(async function () {
   "use strict";
   const root = document.querySelector("[data-diary]");
   if (!root) return;
-  const { fmt, diary, toast, escapeHtml, foodThumb } = window.NL;
+  const { fmt, diary, toast, escapeHtml, foodThumb, api, isAuthed } = window.NL;
 
   const FOODS = Object.fromEntries((window.NL_FOODS || []).map((f) => [f.slug, f]));
   const MEALS = [
@@ -18,8 +18,17 @@
   let entries = [];
   let renderToken = 0;
 
-  const options = Object.values(FOODS)
-    .map((f) => `<option value="${f.slug}">${f.emoji} ${escapeHtml(f.name_vi)} · ${fmt.num(f.nutrition.calories)} kcal</option>`).join("");
+  let customFoods = [];
+  const optionLabel = (name, kcal) => `${escapeHtml(name)} · ${fmt.num(kcal)} kcal`;
+  function buildOptions() {
+    const all = Object.values(FOODS);
+    const favs = all.filter((f) => f.favorite);
+    const group = (label, html) => (html ? `<optgroup label="${label}">${html}</optgroup>` : "");
+    return group("Món yêu thích", favs.map((f) => `<option value="f:${f.slug}">${optionLabel(f.name_vi, f.nutrition.calories)}</option>`).join(""))
+      + group("Món tự thêm", customFoods.map((c) => `<option value="c:${c.id}">${optionLabel(c.name, c.nutrition.calories)}</option>`).join(""))
+      + group("Thư viện món ăn", all.map((f) => `<option value="f:${f.slug}">${optionLabel(f.name_vi, f.nutrition.calories)}</option>`).join(""));
+  }
+  let options = buildOptions();
 
   const iso = () => fmt.isoDate(current);
 
@@ -62,9 +71,9 @@
       const kcal = list.reduce((s, it) => s + it.kcal * it.servings, 0);
       const rows = list.map((it) => `<li>
           ${foodThumb(it)}
-          <div class="info"><strong>${escapeHtml(it.name)}</strong><span>${escapeHtml(it.serving)} · ${fmt.num(it.kcal * it.servings)} kcal</span></div>
+          <div class="info"><strong>${escapeHtml(it.name)}</strong><span>${fmt.num(it.servings, 2)} × ${escapeHtml(it.serving)}${it.serving_grams && it.servings !== 1 ? ` · ~${fmt.num(it.serving_grams * it.servings)} g` : ""} · ${fmt.num(it.kcal * it.servings)} kcal</span></div>
           <label class="sr-only" for="q-${it.id}">Số khẩu phần</label>
-          <input class="input qty" id="q-${it.id}" type="number" min="0.25" max="20" step="0.25" value="${it.servings}" data-qty="${it.id}">
+          <input class="input qty" id="q-${it.id}" type="number" min="0.25" max="20" step="0.25" value="${it.servings}" data-qty="${it.id}" title="Số khẩu phần">
           <button class="icon-btn" type="button" data-remove="${it.id}" aria-label="Xóa ${escapeHtml(it.name)}" style="width:34px; height:34px">✕</button>
         </li>`).join("");
       return `<div class="meal card">
@@ -73,8 +82,10 @@
         <form class="meal-add" data-add="${key}">
           <label class="sr-only" for="add-${key}">Chọn món cho ${label.toLowerCase()}</label>
           <select class="input" id="add-${key}" name="slug">${options}</select>
-          <label class="sr-only" for="qty-${key}">Số khẩu phần</label>
-          <input class="input qty" id="qty-${key}" name="qty" type="number" min="0.25" max="20" step="0.25" value="1">
+          <label class="sr-only" for="qty-${key}">Lượng</label>
+          <input class="input qty" id="qty-${key}" name="qty" type="number" min="0.25" step="any" value="1">
+          <label class="sr-only" for="unit-${key}">Đơn vị</label>
+          <select class="input unit" id="unit-${key}" name="unit"><option value="phan">phần</option><option value="g">gram</option></select>
           <button class="btn btn-primary btn-sm" type="submit">+ Thêm</button>
         </form>
       </div>`;
@@ -127,8 +138,11 @@
     const form = e.target.closest("[data-add]");
     if (!form) return;
     e.preventDefault();
-    const qty = Math.min(20, Math.max(0.25, Number(form.elements.qty.value) || 1));
-    run(() => diary.add(form.elements.slug.value, form.dataset.add, qty, iso()));
+    const raw = Number(form.elements.qty.value) || 1;
+    const amount = form.elements.unit.value === "g" ? { grams: raw } : Math.min(20, Math.max(0.25, raw));
+    const [kind, id] = form.elements.slug.value.split(":");
+    const ref = kind === "c" ? { custom_id: Number(id) } : id;
+    run(() => diary.add(ref, form.dataset.add, amount, iso()));
   });
   mealsBox.addEventListener("click", (e) => {
     const btn = e.target.closest("[data-remove]");
@@ -150,8 +164,32 @@
   });
   document.addEventListener("nl:synced", render);
 
+  const dialog = document.querySelector("[data-custom-dialog]");
+  async function loadCustomFoods() {
+    if (!isAuthed) return;
+    try { customFoods = (await api("GET", "/api/custom-foods")).items; } catch (e) { customFoods = []; }
+    options = buildOptions();
+  }
+  if (dialog) {
+    const form = dialog.querySelector("[data-custom-form]");
+    const err = dialog.querySelector("[data-custom-error]");
+    document.querySelector("[data-custom-open]").addEventListener("click", () => { err.hidden = true; form.reset(); dialog.showModal(); });
+    dialog.querySelector("[data-custom-cancel]").addEventListener("click", () => dialog.close());
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      try {
+        const item = await api("POST", "/api/custom-foods", Object.fromEntries(new FormData(form)));
+        dialog.close();
+        await loadCustomFoods();
+        await render();
+        toast(`Đã thêm “${item.name}”. Chọn món trong mục “Món tự thêm” để ghi vào bữa ăn.`);
+      } catch (ex) { err.textContent = ex.message; err.hidden = false; }
+    });
+  }
+
   // Thêm nhanh từ trang chi tiết món: /nhat-ky?them=pho
   const quick = new URLSearchParams(location.search).get("them");
+  await loadCustomFoods();
   history.replaceState(null, "", location.pathname);
   if (quick && FOODS[quick]) {
     run(async () => {

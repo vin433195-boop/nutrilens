@@ -112,6 +112,7 @@ class NutritionMixin:
             "category": self.category,
             "cuisine": self.cuisine,
             "serving": self.serving,
+            "serving_grams": getattr(self, "serving_grams", None),
             "nutrition": {
                 "calories": self.calories,
                 "carbohydrate": self.carbohydrate,

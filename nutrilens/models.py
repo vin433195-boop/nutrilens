@@ -10,7 +10,7 @@ import markdown
 from flask_login import UserMixin
 from markupsafe import Markup
 from sqlalchemy import (Boolean, Column, Date, DateTime, Float, ForeignKey, Index, Integer,
-                        String, Table, Text)
+                        String, Table, Text, UniqueConstraint)
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -47,6 +47,9 @@ class User(UserMixin, db.Model):
                                                              cascade="all, delete-orphan")
     recognitions: Mapped[list["Recognition"]] = relationship(back_populates="user",
                                                              cascade="all, delete-orphan")
+    custom_foods: Mapped[list["CustomFood"]] = relationship(cascade="all, delete-orphan")
+    weight_logs: Mapped[list["WeightLog"]] = relationship(cascade="all, delete-orphan")
+    favorites: Mapped[list["Favorite"]] = relationship(cascade="all, delete-orphan")
 
     # Flask-Login dùng is_active để chặn tài khoản bị vô hiệu hóa
     @property
@@ -281,7 +284,10 @@ class DiaryEntry(db.Model):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"))
-    food_id: Mapped[int] = mapped_column(ForeignKey("foods.id"))
+    food_id: Mapped[int | None] = mapped_column(ForeignKey("foods.id"))
+    custom_food_id: Mapped[int | None] = mapped_column(ForeignKey("custom_foods.id", ondelete="SET NULL"))
+    name: Mapped[str | None] = mapped_column(String(120))      # Tên món tại thời điểm ghi
+    serving_label: Mapped[str | None] = mapped_column(String(120))
     entry_date: Mapped[date] = mapped_column(Date)
     meal: Mapped[str] = mapped_column(String(16))
     servings: Mapped[float] = mapped_column(Float, default=1)
@@ -292,20 +298,77 @@ class DiaryEntry(db.Model):
     created_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)
 
     user: Mapped[User] = relationship(back_populates="diary_entries")
-    food: Mapped[Food] = relationship(lazy="joined")
+    food: Mapped[Food | None] = relationship(lazy="joined")
+    custom_food: Mapped["CustomFood | None"] = relationship(lazy="joined")
 
     @classmethod
     def from_food(cls, user: User, food: Food, day: date, meal: str, servings: float) -> "DiaryEntry":
-        return cls(user=user, food=food, entry_date=day, meal=meal, servings=servings,
-                   kcal=food.calories, carb=food.carbohydrate, protein=food.protein, fat=food.lipid)
+        return cls(user=user, food=food, entry_date=day, meal=meal, servings=servings, name=food.name_vi,
+                   serving_label=food.serving, kcal=food.calories, carb=food.carbohydrate,
+                   protein=food.protein, fat=food.lipid)
+
+    @classmethod
+    def from_custom(cls, user: User, item: "CustomFood", day: date, meal: str, servings: float) -> "DiaryEntry":
+        return cls(user=user, custom_food=item, entry_date=day, meal=meal, servings=servings, name=item.name,
+                   serving_label=item.serving, kcal=item.calories, carb=item.carbohydrate,
+                   protein=item.protein, fat=item.lipid)
 
     def to_dict(self) -> dict:
+        f = self.food
         return {
-            "id": self.id, "slug": self.food.slug, "name": self.food.name_vi, "emoji": self.food.emoji,
-            "image": f"/static/{self.food.image_path}" if self.food.image_path else None,
-            "serving": self.food.serving, "meal": self.meal, "servings": self.servings,
+            "id": self.id, "slug": f.slug if f else None, "custom_id": self.custom_food_id,
+            "name": self.name or (f.name_vi if f else "Món đã xóa"), "emoji": f.emoji if f else "🍽️",
+            "image": f"/static/{f.image_path}" if f and f.image_path else None,
+            "serving": self.serving_label or (f.serving if f else "1 khẩu phần"),
+            "serving_grams": (f.serving_grams if f else self.custom_food.serving_grams if self.custom_food else None),
+            "meal": self.meal, "servings": self.servings,
             "kcal": self.kcal, "carb": self.carb, "protein": self.protein, "fat": self.fat,
         }
+
+
+class CustomFood(db.Model):
+    """Món người dùng tự thêm (không có trong thư viện), chỉ người đó thấy."""
+    __tablename__ = "custom_foods"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
+    name: Mapped[str] = mapped_column(String(120))
+    serving: Mapped[str] = mapped_column(String(120), default="1 khẩu phần")
+    serving_grams: Mapped[float | None] = mapped_column(Float)
+    calories: Mapped[float] = mapped_column(Float)
+    carbohydrate: Mapped[float] = mapped_column(Float, default=0)
+    protein: Mapped[float] = mapped_column(Float, default=0)
+    lipid: Mapped[float] = mapped_column(Float, default=0)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)
+
+    def to_dict(self) -> dict:
+        return {"id": self.id, "name": self.name, "serving": self.serving, "serving_grams": self.serving_grams,
+                "nutrition": {"calories": self.calories, "carbohydrate": self.carbohydrate,
+                              "protein": self.protein, "lipid": self.lipid}}
+
+
+class WeightLog(db.Model):
+    """Cân nặng theo ngày (mỗi ngày tối đa một bản ghi)."""
+    __tablename__ = "weight_logs"
+    __table_args__ = (UniqueConstraint("user_id", "log_date", name="uq_weight_user_date"),)
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
+    log_date: Mapped[date] = mapped_column(Date)
+    weight_kg: Mapped[float] = mapped_column(Float)
+
+    def to_dict(self) -> dict:
+        return {"id": self.id, "date": self.log_date.isoformat(), "weight": self.weight_kg}
+
+
+class Favorite(db.Model):
+    __tablename__ = "favorites"
+
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), primary_key=True)
+    food_id: Mapped[int] = mapped_column(ForeignKey("foods.id", ondelete="CASCADE"), primary_key=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)
+
+    food: Mapped[Food] = relationship(lazy="joined")
 
 
 class Recognition(db.Model):

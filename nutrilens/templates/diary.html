@@ -29,9 +29,38 @@
       </div>
       <div style="display:flex; gap:8px; flex-wrap:wrap">
         <a class="btn btn-outline btn-sm" href="{{ url_for('main.recognize') }}">{{ icon("camera", 16) }} Nhận dạng ảnh</a>
+        {% if current_user.is_authenticated %}<button class="btn btn-outline btn-sm" type="button" data-custom-open>{{ icon("plus", 16) }} Món tự thêm</button>
+        <a class="btn btn-outline btn-sm" href="{{ url_for('main.report') }}">{{ icon("activity", 16) }} Báo cáo</a>{% endif %}
         <button class="btn btn-ghost btn-sm" type="button" data-clear-day>{{ icon("trash", 16) }} Xóa ngày này</button>
       </div>
     </div>
+
+    {% if current_user.is_authenticated %}
+    <dialog class="modal" data-custom-dialog aria-labelledby="custom-title">
+      <form method="dialog" class="modal-body" data-custom-form novalidate>
+        <h2 id="custom-title" class="card-title">{{ icon("plus") }} Thêm món của riêng bạn</h2>
+        <p class="muted small" style="margin-top:-8px">Dùng cho món chưa có trong thư viện. Xem số liệu trên bao bì hoặc ước tính theo khẩu phần.</p>
+        <div class="field"><label for="cf-name">Tên món *</label><input class="input" id="cf-name" name="name" maxlength="120" required></div>
+        <div class="form-row">
+          <div class="field"><label for="cf-serving">Khẩu phần</label><input class="input" id="cf-serving" name="serving" placeholder="1 hộp, 1 ly..." maxlength="120"></div>
+          <div class="field"><label for="cf-grams">Khối lượng (g)</label><input class="input" id="cf-grams" name="serving_grams" type="number" min="1" step="any"></div>
+        </div>
+        <div class="form-row">
+          <div class="field"><label for="cf-kcal">Calo (kcal) *</label><input class="input" id="cf-kcal" name="calories" type="number" min="0" step="any" required></div>
+          <div class="field"><label for="cf-protein">Protein (g)</label><input class="input" id="cf-protein" name="protein" type="number" min="0" step="any"></div>
+        </div>
+        <div class="form-row">
+          <div class="field"><label for="cf-carb">Carbohydrate (g)</label><input class="input" id="cf-carb" name="carbohydrate" type="number" min="0" step="any"></div>
+          <div class="field"><label for="cf-fat">Chất béo (g)</label><input class="input" id="cf-fat" name="lipid" type="number" min="0" step="any"></div>
+        </div>
+        <p class="field-error" data-custom-error hidden></p>
+        <div class="modal-actions">
+          <button class="btn btn-ghost" type="button" data-custom-cancel>Hủy</button>
+          <button class="btn btn-primary" type="submit" value="save">{{ icon("check", 18) }} Lưu món</button>
+        </div>
+      </form>
+    </dialog>
+    {% endif %}
 
     <div class="diary-layout">
       <div data-meals></div>

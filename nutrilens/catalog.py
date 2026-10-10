@@ -78,9 +78,12 @@ class Catalog:
     def invalidate(self) -> None:
         self._count_cache = None
 
-    def browse(self, q: str = "", category: str = "", sort: str = "ten", page: int = 1, per_page: int = 12) -> ListPage:
+    def browse(self, q: str = "", category: str = "", sort: str = "ten", page: int = 1, per_page: int = 12,
+               only_ids: set[int] | None = None) -> ListPage:
         """Lọc, sắp xếp và phân trang cho trang thư viện."""
         foods = self.search(q) if q else self.all()
+        if only_ids is not None:
+            foods = [f for f in foods if f.id in only_ids]
         if category:
             foods = [f for f in foods if f.category == category]
         label, key, reverse = SORTS.get(sort, SORTS["ten"])

@@ -84,7 +84,10 @@
           <div><strong>{{ stats.entries }}</strong><span>món đã ghi</span></div>
           <div><strong>{{ stats.recognitions }}</strong><span>lần nhận dạng</span></div>
         </div>
-        <a class="btn btn-outline btn-block" style="margin-top:16px" href="{{ url_for('main.diary') }}">{{ icon("clipboard", 18) }} Mở nhật ký</a>
+        <div class="stack" style="margin-top:16px">
+          <a class="btn btn-outline btn-block" href="{{ url_for('main.diary') }}">{{ icon("clipboard", 18) }} Mở nhật ký</a>
+          <a class="btn btn-outline btn-block" href="{{ url_for('main.report') }}">{{ icon("activity", 18) }} Báo cáo &amp; cân nặng</a>
+        </div>
       </div>
       <div class="card">
         <h2 class="card-title">{{ icon("target") }} Mục tiêu dinh dưỡng</h2>
@@ -100,6 +103,14 @@
           <p class="muted small">Bạn chưa đặt mục tiêu. Mặc định nhật ký dùng 2.000 kcal mỗi ngày.</p>
         {% endif %}
         <a class="btn btn-accent btn-block" style="margin-top:16px" href="{{ url_for('main.calculator') }}">{{ icon("calculator", 18) }} Tính lại mục tiêu</a>
+      </div>
+      <div class="card">
+        <h2 class="card-title">{{ icon("download") }} Dữ liệu của tôi</h2>
+        <p class="muted small">Tải về toàn bộ dữ liệu NutriLens lưu về bạn, hoặc nhật ký ăn uống dạng bảng tính.</p>
+        <div class="stack">
+          <a class="btn btn-outline btn-block" href="{{ url_for('auth.export_json') }}">{{ icon("download", 18) }} Toàn bộ dữ liệu (JSON)</a>
+          <a class="btn btn-outline btn-block" href="{{ url_for('auth.export_diary_csv') }}">{{ icon("download", 18) }} Nhật ký (CSV cho Excel)</a>
+        </div>
       </div>
       <div class="card">
         <h2 class="card-title">{{ icon("shield") }} Bảo mật</h2>

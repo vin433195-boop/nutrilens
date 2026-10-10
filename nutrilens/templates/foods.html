@@ -17,6 +17,7 @@
   <div class="container">
     <form class="toolbar" method="get" action="{{ url_for('main.foods') }}" data-food-filter>
       {% if active_category %}<input type="hidden" name="danh-muc" value="{{ active_category }}">{% endif %}
+      {% if only_fav %}<input type="hidden" name="yeu-thich" value="1">{% endif %}
       <div class="search-box">
         {{ icon("search", 18) }}
         <label class="sr-only" for="food-search">Tìm món ăn</label>
@@ -33,7 +34,10 @@
 
     {% set base_args = {"q": query or none, "sap-xep": sort if sort != "ten" else none} %}
     <nav class="chips" aria-label="Lọc theo danh mục" style="margin-bottom: 24px">
-      <a class="chip {{ 'active' if not active_category }}" href="{{ url_for('main.foods', **base_args) }}" {% if not active_category %}aria-current="true"{% endif %}>Tất cả</a>
+      <a class="chip {{ 'active' if not active_category and not only_fav }}" href="{{ url_for('main.foods', **base_args) }}" {% if not active_category and not only_fav %}aria-current="true"{% endif %}>Tất cả</a>
+      {% if current_user.is_authenticated %}
+        <a class="chip {{ 'active' if only_fav }}" href="{{ url_for('main.foods', **dict(base_args, **{'yeu-thich': '1'})) }}" {% if only_fav %}aria-current="true"{% endif %}>{{ icon("heart", 14) }} Yêu thích</a>
+      {% endif %}
       {% for c in categories %}
         <a class="chip {{ 'active' if active_category == c }}" href="{{ url_for('main.foods', **dict(base_args, **{'danh-muc': c})) }}" {% if active_category == c %}aria-current="true"{% endif %}>{{ c }}</a>
       {% endfor %}
@@ -48,7 +52,7 @@
     {% else %}
       <div class="empty">
         <div class="big">🔍</div>
-        <h3>Không tìm thấy món phù hợp</h3>
+        <h3>{{ "Bạn chưa có món yêu thích nào" if only_fav and not query else "Không tìm thấy món phù hợp" }}</h3>
         <p>Thử từ khóa khác, <a href="{{ url_for('main.foods') }}">xem tất cả món</a> hoặc <a href="{{ url_for('main.contact') }}">đề xuất thêm món mới</a>.</p>
       </div>
     {% endif %}

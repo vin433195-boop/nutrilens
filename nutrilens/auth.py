@@ -4,7 +4,11 @@ from __future__ import annotations
 
 import re
 
-from flask import (Blueprint, current_app, flash, jsonify, redirect, render_template, request,
+import csv
+import io
+import json
+
+from flask import (Blueprint, Response, current_app, flash, jsonify, redirect, render_template, request,
                    session, url_for)
 from flask_login import current_user, login_required, login_user, logout_user
 from itsdangerous import BadSignature, SignatureExpired, URLSafeTimedSerializer
@@ -15,7 +19,7 @@ from flask_limiter.util import get_remote_address
 
 from .extensions import db, limiter, login_manager
 from .mail import mail_configured, send_template
-from .models import DiaryEntry, Recognition, User, utcnow
+from .models import ContactMessage, DiaryEntry, Recognition, User, utcnow
 
 bp = Blueprint("auth", __name__)
 
@@ -350,3 +354,45 @@ def account():
     }
     status = 422 if errors else 200
     return render_template("account.html", errors=errors, stats=stats, action=action), status
+
+
+# ── Tải về dữ liệu cá nhân (quyền của chủ thể dữ liệu theo Nghị định 13/2023/NĐ-CP) ──
+@bp.route("/tai-khoan/xuat-du-lieu.json")
+@login_required
+def export_json():
+    u: User = current_user
+    p = u.profile
+    data = {
+        "exported_at": utcnow().isoformat() + "Z",
+        "account": {"email": u.email, "name": u.name, "created_at": u.created_at.isoformat(),
+                    "email_verified_at": u.email_verified_at.isoformat() if u.email_verified_at else None},
+        "profile": ({"body": p.body_dict(), "target": p.target_dict()} if p else None),
+        "diary": [dict(e.to_dict(), date=e.entry_date.isoformat())
+                  for e in sorted(u.diary_entries, key=lambda e: (e.entry_date, e.id))],
+        "weights": [w.to_dict() for w in sorted(u.weight_logs, key=lambda w: w.log_date)],
+        "custom_foods": [c.to_dict() for c in u.custom_foods],
+        "favorites": [f.food.slug for f in u.favorites],
+        "recognitions": [r.to_dict() for r in u.recognitions],
+        "contact_messages": [{"topic": m.topic, "body": m.body, "created_at": m.created_at.isoformat()}
+                             for m in db.session.scalars(select(ContactMessage).where(ContactMessage.user_id == u.id))],
+    }
+    body = json.dumps(data, ensure_ascii=False, indent=2)
+    return Response(body, mimetype="application/json",
+                    headers={"Content-Disposition": "attachment; filename=nutrilens-du-lieu-cua-toi.json"})
+
+
+@bp.route("/tai-khoan/nhat-ky.csv")
+@login_required
+def export_diary_csv():
+    buf = io.StringIO()
+    w = csv.writer(buf)
+    w.writerow(["Ngày", "Bữa", "Món", "Khẩu phần", "Số khẩu phần", "Calo", "Protein (g)", "Carb (g)", "Chất béo (g)"])
+    meals = {"breakfast": "Sáng", "lunch": "Trưa", "dinner": "Tối", "snack": "Phụ"}
+    for e in sorted(current_user.diary_entries, key=lambda e: (e.entry_date, e.id)):
+        d = e.to_dict()
+        w.writerow([e.entry_date.isoformat(), meals.get(e.meal, e.meal), d["name"], d["serving"], e.servings,
+                    round(e.kcal * e.servings), round(e.protein * e.servings, 1),
+                    round(e.carb * e.servings, 1), round(e.fat * e.servings, 1)])
+    # BOM để Excel mở đúng tiếng Việt
+    return Response("\ufeff" + buf.getvalue(), mimetype="text/csv",
+                    headers={"Content-Disposition": "attachment; filename=nutrilens-nhat-ky.csv"})

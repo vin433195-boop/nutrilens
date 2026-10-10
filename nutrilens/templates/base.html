@@ -73,6 +73,8 @@
               {% if current_user.is_admin %}<a href="{{ url_for('admin.dashboard') }}">{{ icon("shield", 16) }} Trang quản trị</a>{% endif %}
               <a href="{{ url_for('auth.account') }}">{{ icon("user", 16) }} Tài khoản</a>
               <a href="{{ url_for('main.diary') }}">{{ icon("clipboard", 16) }} Nhật ký của tôi</a>
+              <a href="{{ url_for('main.report') }}">{{ icon("activity", 16) }} Báo cáo &amp; cân nặng</a>
+              <a href="{{ url_for('main.foods', **{'yeu-thich': '1'}) }}">{{ icon("heart", 16) }} Món yêu thích</a>
               <a href="{{ url_for('main.recognize') }}">{{ icon("camera", 16) }} Nhận dạng món ăn</a>
               <form method="post" action="{{ url_for('auth.logout') }}">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">

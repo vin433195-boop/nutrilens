@@ -4,12 +4,12 @@ import re
 
 from flask import (Blueprint, Response, abort, current_app, flash, redirect,
                    render_template, request, url_for)
-from flask_login import current_user
+from flask_login import current_user, login_required
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 
 from .extensions import db, limiter
-from .models import ContactMessage, Subscriber
+from .models import ContactMessage, Favorite, Subscriber
 
 bp = Blueprint("main", __name__)
 
@@ -30,6 +30,12 @@ def all_foods_or_503():
     if len(foods) < 2:
         abort(503, description="Thư viện món ăn chưa có dữ liệu. Hãy chạy lệnh: flask --app app setup-db")
     return foods
+
+
+def favorite_ids() -> set[int]:
+    if not current_user.is_authenticated:
+        return set()
+    return set(db.session.scalars(select(Favorite.food_id).where(Favorite.user_id == current_user.id)))
 
 
 def user_profile_data():
@@ -57,9 +63,11 @@ def foods():
     q = request.args.get("q", "").strip()[:80]
     category = request.args.get("danh-muc", "")
     sort = request.args.get("sap-xep", "ten")
-    page = catalog().browse(q=q, category=category, sort=sort, page=request.args.get("trang", 1, type=int))
+    only_fav = request.args.get("yeu-thich") == "1" and current_user.is_authenticated
+    page = catalog().browse(q=q, category=category, sort=sort, page=request.args.get("trang", 1, type=int),
+                            only_ids=favorite_ids() if only_fav else None)
     return render_template("foods.html", page=page, categories=catalog().categories(), query=q,
-                           active_category=category, sort=sort, sorts=SORTS)
+                           active_category=category, sort=sort, sorts=SORTS, only_fav=only_fav)
 
 
 @bp.route("/mon-an/<slug>")
@@ -67,7 +75,8 @@ def food_detail(slug):
     food = catalog().get(slug)
     if food is None:
         abort(404, description="Không tìm thấy món ăn này.")
-    return render_template("food_detail.html", food=food, related=catalog().related(food))
+    return render_template("food_detail.html", food=food, related=catalog().related(food),
+                           is_favorite=food.id in favorite_ids())
 
 
 @bp.route("/so-sanh")
@@ -94,9 +103,17 @@ def calculator():
 
 @bp.route("/nhat-ky")
 def diary():
-    foods = sorted(catalog().all(), key=lambda f: f.name_vi)
-    return render_template("diary.html", foods_data=[f.to_dict() for f in foods],
+    from .catalog import fold
+    foods = sorted(catalog().all(), key=lambda f: fold(f.name_vi))
+    favs = favorite_ids()
+    return render_template("diary.html", foods_data=[dict(f.to_dict(), favorite=f.id in favs) for f in foods],
                            profile_data=user_profile_data())
+
+
+@bp.route("/bao-cao")
+@login_required
+def report():
+    return render_template("report.html")
 
 
 @bp.route("/kien-thuc")

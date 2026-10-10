@@ -60,6 +60,12 @@
         <div class="hero-actions">
           <a class="btn btn-primary" href="{{ url_for('main.diary', them=food.slug) }}">{{ icon("plus", 18) }} Thêm vào nhật ký</a>
           <a class="btn btn-outline" href="{{ url_for('main.compare', a=food.slug, b=related[0].slug) }}">{{ icon("scale", 18) }} So sánh với món khác</a>
+          {% if current_user.is_authenticated %}
+            <button class="btn btn-outline fav-btn {{ 'is-fav' if is_favorite }}" type="button" data-favorite="{{ food.slug }}" aria-pressed="{{ 'true' if is_favorite else 'false' }}">
+              {{ icon("heart", 18) }} <span>{{ "Đã yêu thích" if is_favorite else "Yêu thích" }}</span></button>
+          {% else %}
+            <a class="btn btn-outline fav-btn" href="{{ url_for('auth.login', next=request.path) }}" title="Đăng nhập để lưu món yêu thích">{{ icon("heart", 18) }} Yêu thích</a>
+          {% endif %}
         </div>
       </div>
     </div>

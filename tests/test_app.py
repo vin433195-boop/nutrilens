@@ -734,5 +734,109 @@ class AdminTests(AppTestCase):
         self.assertIn("pho,0.6,ramen", csv_text)
 
 
+
+# ════════════════════════════════════════════════════════════
+class UserFeatureTests(AppTestCase):
+    def setUp(self):
+        super().setUp()
+        self.user = self.make_user()
+        self.login()
+
+    def test_add_by_grams(self):
+        res = self.api("POST", "/api/diary", {"slug": "pho", "meal": "lunch", "grams": 275})
+        self.assertEqual(res.status_code, 201)
+        self.assertEqual(res.get_json()["servings"], 0.5)  # Một tô phở 550 g
+        res = self.api("PATCH", f"/api/diary/{res.get_json()['id']}", {"grams": 1100})
+        self.assertEqual(res.get_json()["servings"], 2)
+        self.assertEqual(self.api("POST", "/api/diary", {"slug": "pho", "meal": "lunch", "grams": 0}).status_code, 400)
+
+    def test_custom_food_flow(self):
+        res = self.api("POST", "/api/custom-foods", {"name": "Sữa chua nếp cẩm", "serving": "1 hũ", "serving_grams": "120",
+                                                     "calories": "180", "protein": "5", "carbohydrate": "30", "lipid": "4"})
+        self.assertEqual(res.status_code, 201)
+        cid = res.get_json()["id"]
+        self.assertEqual(len(self.client.get("/api/custom-foods").get_json()["items"]), 1)
+        res = self.api("POST", "/api/diary", {"custom_id": cid, "meal": "snack", "servings": 2})
+        self.assertEqual(res.status_code, 201)
+        self.assertEqual((res.get_json()["name"], res.get_json()["kcal"]), ("Sữa chua nếp cẩm", 180))
+        # Xóa món tự thêm: nhật ký đã ghi vẫn giữ tên và số liệu
+        self.api("DELETE", f"/api/custom-foods/{cid}")
+        entry = self.client.get("/api/diary").get_json()["entries"][0]
+        self.assertEqual((entry["name"], entry["kcal"]), ("Sữa chua nếp cẩm", 180))
+        self.assertEqual(self.api("POST", "/api/custom-foods", {"name": "X", "calories": 10}).status_code, 400)
+        self.assertEqual(self.api("POST", "/api/custom-foods", {"name": "Bánh", "calories": ""}).status_code, 400)
+
+    def test_cannot_use_other_users_custom_food(self):
+        from nutrilens.models import CustomFood
+        other = self.make_user(email="b@example.com")
+        item = CustomFood(user_id=other.id, name="Bí mật", calories=100)
+        db.session.add(item)
+        db.session.commit()
+        self.assertEqual(self.api("POST", "/api/diary", {"custom_id": item.id, "meal": "lunch"}).status_code, 400)
+        self.assertEqual(self.api("DELETE", f"/api/custom-foods/{item.id}").status_code, 404)
+
+    def test_weights(self):
+        yesterday = (date.today() - timedelta(days=1)).isoformat()
+        self.api("POST", "/api/weights", {"date": yesterday, "weight": "61.5"})
+        self.api("POST", "/api/weights", {"weight": "61"})
+        self.api("POST", "/api/weights", {"weight": "60.8"})  # Cùng ngày: cập nhật, không thêm mới
+        items = self.client.get("/api/weights").get_json()["items"]
+        self.assertEqual([w["weight"] for w in items], [61.5, 60.8])
+        self.assertEqual(self.client.get("/api/profile").get_json()["body"]["weight"], 60.8)
+        future = (date.today() + timedelta(days=2)).isoformat()
+        self.assertEqual(self.api("POST", "/api/weights", {"date": future, "weight": 60}).status_code, 400)
+        self.assertEqual(self.api("POST", "/api/weights", {"weight": 5}).status_code, 400)
+
+    def test_favorites(self):
+        self.assertEqual(self.api("POST", "/api/favorites/com_tam").status_code, 200)
+        self.api("POST", "/api/favorites/com_tam")  # Bấm hai lần không tạo trùng
+        self.assertEqual([f["slug"] for f in self.client.get("/api/favorites").get_json()["items"]], ["com_tam"])
+        html = self.client.get("/mon-an?yeu-thich=1").get_data(as_text=True)
+        self.assertIn("Cơm tấm sườn", html)
+        self.assertIn("Hiển thị 1–1 trong 1 món", html)
+        self.assertIn('aria-pressed="true"', self.client.get("/mon-an/com_tam").get_data(as_text=True))
+        self.api("DELETE", "/api/favorites/com_tam")
+        self.assertEqual(self.client.get("/api/favorites").get_json()["items"], [])
+
+    def test_report(self):
+        self.api("POST", "/api/diary", {"slug": "pho", "meal": "lunch"})
+        self.api("POST", "/api/diary", {"slug": "pho", "meal": "dinner"})
+        r = self.client.get("/api/report?days=7").get_json()
+        self.assertEqual(len(r["days"]), 7)
+        self.assertEqual(r["days"][-1]["kcal"], 848)
+        self.assertEqual(r["logged_days"], 1)
+        self.assertEqual(r["top_foods"][0], {"name": "Phở bò", "count": 2, "kcal": 848})
+        self.assertEqual(self.client.get("/bao-cao").status_code, 200)
+
+    def test_report_requires_login(self):
+        self.client.post("/dang-xuat", data={"csrf_token": self.csrf()})
+        self.assertEqual(self.client.get("/bao-cao").status_code, 302)
+        self.assertEqual(self.client.get("/api/report").status_code, 401)
+
+    def test_export(self):
+        self.api("POST", "/api/diary", {"slug": "banh_mi", "meal": "breakfast"})
+        self.api("POST", "/api/weights", {"weight": 60})
+        res = self.client.get("/tai-khoan/xuat-du-lieu.json")
+        self.assertIn("attachment", res.headers["Content-Disposition"])
+        data = res.get_json(force=True)
+        self.assertEqual(data["account"]["email"], "an@example.com")
+        self.assertEqual(data["diary"][0]["name"], "Bánh mì thịt")
+        self.assertEqual(data["weights"][0]["weight"], 60)
+        self.assertNotIn("password", res.get_data(as_text=True).lower())
+        csv_text = self.client.get("/tai-khoan/nhat-ky.csv").get_data(as_text=True)
+        self.assertIn("Bánh mì thịt", csv_text)
+        self.assertTrue(csv_text.startswith("\ufeff"))
+
+    def test_delete_account_removes_new_data(self):
+        from nutrilens.models import CustomFood, Favorite, WeightLog
+        self.api("POST", "/api/custom-foods", {"name": "Món riêng", "calories": 100})
+        self.api("POST", "/api/weights", {"weight": 60})
+        self.api("POST", "/api/favorites/pho")
+        self.client.post("/tai-khoan", data={"csrf_token": self.csrf("/tai-khoan"), "action": "delete",
+                                             "current_delete": PASSWORD, "confirm_text": "XOA"})
+        for model in (CustomFood, WeightLog, Favorite):
+            self.assertEqual(db.session.scalar(select(func.count()).select_from(model)), 0, model.__name__)
+
+
 if __name__ == "__main__":
     unittest.main()

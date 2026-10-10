@@ -10,7 +10,7 @@ from PIL import Image, UnidentifiedImageError
 from sqlalchemy import delete, func, select
 
 from .extensions import db, limiter
-from .models import DiaryEntry, Profile, Recognition
+from .models import CustomFood, DiaryEntry, Favorite, Profile, Recognition, WeightLog
 from .predictor import PredictorUnavailable
 
 bp = Blueprint("api", __name__)
@@ -200,15 +200,37 @@ def diary_day():
     return jsonify(date=day.isoformat(), entries=[e.to_dict() for e in entries])
 
 
+def _amount(data: dict, serving_grams: float | None) -> float:
+    """Số khẩu phần, nhận trực tiếp hoặc quy đổi từ số gram."""
+    if data.get("grams") not in (None, ""):
+        if not serving_grams:
+            abort(400, description="Món này chưa có khối lượng khẩu phần nên không nhập theo gram được.")
+        try:
+            grams = float(data["grams"])
+        except (TypeError, ValueError):
+            abort(400, description="Số gram không hợp lệ.")
+        if not 1 <= grams <= 5000:
+            abort(400, description="Số gram phải từ 1 đến 5.000.")
+        return _parse_servings(max(MIN_SERVINGS, round(grams / serving_grams, 2)))
+    return _parse_servings(data.get("servings", 1))
+
+
 @bp.post("/diary")
 @login_required
 def diary_add():
     data = _json()
-    food = catalog().get(str(data.get("slug", "")))
-    if food is None:
-        abort(400, description="Món ăn không hợp lệ.")
-    entry = DiaryEntry.from_food(me(), food, _parse_date(data.get("date"), date.today()),
-                                 _parse_meal(data.get("meal")), _parse_servings(data.get("servings", 1)))
+    day = _parse_date(data.get("date"), date.today())
+    meal = _parse_meal(data.get("meal"))
+    if data.get("custom_id"):
+        item = db.session.get(CustomFood, int(data["custom_id"])) if str(data["custom_id"]).isdigit() else None
+        if item is None or item.user_id != current_user.id:
+            abort(400, description="Món tự thêm không hợp lệ.")
+        entry = DiaryEntry.from_custom(me(), item, day, meal, _amount(data, item.serving_grams))
+    else:
+        food = catalog().get(str(data.get("slug", "")))
+        if food is None:
+            abort(400, description="Món ăn không hợp lệ.")
+        entry = DiaryEntry.from_food(me(), food, day, meal, _amount(data, food.serving_grams))
     db.session.add(entry)
     db.session.commit()
     return jsonify(entry.to_dict()), 201
@@ -219,8 +241,10 @@ def diary_add():
 def diary_update(entry_id):
     entry = _own_entry(entry_id)
     data = _json()
-    if "servings" in data:
-        entry.servings = _parse_servings(data["servings"])
+    if "servings" in data or "grams" in data:
+        grams_base = entry.food.serving_grams if entry.food else (
+            entry.custom_food.serving_grams if entry.custom_food else None)
+        entry.servings = _amount(data, grams_base)
     if "meal" in data:
         entry.meal = _parse_meal(data["meal"])
     db.session.commit()
@@ -353,3 +377,164 @@ def put_profile():
         _apply_body(p, data["body"])
     db.session.commit()
     return jsonify(target=p.target_dict(), body=p.body_dict())
+
+
+# ── Món tự thêm ──────────────────────────────────────────────
+def _num(data: dict, key: str, lo: float, hi: float, label: str, required: bool = False) -> float | None:
+    raw = data.get(key)
+    if raw in (None, ""):
+        if required:
+            abort(400, description=f"Vui lòng nhập {label}.")
+        return None
+    try:
+        v = float(str(raw).replace(",", "."))
+    except ValueError:
+        abort(400, description=f"{label.capitalize()} phải là số.")
+    if not lo <= v <= hi:
+        abort(400, description=f"{label.capitalize()} phải từ {lo:g} đến {hi:g}.")
+    return round(v, 1)
+
+
+@bp.get("/custom-foods")
+@login_required
+def custom_foods():
+    items = db.session.scalars(select(CustomFood).where(CustomFood.user_id == current_user.id)
+                               .order_by(CustomFood.name))
+    return jsonify(items=[i.to_dict() for i in items])
+
+
+@bp.post("/custom-foods")
+@login_required
+def custom_food_add():
+    data = _json()
+    name = str(data.get("name", "")).strip()
+    if not 2 <= len(name) <= 120:
+        abort(400, description="Tên món cần từ 2 đến 120 ký tự.")
+    count = db.session.scalar(select(func.count(CustomFood.id)).where(CustomFood.user_id == current_user.id))
+    if count >= 200:
+        abort(400, description="Bạn đã có 200 món tự thêm, hãy xóa bớt món không dùng.")
+    item = CustomFood(user_id=current_user.id, name=name,
+                      serving=str(data.get("serving") or "1 khẩu phần").strip()[:120],
+                      serving_grams=_num(data, "serving_grams", 1, 3000, "khối lượng khẩu phần"),
+                      calories=_num(data, "calories", 0, 5000, "lượng calo", required=True),
+                      carbohydrate=_num(data, "carbohydrate", 0, 1000, "carbohydrate") or 0,
+                      protein=_num(data, "protein", 0, 500, "protein") or 0,
+                      lipid=_num(data, "lipid", 0, 500, "chất béo") or 0)
+    db.session.add(item)
+    db.session.commit()
+    return jsonify(item.to_dict()), 201
+
+
+@bp.delete("/custom-foods/<int:item_id>")
+@login_required
+def custom_food_delete(item_id):
+    item = db.session.get(CustomFood, item_id)
+    if item is None or item.user_id != current_user.id:
+        abort(404, description="Không tìm thấy món.")
+    db.session.delete(item)  # Nhật ký đã ghi vẫn giữ tên và dinh dưỡng đã lưu
+    db.session.commit()
+    return jsonify(ok=True)
+
+
+# ── Cân nặng ─────────────────────────────────────────────────
+@bp.get("/weights")
+@login_required
+def weights():
+    rows = db.session.scalars(select(WeightLog).where(WeightLog.user_id == current_user.id)
+                              .order_by(WeightLog.log_date.desc()).limit(365))
+    return jsonify(items=[r.to_dict() for r in rows][::-1])
+
+
+@bp.post("/weights")
+@login_required
+def weight_add():
+    data = _json()
+    day = _parse_date(data.get("date"), date.today())
+    if day > date.today():
+        abort(400, description="Không ghi cân nặng cho ngày trong tương lai.")
+    weight = _num(data, "weight", 25, 300, "cân nặng", required=True)
+    row = db.session.scalar(select(WeightLog).where(WeightLog.user_id == current_user.id,
+                                                    WeightLog.log_date == day))
+    latest = db.session.scalar(select(func.max(WeightLog.log_date)).where(WeightLog.user_id == current_user.id))
+    if row is None:
+        row = WeightLog(user_id=current_user.id, log_date=day, weight_kg=weight)
+        db.session.add(row)
+    else:
+        row.weight_kg = weight
+    if latest is None or day >= latest:  # Bản ghi mới nhất: cập nhật cân nặng trong hồ sơ
+        _profile(create=True).weight_kg = weight
+    db.session.commit()
+    return jsonify(row.to_dict()), 201
+
+
+@bp.delete("/weights/<int:row_id>")
+@login_required
+def weight_delete(row_id):
+    row = db.session.get(WeightLog, row_id)
+    if row is None or row.user_id != current_user.id:
+        abort(404, description="Không tìm thấy bản ghi.")
+    db.session.delete(row)
+    db.session.commit()
+    return jsonify(ok=True)
+
+
+# ── Món yêu thích ────────────────────────────────────────────
+@bp.get("/favorites")
+@login_required
+def favorites():
+    rows = db.session.scalars(select(Favorite).where(Favorite.user_id == current_user.id)
+                              .order_by(Favorite.created_at.desc()))
+    return jsonify(items=[r.food.to_dict() for r in rows if r.food.is_published])
+
+
+@bp.route("/favorites/<slug>", methods=["POST", "DELETE"])
+@login_required
+def favorite_toggle(slug):
+    food = catalog().get(slug)
+    if food is None:
+        abort(404, description="Không tìm thấy món ăn.")
+    row = db.session.get(Favorite, (current_user.id, food.id))
+    if request.method == "POST" and row is None:
+        db.session.add(Favorite(user_id=current_user.id, food_id=food.id))
+    elif request.method == "DELETE" and row is not None:
+        db.session.delete(row)
+    db.session.commit()
+    return jsonify(slug=slug, favorite=request.method == "POST")
+
+
+# ── Báo cáo ──────────────────────────────────────────────────
+@bp.get("/report")
+@login_required
+def report():
+    days = max(7, min(request.args.get("days", 30, type=int), 90))
+    end = date.today()
+    start = end - timedelta(days=days - 1)
+    where = (DiaryEntry.user_id == current_user.id, DiaryEntry.entry_date.between(start, end))
+    rows = db.session.execute(
+        select(DiaryEntry.entry_date, func.sum(DiaryEntry.kcal * DiaryEntry.servings),
+               func.sum(DiaryEntry.protein * DiaryEntry.servings), func.sum(DiaryEntry.carb * DiaryEntry.servings),
+               func.sum(DiaryEntry.fat * DiaryEntry.servings)).where(*where).group_by(DiaryEntry.entry_date))
+    per_day = {}
+    for d, k, pr, c, f in rows:
+        key = d.isoformat() if isinstance(d, date) else str(d)
+        per_day[key] = {"kcal": round(float(k or 0)), "protein": round(float(pr or 0), 1),
+                        "carb": round(float(c or 0), 1), "fat": round(float(f or 0), 1)}
+    empty = {"kcal": 0, "protein": 0, "carb": 0, "fat": 0}
+    series = [{"date": (start + timedelta(days=i)).isoformat(),
+               **per_day.get((start + timedelta(days=i)).isoformat(), empty)} for i in range(days)]
+    logged = [x for x in series if x["kcal"] > 0]
+    prof = _profile()
+    target = prof.target_dict() if prof else {"calories": 2000, "protein": 75, "carb": 250, "fat": 67}
+    avg = {k: round(sum(x[k] for x in logged) / len(logged), 1) if logged else 0
+           for k in ("kcal", "protein", "carb", "fat")}
+    top = db.session.execute(
+        select(DiaryEntry.name, func.count(DiaryEntry.id), func.sum(DiaryEntry.kcal * DiaryEntry.servings))
+        .where(*where).group_by(DiaryEntry.name).order_by(func.count(DiaryEntry.id).desc()).limit(5)).all()
+    weight_rows = db.session.scalars(select(WeightLog).where(WeightLog.user_id == current_user.id)
+                                     .order_by(WeightLog.log_date.desc()).limit(60)).all()[::-1]
+    return jsonify(
+        days=series, target=target, average=avg, logged_days=len(logged),
+        within_target=sum(1 for x in logged if abs(x["kcal"] - target["calories"]) <= target["calories"] * 0.1),
+        top_foods=[{"name": n or "Món đã xóa", "count": c, "kcal": round(float(k or 0))} for n, c, k in top],
+        weights=[w.to_dict() for w in weight_rows],
+    )

@@ -638,7 +638,7 @@
   "source": "Số liệu trực tiếp từ USDA FNDDS 2021–2023"
  },
  "com_tam": {
-  "serving": "1 đĩa (~450 g)",
+  "serving": "1 đĩa (~449 g)",
   "serving_grams": 449,
   "nutrition": {
    "calories": 684,
@@ -711,7 +711,7 @@
   "source": "Số liệu tính theo công thức từ USDA SR Legacy (2018), USDA FNDDS 2021–2023"
  },
  "bun_bo_hue": {
-  "serving": "1 tô (~715 g)",
+  "serving": "1 tô (~716 g)",
   "serving_grams": 716,
   "nutrition": {
    "calories": 569,
@@ -778,7 +778,7 @@
   "source": "Số liệu tính theo công thức từ USDA SR Legacy (2018), USDA FNDDS 2021–2023"
  },
  "banh_mi": {
-  "serving": "1 ổ (~205 g)",
+  "serving": "1 ổ (~203 g)",
   "serving_grams": 203,
   "nutrition": {
    "calories": 464,
@@ -845,7 +845,7 @@
   "source": "Số liệu tính theo công thức từ USDA SR Legacy (2018), USDA FNDDS 2021–2023"
  },
  "bun_cha": {
-  "serving": "1 suất (~405 g)",
+  "serving": "1 suất (~404 g)",
   "serving_grams": 404,
   "nutrition": {
    "calories": 612,
@@ -1162,7 +1162,7 @@
   "source": "Số liệu tính theo công thức từ USDA SR Legacy (2018), USDA FNDDS 2021–2023"
  },
  "ca_kho_to": {
-  "serving": "1 phần cá (~160 g, chưa gồm cơm)",
+  "serving": "1 phần cá (~161 g, chưa gồm cơm)",
   "serving_grams": 161,
   "nutrition": {
    "calories": 279,
@@ -1217,7 +1217,7 @@
   "source": "Số liệu tính theo công thức từ USDA SR Legacy (2018), USDA FNDDS 2021–2023"
  },
  "canh_chua_ca": {
-  "serving": "1 tô (~515 g)",
+  "serving": "1 tô (~514 g)",
   "serving_grams": 514,
   "nutrition": {
    "calories": 215,
@@ -1296,7 +1296,7 @@
   "source": "Số liệu tính theo công thức từ USDA SR Legacy (2018), USDA FNDDS 2021–2023"
  },
  "rau_muong_xao": {
-  "serving": "1 đĩa (~220 g)",
+  "serving": "1 đĩa (~221 g)",
   "serving_grams": 221,
   "nutrition": {
    "calories": 139,
@@ -1345,7 +1345,7 @@
   "source": "Số liệu tính theo công thức từ USDA SR Legacy (2018), USDA FNDDS 2021–2023"
  },
  "com_ga": {
-  "serving": "1 đĩa (~360 g)",
+  "serving": "1 đĩa (~362 g)",
   "serving_grams": 362,
   "nutrition": {
    "calories": 576,
@@ -1546,7 +1546,7 @@
   "source": "Số liệu tính theo công thức từ USDA SR Legacy (2018)"
  },
  "bun_rieu": {
-  "serving": "1 tô (~680 g)",
+  "serving": "1 tô (~678 g)",
   "serving_grams": 678,
   "nutrition": {
    "calories": 365,
