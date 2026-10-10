@@ -1,0 +1,28 @@
+{% extends "admin/_layout.html" %}
+{% from "partials/macros.html" import icon, food_img, pagination with context %}
+{% block admin_title %}Bài viết{% endblock %}
+{% block heading %}Bài viết{% endblock %}
+{% block subheading %}<p class="muted">{{ page.total }} bài viết.</p>{% endblock %}
+{% block actions %}<a class="btn btn-primary btn-sm" href="{{ url_for('admin.article_edit') }}">{{ icon("plus", 16) }} Viết bài mới</a>{% endblock %}
+
+{% block admin_content %}
+<div class="table-wrap">
+<table class="table">
+  <thead><tr><th>Tiêu đề</th><th>Chủ đề</th><th>Ngày đăng</th><th>Trạng thái</th><th></th></tr></thead>
+  <tbody>
+    {% for a in page.items %}
+      <tr>
+        <td><div class="cell-food">
+          {% if a.cover_image %}<img class="thumb" src="{{ url_for('static', filename=a.cover_image) }}" alt="">{% else %}<span class="food-emoji thumb">{{ a.emoji }}</span>{% endif %}
+          <div><strong>{{ a.title }}</strong><small class="muted">{{ a.slug }}</small></div></div></td>
+        <td>{{ a.category }}</td>
+        <td>{{ a.date_vi }}</td>
+        <td>{% if a.is_published %}<span class="badge badge-good">Đã đăng</span>{% else %}<span class="badge">Bản nháp</span>{% endif %}</td>
+        <td class="actions"><a class="btn btn-ghost btn-sm" href="{{ url_for('admin.article_edit', article_id=a.id) }}">{{ icon("edit", 16) }} Sửa</a></td>
+      </tr>
+    {% else %}<tr><td colspan="5" class="muted center">Chưa có bài viết.</td></tr>{% endfor %}
+  </tbody>
+</table>
+</div>
+{{ pagination(page, "admin.articles") }}
+{% endblock %}

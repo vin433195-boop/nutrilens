@@ -1,0 +1,42 @@
+{% extends "admin/_layout.html" %}
+{% from "partials/macros.html" import icon, food_img, pagination with context %}
+{% block admin_title %}Nhận dạng AI{% endblock %}
+{% block heading %}Nhận dạng AI{% endblock %}
+{% block subheading %}<p class="muted">Kết quả nhận dạng và các lần người dùng chọn lại món. Ảnh không được lưu.</p>{% endblock %}
+{% block actions %}
+  {% if request.args.get('loc') == 'da-sua' %}<a class="btn btn-outline btn-sm" href="{{ url_for('admin.recognitions') }}">Xem tất cả</a>
+  {% else %}<a class="btn btn-outline btn-sm" href="{{ url_for('admin.recognitions', loc='da-sua') }}">Chỉ lần bị sửa</a>{% endif %}
+  <a class="btn btn-primary btn-sm" href="{{ url_for('admin.recognitions_csv') }}">{{ icon("download", 16) }} Xuất CSV để huấn luyện</a>
+{% endblock %}
+
+{% block admin_content %}
+<div class="grid grid-2" style="align-items:start">
+  <div class="table-wrap">
+  <table class="table">
+    <thead><tr><th>Thời gian</th><th>AI dự đoán</th><th class="num">Tin cậy</th><th>Người dùng chọn</th></tr></thead>
+    <tbody>
+      {% for r in page.items %}
+        <tr>
+          <td><small>{{ r.created_at.strftime("%d/%m %H:%M") }}</small></td>
+          <td>{{ r.food.name_vi if r.food else r.predicted_label }}{% if r.tta %} <span class="badge">TTA</span>{% endif %}</td>
+          <td class="num">{{ (r.confidence * 100)|round(1) }}%</td>
+          <td>{% if r.corrected_food %}<span class="badge badge-limit">{{ r.corrected_food.name_vi }}</span>{% else %}<span class="muted">Giữ nguyên</span>{% endif %}</td>
+        </tr>
+      {% else %}<tr><td colspan="4" class="muted center">Chưa có lượt nhận dạng.</td></tr>{% endfor %}
+    </tbody>
+  </table>
+  {{ pagination(page, "admin.recognitions") }}
+  </div>
+  <div class="card">
+    <h2 class="card-title">{{ icon("activity") }} Tỉ lệ người dùng giữ nguyên kết quả</h2>
+    <p class="muted small">Chỉ tính các lượt của người đã đăng nhập có thể sửa kết quả. Tỉ lệ thấp nghĩa là AI hay đoán sai món đó.</p>
+    {% for label, total, kept in accuracy %}
+      {% set pct = (kept * 100 / total)|round|int if total else 0 %}
+      <div class="macro-bar" style="margin-bottom:12px">
+        <div class="top"><span><code>{{ label }}</code></span><b>{{ pct }}% · {{ total }} lượt</b></div>
+        <div class="track"><i style="width:{{ pct }}%; background: {{ 'var(--good)' if pct >= 70 else 'var(--ok)' if pct >= 40 else 'var(--limit)' }}"></i></div>
+      </div>
+    {% else %}<p class="muted small">Chưa có dữ liệu.</p>{% endfor %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "admin/_layout.html" %}
+{% from "partials/macros.html" import icon, food_img, pagination with context %}
+{% block admin_title %}Tin nhắn{% endblock %}
+{% block heading %}{{ msg.topic }}{% endblock %}
+{% block subheading %}<p class="muted">Từ {{ msg.name }} &lt;{{ msg.email }}&gt; · {{ msg.created_at.strftime("%d/%m/%Y %H:%M") }} (UTC){% if msg.user_id %} · thành viên #{{ msg.user_id }}{% endif %}</p>{% endblock %}
+{% block actions %}
+  <a class="btn btn-primary btn-sm" href="mailto:{{ msg.email }}?subject={{ ('Re: ' ~ msg.topic)|urlencode }}">{{ icon("mail", 16) }} Trả lời qua email</a>
+{% endblock %}
+
+{% block admin_content %}
+<div class="card"><div class="message-body">{{ msg.body }}</div></div>
+<div style="display:flex; gap:10px; margin-top:16px">
+  <a class="btn btn-ghost btn-sm" href="{{ url_for('admin.messages') }}">{{ icon("chevron-left", 16) }} Danh sách</a>
+  <form method="post" action="{{ url_for('admin.message_delete', msg_id=msg.id) }}" data-confirm="Xóa tin nhắn này?">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <button class="btn btn-danger btn-sm" type="submit">{{ icon("trash", 16) }} Xóa</button>
+  </form>
+</div>
+{% endblock %}
+
+{% block scripts %}<script src="{{ url_for('static', filename='js/auth.js') }}"></script>{% endblock %}

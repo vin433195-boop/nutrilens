@@ -17,7 +17,7 @@ from nutrilens import create_app
 from nutrilens.auth import make_reset_token
 from nutrilens.config import TestConfig
 from nutrilens.extensions import db
-from nutrilens.models import ContactMessage, DiaryEntry, Food, Profile, Recognition, User
+from nutrilens.models import Article, ContactMessage, DiaryEntry, Food, Profile, Recognition, User
 from nutrilens.predictor import Predictor
 from nutrilens.seed import seed_all
 
@@ -540,6 +540,135 @@ class FormTests(AppTestCase):
         res = self.client.post("/dang-ky-ban-tin", data={"csrf_token": token, "email": "c@d.vn",
                                                          "next": "//evil.example"})
         self.assertEqual(res.headers["Location"], "/")
+
+
+
+# ════════════════════════════════════════════════════════════
+class AdminTests(AppTestCase):
+    def setUp(self):
+        super().setUp()
+        self.admin = self.make_user(email="admin@example.com", name="Quản Trị")
+        self.admin.role = "admin"
+        db.session.commit()
+
+    def login_admin(self):
+        self.login(email="admin@example.com")
+
+    def post(self, url, data=None, **kw):
+        return self.client.post(url, data={"csrf_token": self.csrf("/"), **(data or {})}, **kw)
+
+    def food_form(self, **override):
+        data = {"name_vi": "Bún chả", "name_en": "Bun cha", "slug": "", "category": "Món chính", "new_category": "",
+                "cuisine": "Việt Nam", "serving": "1 suất (~400 g)", "serving_grams": "400", "description": "Bún chả Hà Nội",
+                "highlights": "Nhiều rau\nĐạm từ thịt", "tips": "Ăn nhiều rau sống", "tags": "Việt Nam, nướng",
+                "calories": "450", "carbohydrate": "55", "protein": "22", "lipid": "15", "fiber": "3", "sugar": "8",
+                "sodium": "900", "source": "Ước tính", "is_published": "1", "emoji": "🍜", "model_label": "",
+                "image_credit": "", "image_license": "", "image_source": ""}
+        data.update(override)
+        return data
+
+    def test_access_control(self):
+        self.assertEqual(self.client.get("/quan-tri/").status_code, 302)  # Chưa đăng nhập
+        self.make_user()
+        self.login()
+        self.assertEqual(self.client.get("/quan-tri/").status_code, 403)  # Thành viên thường
+        self.assertEqual(self.client.get("/quan-tri/mon-an").status_code, 403)
+
+    def test_all_admin_pages_render(self):
+        self.login_admin()
+        db.session.add(ContactMessage(name="A", email="a@b.vn", topic="Khác", body="Xin chào quản trị"))
+        db.session.commit()
+        pho = self.app.extensions["catalog"].get("pho")
+        article = self.app.extensions["articles"].all()[0]
+        for url in ["/quan-tri/", "/quan-tri/mon-an", "/quan-tri/mon-an?loc=chua-co-anh", "/quan-tri/mon-an/them",
+                    f"/quan-tri/mon-an/{pho.id}", "/quan-tri/bai-viet", "/quan-tri/bai-viet/them",
+                    f"/quan-tri/bai-viet/{article.id}", "/quan-tri/tin-nhan", "/quan-tri/nguoi-dung",
+                    "/quan-tri/nhan-dang", "/quan-tri/nhan-dang/xuat-csv"]:
+            with self.subTest(url=url):
+                self.assertEqual(self.client.get(url).status_code, 200)
+
+    def test_create_food_with_image(self):
+        self.login_admin()
+        data = self.food_form()
+        data["image"] = (make_image(), "bun.jpg")
+        res = self.post("/quan-tri/mon-an/them", data, content_type="multipart/form-data")
+        self.assertEqual(res.status_code, 302, res.get_data(as_text=True)[:500])
+        food = self.app.extensions["catalog"].get("bun_cha")
+        self.assertIsNotNone(food)
+        self.assertEqual((food.calories, food.serving_grams, food.category), (450, 400, "Món chính"))
+        self.assertEqual(food.highlights, ["Nhiều rau", "Đạm từ thịt"])
+        self.assertEqual(set(food.tags), {"việt nam", "nướng"})
+        self.assertTrue(food.image_path.startswith("uploads/foods/bun_cha-"))
+        path = Path(self.app.static_folder) / food.image_path
+        self.assertTrue(path.exists())
+        self.assertEqual(Image.open(path).format, "WEBP")
+        path.unlink()
+
+    def test_food_validation(self):
+        self.login_admin()
+        res = self.post("/quan-tri/mon-an/them", self.food_form(name_vi="", calories="-5", slug="Có Dấu"))
+        self.assertEqual(res.status_code, 422)
+        res = self.post("/quan-tri/mon-an/them", self.food_form(slug="pho"))
+        self.assertIn("Slug này đã được dùng", res.get_data(as_text=True))
+
+    def test_edit_food_and_new_category(self):
+        self.login_admin()
+        pho = self.app.extensions["catalog"].get("pho")
+        res = self.post(f"/quan-tri/mon-an/{pho.id}", self.food_form(slug="pho", name_vi="Phở bò tái",
+                                                                     new_category="Đặc sản Hà Nội", model_label="pho"))
+        self.assertEqual(res.status_code, 302)
+        pho = self.app.extensions["catalog"].get("pho")
+        self.assertEqual((pho.name_vi, pho.category), ("Phở bò tái", "Đặc sản Hà Nội"))
+        self.assertEqual(self.app.extensions["catalog"].by_label("pho").id, pho.id)
+
+    def test_cannot_delete_food_used_in_diary(self):
+        self.login_admin()
+        pho = self.app.extensions["catalog"].get("pho")
+        db.session.add(DiaryEntry.from_food(self.admin, pho, date.today(), "lunch", 1))
+        db.session.commit()
+        self.post(f"/quan-tri/mon-an/{pho.id}/xoa")
+        self.assertIsNotNone(db.session.get(Food, pho.id))
+        donuts = self.app.extensions["catalog"].get("donuts")
+        self.post(f"/quan-tri/mon-an/{donuts.id}/xoa")
+        self.assertIsNone(db.session.get(Food, donuts.id))
+
+    def test_article_crud(self):
+        self.login_admin()
+        res = self.post("/quan-tri/bai-viet/them", {"title": "Ăn sáng đủ chất", "slug": "", "excerpt": "Tóm tắt",
+                                                    "category": "Thực hành", "emoji": "🥣", "read_time": "",
+                                                    "published_at": "2026-10-01", "is_published": "1",
+                                                    "body_md": "## Vì sao\n\nBữa sáng giúp bạn tỉnh táo cả ngày."})
+        self.assertEqual(res.status_code, 302)
+        self.assertEqual(self.client.get("/kien-thuc/an-sang-du-chat").status_code, 200)
+        article = db.session.scalar(select(Article).where(Article.slug == "an-sang-du-chat"))
+        self.post(f"/quan-tri/bai-viet/{article.id}/xoa")
+        self.assertEqual(self.client.get("/kien-thuc/an-sang-du-chat").status_code, 404)
+
+    def test_message_marked_read(self):
+        self.login_admin()
+        msg = ContactMessage(name="A", email="a@b.vn", topic="Khác", body="Xin chào quản trị")
+        db.session.add(msg)
+        db.session.commit()
+        self.assertIn(">1<", self.client.get("/quan-tri/").get_data(as_text=True).replace(" ", ""))
+        self.client.get(f"/quan-tri/tin-nhan/{msg.id}")
+        self.assertTrue(db.session.get(ContactMessage, msg.id).is_read)
+
+    def test_deactivate_user_and_self_protection(self):
+        self.login_admin()
+        user = self.make_user()
+        self.post(f"/quan-tri/nguoi-dung/{user.id}", {"action": "deactivate"})
+        self.assertFalse(db.session.get(User, user.id).active)
+        self.post(f"/quan-tri/nguoi-dung/{self.admin.id}", {"action": "demote"})
+        self.assertEqual(db.session.get(User, self.admin.id).role, "admin")
+
+    def test_corrections_csv(self):
+        self.login_admin()
+        pho, ramen = (self.app.extensions["catalog"].get(s) for s in ("pho", "ramen"))
+        db.session.add(Recognition(user_id=self.admin.id, predicted_label="pho", confidence=0.6, food=pho,
+                                   corrected_food_id=ramen.id))
+        db.session.commit()
+        csv_text = self.client.get("/quan-tri/nhan-dang/xuat-csv").get_data(as_text=True)
+        self.assertIn("pho,0.6,ramen", csv_text)
 
 
 if __name__ == "__main__":

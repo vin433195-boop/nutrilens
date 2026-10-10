@@ -1,0 +1,45 @@
+{% extends "admin/_layout.html" %}
+{% from "partials/macros.html" import icon, food_img, pagination with context %}
+{% block admin_title %}Tổng quan{% endblock %}
+{% block heading %}Tổng quan{% endblock %}
+{% block subheading %}<p class="muted">Tình hình NutriLens trong 7 ngày gần nhất.</p>{% endblock %}
+{% block actions %}<a class="btn btn-primary btn-sm" href="{{ url_for('admin.food_new') }}">{{ icon("plus", 16) }} Thêm món</a>{% endblock %}
+
+{% block admin_content %}
+<div class="kpi-grid">
+  <a class="kpi" href="{{ url_for('admin.users') }}"><span>Người dùng</span><strong>{{ stats.users|num }}</strong><small>+{{ stats.users_week }} tuần này</small></a>
+  <a class="kpi" href="{{ url_for('admin.foods') }}"><span>Món ăn</span><strong>{{ stats.foods|num }}</strong><small>{{ stats.foods_hidden }} đang ẩn · {{ stats.no_image }} chưa có ảnh</small></a>
+  <a class="kpi" href="{{ url_for('admin.messages', loc='chua-doc') }}"><span>Tin nhắn chưa đọc</span><strong>{{ stats.messages_unread|num }}</strong><small>{{ stats.subscribers }} người đăng ký bản tin</small></a>
+  <a class="kpi" href="{{ url_for('admin.recognitions') }}"><span>Lượt nhận dạng</span><strong>{{ stats.recognitions|num }}</strong><small>+{{ stats.recognitions_week }} tuần này</small></a>
+  <a class="kpi" href="{{ url_for('admin.recognitions', loc='da-sua') }}"><span>Người dùng sửa kết quả AI</span><strong>{{ stats.correction_rate }}%</strong><small>{{ stats.corrected }} lần chọn lại món</small></a>
+  <div class="kpi"><span>Món ghi nhật ký</span><strong>{{ stats.diary_week|num }}</strong><small>trong 7 ngày</small></div>
+</div>
+
+<div class="grid grid-2" style="margin-top:24px">
+  <div class="card">
+    <h2 class="card-title">{{ icon("mail") }} Tin nhắn mới</h2>
+    {% for m in latest_messages %}
+      <a class="admin-row-link" href="{{ url_for('admin.message_view', msg_id=m.id) }}">
+        <span>{% if not m.is_read %}<b class="dot-new" title="Chưa đọc"></b>{% endif %}<strong>{{ m.name }}</strong> · {{ m.topic }}</span>
+        <small class="muted">{{ m.created_at.strftime("%d/%m %H:%M") }}</small>
+      </a>
+    {% else %}<p class="muted small">Chưa có tin nhắn.</p>{% endfor %}
+  </div>
+  <div class="card">
+    <h2 class="card-title">{{ icon("users") }} Người dùng mới</h2>
+    {% for u in latest_users %}
+      <div class="admin-row-link"><span><strong>{{ u.name }}</strong> · {{ u.email }}</span><small class="muted">{{ u.created_at.strftime("%d/%m/%Y") }}</small></div>
+    {% else %}<p class="muted small">Chưa có người dùng.</p>{% endfor %}
+  </div>
+</div>
+
+<div class="card" style="margin-top:24px">
+  <h2 class="card-title">{{ icon("camera") }} AI hay nhầm nhất</h2>
+  <p class="muted small">Các trường hợp người dùng chọn lại món khác với dự đoán. Đây là những cặp món nên bổ sung ảnh khi huấn luyện lại model.</p>
+  {% if confusions %}
+    <table class="table"><thead><tr><th>AI dự đoán</th><th>Người dùng chọn</th><th class="num">Số lần</th></tr></thead><tbody>
+      {% for label, name, n in confusions %}<tr><td><code>{{ label }}</code></td><td>{{ name }}</td><td class="num">{{ n }}</td></tr>{% endfor %}
+    </tbody></table>
+  {% else %}<p class="muted small">Chưa có dữ liệu.</p>{% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends "admin/_layout.html" %}
+{% from "partials/macros.html" import icon, food_img, pagination with context %}
+{% block admin_title %}{{ article.title if article else "Viết bài mới" }}{% endblock %}
+{% block heading %}{{ "Sửa bài viết" if article else "Viết bài mới" }}{% endblock %}
+{% block subheading %}{% if article and article.id %}<p class="muted"><a href="{{ url_for('main.article_detail', slug=article.slug) }}" target="_blank" rel="noopener">{{ icon("external", 14) }} Xem trên website</a></p>{% endif %}{% endblock %}
+
+{% macro err(name) %}{% if errors.get(name) %}<p class="field-error">{{ errors[name] }}</p>{% endif %}{% endmacro %}
+
+{% block admin_content %}
+<form method="post" enctype="multipart/form-data" novalidate class="admin-form">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <div class="admin-form-main stack">
+    <section class="card">
+      <div class="field {{ 'has-error' if errors.title }}"><label for="title">Tiêu đề *</label>
+        <input class="input" id="title" name="title" value="{{ form.title }}" maxlength="255">{{ err("title") }}</div>
+      <div class="field {{ 'has-error' if errors.excerpt }}"><label for="excerpt">Tóm tắt</label>
+        <textarea class="input" id="excerpt" name="excerpt" rows="2" maxlength="500">{{ form.excerpt }}</textarea>{{ err("excerpt") }}</div>
+      <div class="field {{ 'has-error' if errors.body_md }}"><label for="body_md">Nội dung (Markdown) *</label>
+        <textarea class="input mono" id="body_md" name="body_md" rows="22">{{ form.body_md }}</textarea>
+        <p class="hint">Dùng <code>## Tiêu đề</code>, <code>**in đậm**</code>, <code>- gạch đầu dòng</code>, <code>&gt; trích dẫn</code>, <code>[chữ](/link)</code>.</p>{{ err("body_md") }}</div>
+    </section>
+  </div>
+  <aside class="admin-form-side stack">
+    <section class="card">
+      <div class="field {{ 'has-error' if errors.slug }}"><label for="slug">Slug</label>
+        <input class="input" id="slug" name="slug" value="{{ form.slug }}" placeholder="tu-dong-tu-tieu-de">{{ err("slug") }}</div>
+      <div class="form-row">
+        <div class="field"><label for="category">Chủ đề</label><input class="input" id="category" name="category" value="{{ form.category }}"></div>
+        <div class="field"><label for="emoji">Emoji</label><input class="input" id="emoji" name="emoji" value="{{ form.emoji }}" maxlength="8"></div>
+      </div>
+      <div class="form-row">
+        <div class="field {{ 'has-error' if errors.published_at }}"><label for="published_at">Ngày đăng</label><input class="input" id="published_at" name="published_at" type="date" value="{{ form.published_at }}">{{ err("published_at") }}</div>
+        <div class="field"><label for="read_time">Phút đọc</label><input class="input" id="read_time" name="read_time" type="number" min="1" value="{{ form.read_time }}" placeholder="Tự tính"></div>
+      </div>
+      <label class="check"><input type="checkbox" name="is_published" value="1" {{ 'checked' if form.is_published }}> Đăng công khai</label>
+    </section>
+    <section class="card">
+      <h2 class="card-title">{{ icon("image") }} Ảnh bìa</h2>
+      {% if article and article.cover_image %}
+        <img class="admin-preview" src="{{ url_for('static', filename=article.cover_image) }}" alt="">
+        <label class="check" style="margin:10px 0"><input type="checkbox" name="remove_cover" value="1"> Xóa ảnh bìa</label>
+      {% endif %}
+      <div class="field {{ 'has-error' if errors.cover }}"><label for="cover">Tải ảnh bìa</label>
+        <input class="input" id="cover" name="cover" type="file" accept="image/jpeg,image/png,image/webp">{{ err("cover") }}</div>
+      <div class="field"><label for="cover_credit">Ghi công ảnh</label><input class="input" id="cover_credit" name="cover_credit" value="{{ form.cover_credit }}" placeholder="Tác giả · Giấy phép"></div>
+    </section>
+    <button class="btn btn-primary btn-block btn-lg" type="submit">{{ icon("check", 18) }} Lưu bài viết</button>
+    <a class="btn btn-ghost btn-block" href="{{ url_for('admin.articles') }}">Quay lại danh sách</a>
+  </aside>
+</form>
+{% if article and article.id %}
+<form method="post" action="{{ url_for('admin.article_delete', article_id=article.id) }}" class="card danger-card" style="margin-top:24px" data-confirm="Xóa vĩnh viễn bài viết này?">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <h2 class="card-title">{{ icon("trash") }} Xóa bài viết</h2>
+  <button class="btn btn-danger btn-sm" type="submit">Xóa bài viết</button>
+</form>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}<script src="{{ url_for('static', filename='js/auth.js') }}"></script>{% endblock %}

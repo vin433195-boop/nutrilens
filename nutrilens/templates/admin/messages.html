@@ -1,0 +1,28 @@
+{% extends "admin/_layout.html" %}
+{% from "partials/macros.html" import icon, food_img, pagination with context %}
+{% block admin_title %}Tin nhắn{% endblock %}
+{% block heading %}Tin nhắn liên hệ{% endblock %}
+{% block subheading %}<p class="muted">{{ unread_messages }} tin chưa đọc.</p>{% endblock %}
+{% block actions %}
+  {% if request.args.get('loc') == 'chua-doc' %}<a class="btn btn-outline btn-sm" href="{{ url_for('admin.messages') }}">Xem tất cả</a>
+  {% else %}<a class="btn btn-outline btn-sm" href="{{ url_for('admin.messages', loc='chua-doc') }}">Chỉ tin chưa đọc</a>{% endif %}
+{% endblock %}
+
+{% block admin_content %}
+<div class="table-wrap">
+<table class="table">
+  <thead><tr><th>Người gửi</th><th>Chủ đề</th><th>Nội dung</th><th>Thời gian</th></tr></thead>
+  <tbody>
+    {% for m in page.items %}
+      <tr class="{{ 'unread' if not m.is_read }}">
+        <td><a href="{{ url_for('admin.message_view', msg_id=m.id) }}"><strong>{{ m.name }}</strong></a><br><small class="muted">{{ m.email }}</small></td>
+        <td>{{ m.topic }}</td>
+        <td class="clip">{{ m.body|truncate(90) }}</td>
+        <td><small>{{ m.created_at.strftime("%d/%m/%Y %H:%M") }}</small></td>
+      </tr>
+    {% else %}<tr><td colspan="4" class="muted center">Không có tin nhắn.</td></tr>{% endfor %}
+  </tbody>
+</table>
+</div>
+{{ pagination(page, "admin.messages") }}
+{% endblock %}

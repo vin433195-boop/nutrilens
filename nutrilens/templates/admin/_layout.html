@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% from "partials/macros.html" import icon, food_img, pagination with context %}
+
+{% block title %}{% block admin_title %}Quản trị{% endblock %} · {{ site_name }}{% endblock %}
+{% block newsletter %}{% endblock %}
+{% block head %}<meta name="robots" content="noindex">{% endblock %}
+
+{% block content %}
+{% set admin_nav = [
+  ("admin.dashboard", "Tổng quan", "grid"),
+  ("admin.foods", "Món ăn", "book"),
+  ("admin.articles", "Bài viết", "edit"),
+  ("admin.messages", "Tin nhắn", "mail"),
+  ("admin.users", "Người dùng", "users"),
+  ("admin.recognitions", "Nhận dạng AI", "camera"),
+] %}
+<div class="admin-shell">
+  <aside class="admin-side" aria-label="Menu quản trị">
+    <div class="admin-side-title">{{ icon("shield", 18) }} Quản trị</div>
+    <nav>
+      {% for endpoint, label, ic in admin_nav %}
+        {% set active = request.endpoint == endpoint or
+                        (endpoint == "admin.foods" and request.endpoint in ("admin.food_new", "admin.food_edit")) or
+                        (endpoint == "admin.articles" and request.endpoint == "admin.article_edit") or
+                        (endpoint == "admin.messages" and request.endpoint == "admin.message_view") %}
+        <a href="{{ url_for(endpoint) }}" class="{{ 'active' if active }}" {% if active %}aria-current="page"{% endif %}>
+          {{ icon(ic, 18) }}<span>{{ label }}</span>
+          {% if endpoint == "admin.messages" and unread_messages %}<b class="count">{{ unread_messages }}</b>{% endif %}
+        </a>
+      {% endfor %}
+    </nav>
+    <a class="admin-back" href="{{ url_for('main.index') }}">{{ icon("chevron-left", 16) }} Về trang chủ</a>
+  </aside>
+  <div class="admin-main">
+    <header class="admin-head">
+      <div>
+        <h1>{% block heading %}{% endblock %}</h1>
+        {% block subheading %}{% endblock %}
+      </div>
+      <div class="admin-actions">{% block actions %}{% endblock %}</div>
+    </header>
+    {% block admin_content %}{% endblock %}
+  </div>
+</div>
+{% endblock %}

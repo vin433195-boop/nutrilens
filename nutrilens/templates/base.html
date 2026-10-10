@@ -67,6 +67,7 @@
             </summary>
             <div class="menu-panel">
               <div class="menu-head"><strong>{{ current_user.name }}</strong><span>{{ current_user.email }}</span></div>
+              {% if current_user.is_admin %}<a href="{{ url_for('admin.dashboard') }}">{{ icon("shield", 16) }} Trang quản trị</a>{% endif %}
               <a href="{{ url_for('auth.account') }}">{{ icon("user", 16) }} Tài khoản</a>
               <a href="{{ url_for('main.diary') }}">{{ icon("clipboard", 16) }} Nhật ký của tôi</a>
               <a href="{{ url_for('main.recognize') }}">{{ icon("camera", 16) }} Nhận dạng món ăn</a>

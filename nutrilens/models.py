@@ -142,6 +142,8 @@ class Food(NutritionMixin, db.Model):
     category_id: Mapped[int] = mapped_column(ForeignKey("categories.id"))
     cuisine: Mapped[str] = mapped_column(String(80), default="Quốc tế")
     serving: Mapped[str] = mapped_column(String(120), default="1 khẩu phần")
+    serving_grams: Mapped[float | None] = mapped_column(Float)  # Khối lượng 1 khẩu phần, để nhập nhật ký theo gram
+    source: Mapped[str | None] = mapped_column(String(255))     # Nguồn số liệu dinh dưỡng
     description: Mapped[str] = mapped_column(Text, default="")
     calories: Mapped[float] = mapped_column(Float, default=0)
     carbohydrate: Mapped[float] = mapped_column(Float, default=0)
@@ -152,6 +154,11 @@ class Food(NutritionMixin, db.Model):
     sodium: Mapped[float] = mapped_column(Float, default=0)
     is_published: Mapped[bool] = mapped_column(Boolean, default=True)
     is_featured: Mapped[bool] = mapped_column(Boolean, default=False)
+    # Ảnh món ăn: đường dẫn trong thư mục static, kèm tác giả, giấy phép và nguồn để ghi công
+    image_path: Mapped[str | None] = mapped_column(String(255))
+    image_credit: Mapped[str | None] = mapped_column(String(255))
+    image_license: Mapped[str | None] = mapped_column(String(80))
+    image_source: Mapped[str | None] = mapped_column(String(500))
     created_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)
     updated_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow, onupdate=utcnow)
 
@@ -213,6 +220,8 @@ class Article(db.Model):
     emoji: Mapped[str] = mapped_column(String(16), default="📘")
     body_md: Mapped[str] = mapped_column(Text, default="")
     read_time: Mapped[int] = mapped_column(Integer, default=3)
+    cover_image: Mapped[str | None] = mapped_column(String(255))
+    cover_credit: Mapped[str | None] = mapped_column(String(255))
     published_at: Mapped[date] = mapped_column(Date, default=date.today)
     is_published: Mapped[bool] = mapped_column(Boolean, default=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)
@@ -309,6 +318,7 @@ class ContactMessage(db.Model):
     email: Mapped[str] = mapped_column(String(255))
     topic: Mapped[str] = mapped_column(String(80))
     body: Mapped[str] = mapped_column(Text)
+    is_read: Mapped[bool] = mapped_column(Boolean, default=False, server_default="0")
     created_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)
 
 

@@ -1,0 +1,40 @@
+{% extends "admin/_layout.html" %}
+{% from "partials/macros.html" import icon, food_img, pagination with context %}
+{% block admin_title %}Món ăn{% endblock %}
+{% block heading %}Món ăn{% endblock %}
+{% block subheading %}<p class="muted">{{ page.total }} món{% if request.args.get('loc') == 'chua-co-anh' %} chưa có ảnh{% endif %}.</p>{% endblock %}
+{% block actions %}<a class="btn btn-primary btn-sm" href="{{ url_for('admin.food_new') }}">{{ icon("plus", 16) }} Thêm món</a>{% endblock %}
+
+{% block admin_content %}
+<form class="admin-filter" method="get">
+  <div class="search-box">{{ icon("search", 18) }}<label class="sr-only" for="q">Tìm món</label>
+    <input class="input" id="q" name="q" value="{{ q }}" placeholder="Tìm theo tên hoặc slug"></div>
+  <label class="check"><input type="checkbox" name="loc" value="chua-co-anh" {{ 'checked' if request.args.get('loc') == 'chua-co-anh' }} data-autosubmit-input> Chỉ món chưa có ảnh</label>
+  <button class="btn btn-outline btn-sm" type="submit">Lọc</button>
+</form>
+
+<div class="table-wrap">
+<table class="table">
+  <thead><tr><th>Món</th><th>Danh mục</th><th class="num">Calo</th><th class="num">Protein</th><th>Trạng thái</th><th></th></tr></thead>
+  <tbody>
+    {% for f in page.items %}
+      <tr>
+        <td><div class="cell-food">{{ food_img(f, "thumb") }}<div><strong>{{ f.name_vi }}</strong><small class="muted">{{ f.slug }}</small></div></div></td>
+        <td>{{ f.category }}</td>
+        <td class="num">{{ f.calories|num }}</td>
+        <td class="num">{{ f.protein|num }} g</td>
+        <td>
+          {% if f.is_published %}<span class="badge badge-good">Hiển thị</span>{% else %}<span class="badge">Đang ẩn</span>{% endif %}
+          {% if f.is_featured %}<span class="badge badge-ok">Nổi bật</span>{% endif %}
+          {% if not f.image_path %}<span class="badge badge-limit">Chưa có ảnh</span>{% endif %}
+        </td>
+        <td class="actions"><a class="btn btn-ghost btn-sm" href="{{ url_for('admin.food_edit', food_id=f.id) }}">{{ icon("edit", 16) }} Sửa</a></td>
+      </tr>
+    {% else %}
+      <tr><td colspan="6" class="muted center">Không có món nào.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{{ pagination(page, "admin.foods") }}
+{% endblock %}

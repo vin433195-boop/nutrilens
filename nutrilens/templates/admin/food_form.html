@@ -1,0 +1,123 @@
+{% extends "admin/_layout.html" %}
+{% from "partials/macros.html" import icon, food_img, pagination with context %}
+{% block admin_title %}{{ food.name_vi if food else "Thêm món" }}{% endblock %}
+{% block heading %}{{ food.name_vi if food else "Thêm món mới" }}{% endblock %}
+{% block subheading %}{% if food %}<p class="muted"><a href="{{ url_for('main.food_detail', slug=food.slug) }}" target="_blank" rel="noopener">{{ icon("external", 14) }} Xem trên website</a></p>{% endif %}{% endblock %}
+
+{% macro err(name) %}{% if errors.get(name) %}<p class="field-error" id="err-{{ name }}">{{ errors[name] }}</p>{% endif %}{% endmacro %}
+{% macro text(name, label, value, placeholder="", type="text", hint=None) -%}
+<div class="field {{ 'has-error' if errors.get(name) }}">
+  <label for="{{ name }}">{{ label }}</label>
+  <input class="input" id="{{ name }}" name="{{ name }}" type="{{ type }}" value="{{ value }}" placeholder="{{ placeholder }}"
+         {% if type == "number" %}step="any" min="0"{% endif %} {% if errors.get(name) %}aria-invalid="true" aria-describedby="err-{{ name }}"{% endif %}>
+  {% if hint and not errors.get(name) %}<p class="hint">{{ hint }}</p>{% endif %}
+  {{ err(name) }}
+</div>
+{%- endmacro %}
+
+{% block admin_content %}
+{% if errors %}<div class="form-alert" role="alert">{{ icon("info", 18) }}<span>Vui lòng kiểm tra lại {{ errors|length }} trường bị lỗi bên dưới.</span></div>{% endif %}
+<form method="post" enctype="multipart/form-data" novalidate class="admin-form">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <div class="admin-form-main stack">
+    <section class="card">
+      <h2 class="card-title">Thông tin chung</h2>
+      <div class="form-row">
+        {{ text("name_vi", "Tên tiếng Việt *", form.name_vi) }}
+        {{ text("name_en", "Tên tiếng Anh", form.name_en) }}
+      </div>
+      <div class="form-row">
+        {{ text("slug", "Slug (đường dẫn)", form.slug, "tu-dong-tao-tu-ten", hint="Để trống để tự tạo từ tên tiếng Việt.") }}
+        {{ text("cuisine", "Ẩm thực", form.cuisine, "Việt Nam") }}
+      </div>
+      <div class="form-row">
+        <div class="field {{ 'has-error' if errors.category }}">
+          <label for="category">Danh mục *</label>
+          <select class="input" id="category" name="category">
+            <option value="">Chọn danh mục</option>
+            {% for c in categories %}<option {{ 'selected' if c == form.category }}>{{ c }}</option>{% endfor %}
+          </select>
+          {{ err("category") }}
+        </div>
+        {{ text("new_category", "Hoặc tạo danh mục mới", form.new_category, "Ví dụ: Đồ uống") }}
+      </div>
+      <div class="field">
+        <label for="description">Mô tả</label>
+        <textarea class="input" id="description" name="description" rows="3">{{ form.description }}</textarea>
+      </div>
+      <div class="form-row">
+        <div class="field"><label for="highlights">Điểm cộng (mỗi dòng một ý)</label><textarea class="input" id="highlights" name="highlights" rows="4">{{ form.highlights }}</textarea></div>
+        <div class="field"><label for="tips">Mẹo ăn lành mạnh (mỗi dòng một ý)</label><textarea class="input" id="tips" name="tips" rows="4">{{ form.tips }}</textarea></div>
+      </div>
+      {{ text("tags", "Thẻ (cách nhau bằng dấu phẩy)", form.tags, "món nước, thịt bò") }}
+    </section>
+
+    <section class="card">
+      <h2 class="card-title">Dinh dưỡng cho một khẩu phần</h2>
+      <div class="form-row">
+        {{ text("serving", "Khẩu phần *", form.serving, "1 tô (~500 g)") }}
+        {{ text("serving_grams", "Khối lượng khẩu phần (g)", form.serving_grams, "500", "number", "Dùng để người dùng nhập nhật ký theo gram.") }}
+      </div>
+      <div class="nutri-grid">
+        {% for key, label, lo, hi in nutrients %}{{ text(key, label, form[key], "0", "number") }}{% endfor %}
+      </div>
+      {{ text("source", "Nguồn số liệu", form.source, "Ví dụ: USDA FoodData Central, FNDDS 2021-2023") }}
+    </section>
+  </div>
+
+  <aside class="admin-form-side stack">
+    <section class="card">
+      <h2 class="card-title">Hiển thị</h2>
+      <label class="check"><input type="checkbox" name="is_published" value="1" {{ 'checked' if form.is_published }}> Hiển thị trên website</label>
+      <label class="check" style="margin-top:10px"><input type="checkbox" name="is_featured" value="1" {{ 'checked' if form.is_featured }}> Món nổi bật ở trang chủ</label>
+      <div class="field" style="margin-top:16px">
+        <label for="emoji">Emoji dự phòng</label>
+        <input class="input" id="emoji" name="emoji" value="{{ form.emoji }}" maxlength="8" style="max-width:120px">
+        <p class="hint">Chỉ dùng khi món chưa có ảnh.</p>
+      </div>
+      <div class="field {{ 'has-error' if errors.model_label }}">
+        <label for="model_label">Nhãn model AI</label>
+        <select class="input" id="model_label" name="model_label">
+          <option value="">Không gắn</option>
+          {% for l in labels %}<option {{ 'selected' if l == form.model_label }}>{{ l }}</option>{% endfor %}
+        </select>
+        <p class="hint">Khi AI dự đoán nhãn này, website hiển thị món này.</p>
+        {{ err("model_label") }}
+      </div>
+    </section>
+
+    <section class="card">
+      <h2 class="card-title">{{ icon("image") }} Ảnh món ăn</h2>
+      {% if food and food.image_path %}
+        <img class="admin-preview" src="{{ url_for('static', filename=food.image_path) }}" alt="{{ food.name_vi }}">
+        <label class="check" style="margin:10px 0"><input type="checkbox" name="remove_image" value="1"> Xóa ảnh hiện tại</label>
+      {% endif %}
+      <div class="field {{ 'has-error' if errors.image }}">
+        <label for="image">{{ "Thay ảnh mới" if food and food.image_path else "Tải ảnh lên" }}</label>
+        <input class="input" id="image" name="image" type="file" accept="image/jpeg,image/png,image/webp">
+        <p class="hint">JPG, PNG hoặc WEBP, tối đa 6 MB. Ảnh được chuyển sang WebP, rộng tối đa 1.200 px.</p>
+        {{ err("image") }}
+      </div>
+      {{ text("image_credit", "Tác giả ảnh", form.image_credit, "Tên tác giả") }}
+      {{ text("image_license", "Giấy phép", form.image_license, "CC BY-SA 4.0") }}
+      {{ text("image_source", "Link nguồn ảnh", form.image_source, "https://") }}
+    </section>
+
+    <div class="stack">
+      <button class="btn btn-primary btn-block btn-lg" type="submit">{{ icon("check", 18) }} Lưu món ăn</button>
+      <a class="btn btn-ghost btn-block" href="{{ url_for('admin.foods') }}">Quay lại danh sách</a>
+    </div>
+  </aside>
+</form>
+
+{% if food %}
+<form method="post" action="{{ url_for('admin.food_delete', food_id=food.id) }}" class="card danger-card" style="margin-top:24px" data-confirm="Xóa vĩnh viễn món {{ food.name_vi }}?">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <h2 class="card-title">{{ icon("trash") }} Xóa món ăn</h2>
+  <p class="muted small">Chỉ xóa được khi chưa có ai ghi món này vào nhật ký. Nếu đã có, hãy bỏ chọn “Hiển thị trên website”.</p>
+  <button class="btn btn-danger btn-sm" type="submit">Xóa món này</button>
+</form>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}<script src="{{ url_for('static', filename='js/auth.js') }}"></script>{% endblock %}

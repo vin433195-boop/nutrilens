@@ -1,0 +1,42 @@
+{% extends "admin/_layout.html" %}
+{% from "partials/macros.html" import icon, food_img, pagination with context %}
+{% block admin_title %}Người dùng{% endblock %}
+{% block heading %}Người dùng{% endblock %}
+{% block subheading %}<p class="muted">{{ page.total }} tài khoản.</p>{% endblock %}
+
+{% block admin_content %}
+<form class="admin-filter" method="get">
+  <div class="search-box">{{ icon("search", 18) }}<label class="sr-only" for="q">Tìm người dùng</label>
+    <input class="input" id="q" name="q" value="{{ q }}" placeholder="Tìm theo tên hoặc email"></div>
+  <button class="btn btn-outline btn-sm" type="submit">Tìm</button>
+</form>
+<div class="table-wrap">
+<table class="table">
+  <thead><tr><th>Người dùng</th><th>Vai trò</th><th>Email</th><th class="num">Món đã ghi</th><th>Ngày tạo</th><th>Đăng nhập cuối</th><th></th></tr></thead>
+  <tbody>
+    {% for u in page.items %}
+      <tr class="{{ 'muted-row' if not u.active }}">
+        <td><div class="cell-food"><span class="avatar">{{ u.initials }}</span><div><strong>{{ u.name }}</strong>{% if not u.active %}<small class="muted">Đã khóa</small>{% endif %}</div></div></td>
+        <td>{% if u.is_admin %}<span class="badge badge-ok">Quản trị</span>{% else %}<span class="badge">Thành viên</span>{% endif %}</td>
+        <td>{{ u.email }}{% if u.email_verified_at %} <span title="Đã xác thực email">{{ icon("check", 14) }}</span>{% endif %}</td>
+        <td class="num">{{ counts.get(u.id, 0) }}</td>
+        <td><small>{{ u.created_at.strftime("%d/%m/%Y") }}</small></td>
+        <td><small>{{ u.last_login_at.strftime("%d/%m/%Y %H:%M") if u.last_login_at else "–" }}</small></td>
+        <td class="actions">
+          {% if u.id != current_user.id %}
+          <form method="post" action="{{ url_for('admin.user_update', user_id=u.id) }}" class="inline-actions">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            {% if u.active %}<button class="btn btn-ghost btn-sm" name="action" value="deactivate">Khóa</button>
+            {% else %}<button class="btn btn-ghost btn-sm" name="action" value="activate">Mở khóa</button>{% endif %}
+            {% if u.is_admin %}<button class="btn btn-ghost btn-sm" name="action" value="demote">Bỏ quyền QT</button>
+            {% else %}<button class="btn btn-ghost btn-sm" name="action" value="promote">Cấp quyền QT</button>{% endif %}
+          </form>
+          {% else %}<small class="muted">Bạn</small>{% endif %}
+        </td>
+      </tr>
+    {% else %}<tr><td colspan="7" class="muted center">Không có người dùng.</td></tr>{% endfor %}
+  </tbody>
+</table>
+</div>
+{{ pagination(page, "admin.users") }}
+{% endblock %}
