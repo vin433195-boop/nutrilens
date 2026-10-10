@@ -1,0 +1,70 @@
+{
+  "_note": "Công thức tính dinh dưỡng. Mỗi thành phần: [mã fdcId USDA hoặc null nếu là nước, số gram, tên tiếng Việt]. Chạy: python scripts/build_nutrition.py <thư mục dữ liệu USDA>",
+
+  "apple_pie":   {"serving": "1 miếng (~125 g)", "items": [[2707995, 125, "Bánh táo nướng"]]},
+  "caesar_salad": {"serving": "1 đĩa kèm sốt (~180 g)", "items": [[2709591, 150, "Salad Caesar (xà lách romaine, phô mai, bánh mì nướng)"], [2710199, 30, "Sốt Caesar"]]},
+  "cheesecake":  {"serving": "1 miếng (~100 g)", "items": [[2707861, 100, "Bánh phô mai"]]},
+  "chicken_curry": {"serving": "1 chén (~240 g)", "items": [[2706437, 240, "Cà ri gà"]]},
+  "cup_cakes":   {"serving": "1 chiếc (~90 g)", "items": [[2707853, 90, "Bánh cupcake"]]},
+  "donuts":      {"serving": "1 chiếc (~60 g)", "items": [[2708066, 60, "Bánh donut phủ kem đường"]]},
+  "fried_rice":  {"serving": "1 đĩa (~250 g)", "items": [[2708954, 250, "Cơm chiên thịt heo"]]},
+  "hamburger":   {"serving": "1 chiếc (~145 g)", "items": [[2706920, 145, "Hamburger"]]},
+  "hot_dog":     {"serving": "1 chiếc (~107 g)", "items": [[2706166, 57, "Xúc xích"], [2707656, 50, "Bánh mì hot dog"]]},
+  "ice_cream":   {"serving": "1 cốc nhỏ (~100 g)", "items": [[2705630, 100, "Kem vani"]]},
+  "omelette":    {"serving": "2 quả trứng (~110 g)", "items": [[2707198, 110, "Trứng ốp lết"]]},
+  "pizza":       {"serving": "1 lát lớn (~110 g)", "items": [[2708616, 110, "Pizza phô mai, đế vừa"]]},
+  "pho":         {"serving": "1 tô (~550 g)", "items": [[2707124, 550, "Phở có thịt (bánh phở, thịt, nước dùng)"]]},
+  "ramen":       {"serving": "1 tô (~500 g)", "items": [[2709158, 500, "Mì ramen có thịt và trứng"]]},
+  "spaghetti_bolognese": {"serving": "1 đĩa (~380 g)", "items": [[169737, 200, "Mì spaghetti luộc"], [2706470, 180, "Sốt cà chua thịt bò bằm"]]},
+  "spring_rolls": {"serving": "2 cuốn (~128 g)", "items": [[2708702, 128, "Chả giò nhân thịt heo"]]},
+  "steak":       {"serving": "1 miếng (~150 g)", "items": [[2705824, 150, "Thịt bò bít tết đã nấu"]]},
+  "sushi":       {"serving": "6 miếng (~180 g)", "items": [[2708959, 180, "Sushi"]]},
+  "tacos":       {"serving": "1 chiếc (~105 g)", "items": [[2708514, 105, "Taco nhân thịt"]]},
+  "waffles":     {"serving": "1 chiếc vừa (~75 g)", "items": [[2708325, 75, "Bánh waffle"]]},
+
+  "com_tam": {"serving": "1 đĩa (~450 g)", "items": [
+    [168878, 200, "Cơm tấm (gạo trắng nấu chín)"], [167831, 110, "Sườn heo nướng"], [173423, 46, "Trứng ốp la"],
+    [2706457, 10, "Nước mắm"], [169655, 8, "Đường (nước mắm pha)"], [168409, 40, "Dưa leo"], [170457, 30, "Cà chua"],
+    [171411, 5, "Mỡ hành (dầu ăn)"]]},
+  "bun_bo_hue": {"serving": "1 tô (~715 g)", "items": [
+    [168914, 200, "Bún gạo"], [169442, 60, "Bắp bò chín"], [168223, 50, "Giò heo chín"], [172923, 350, "Nước dùng xương"],
+    [2706457, 8, "Nước mắm"], [171411, 8, "Sa tế, dầu điều"], [169957, 40, "Giá, rau sống"]]},
+  "banh_mi": {"serving": "1 ổ (~205 g)", "items": [
+    [172675, 90, "Bánh mì"], [173856, 40, "Chả lụa, thịt nguội"], [172928, 20, "Pa tê gan"], [2710204, 10, "Bơ trứng (mayonnaise)"],
+    [170393, 20, "Đồ chua cà rốt"], [168409, 20, "Dưa leo"], [169997, 3, "Ngò rí"]]},
+  "bun_cha": {"serving": "1 suất (~405 g)", "items": [
+    [168914, 180, "Bún gạo"], [168374, 70, "Chả viên thịt heo nướng"], [168223, 50, "Thịt heo nướng"],
+    [2706457, 12, "Nước mắm"], [169655, 12, "Đường (nước chấm)"], [170393, 30, "Cà rốt, đu đủ ngâm"], [169249, 50, "Rau sống"]]},
+  "goi_cuon": {"serving": "2 cuốn kèm tương (~152 g)", "items": [
+    [2708704, 142, "Gỏi cuốn tôm thịt (bánh tráng, bún, rau)"], [173806, 10, "Đậu phộng rang (tương chấm)"]]},
+  "banh_xeo": {"serving": "1 cái kèm rau, nước chấm (~315 g)", "items": [
+    [169714, 60, "Bột gạo"], [170172, 30, "Nước cốt dừa"], [171411, 15, "Dầu chiên"], [175180, 40, "Tôm"],
+    [168223, 40, "Thịt heo"], [169957, 50, "Giá đỗ"], [169249, 60, "Rau sống, cải xanh"],
+    [2706457, 10, "Nước mắm"], [169655, 10, "Đường (nước chấm)"]]},
+  "hu_tieu": {"serving": "1 tô (~700 g)", "items": [
+    [168914, 200, "Hủ tiếu (bánh gạo)"], [168250, 50, "Thịt heo nạc"], [175180, 40, "Tôm"], [172191, 20, "Trứng cút"],
+    [172923, 350, "Nước dùng xương"], [169957, 30, "Giá"], [2706457, 6, "Nước mắm"], [171411, 4, "Tỏi phi, dầu"]]},
+  "chao_ga": {"serving": "1 tô (~485 g)", "items": [
+    [168878, 150, "Gạo nấu nhừ"], [null, 250, "Nước"], [171451, 70, "Thịt gà xé"],
+    [170499, 5, "Hành tím phi"], [171411, 4, "Dầu ăn"], [2706457, 6, "Nước mắm"]]},
+  "ca_kho_to": {"serving": "1 phần cá (~160 g, chưa gồm cơm)", "items": [
+    [175166, 130, "Cá kho"], [169655, 8, "Đường (nước màu)"], [2706457, 12, "Nước mắm"], [171411, 6, "Dầu, mỡ"],
+    [170499, 5, "Hành tím"]]},
+  "canh_chua_ca": {"serving": "1 tô (~515 g)", "items": [
+    [175166, 80, "Cá"], [170457, 60, "Cà chua"], [169124, 40, "Thơm (dứa)"], [169957, 30, "Giá"], [169260, 30, "Đậu bắp"],
+    [167763, 10, "Me"], [169655, 6, "Đường"], [2706457, 8, "Nước mắm"], [null, 250, "Nước"]]},
+  "rau_muong_xao": {"serving": "1 đĩa (~220 g)", "items": [
+    [169302, 200, "Rau muống"], [171411, 10, "Dầu ăn"], [169230, 6, "Tỏi"], [2706457, 5, "Nước mắm"]]},
+  "com_ga": {"serving": "1 đĩa (~360 g)", "items": [
+    [168878, 200, "Cơm nấu nước luộc gà"], [171051, 110, "Gà luộc (cả da)"], [171411, 5, "Mỡ gà"],
+    [168409, 30, "Dưa leo"], [169997, 5, "Rau răm, hành"], [2706457, 6, "Nước mắm"], [169655, 6, "Đường"]]},
+  "banh_cuon": {"serving": "1 đĩa (~340 g)", "items": [
+    [169714, 50, "Bột gạo"], [null, 150, "Nước (tráng bánh)"], [168374, 40, "Thịt heo xay"], [169237, 10, "Mộc nhĩ"],
+    [173856, 30, "Chả lụa"], [170499, 5, "Hành phi"], [171411, 5, "Dầu ăn"], [2706457, 10, "Nước mắm"],
+    [169655, 10, "Đường (nước chấm)"], [169957, 30, "Giá, rau thơm"]]},
+  "che_dau_xanh": {"serving": "1 ly (~275 g)", "items": [
+    [174257, 120, "Đậu xanh nấu"], [169655, 25, "Đường"], [170172, 30, "Nước cốt dừa"], [null, 100, "Nước, đá"]]},
+  "bun_rieu": {"serving": "1 tô (~680 g)", "items": [
+    [168914, 200, "Bún gạo"], [174205, 40, "Riêu cua"], [170457, 60, "Cà chua"], [172451, 30, "Đậu phụ chiên"],
+    [172923, 300, "Nước dùng"], [2706457, 8, "Nước mắm"], [169957, 40, "Rau, giá"]]}
+}

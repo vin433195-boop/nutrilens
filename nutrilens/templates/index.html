@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "partials/macros.html" import icon, food_card, article_card with context %}
+{% from "partials/macros.html" import icon, food_card, food_img, article_card with context %}
 
 {% block content %}
 <section class="hero">
@@ -14,7 +14,7 @@
       </div>
       <div class="hero-trust">
         <div><strong>{{ dish_count }}</strong><span>món ăn quốc tế</span></div>
-        <div><strong>7</strong><span>chỉ số dinh dưỡng</span></div>
+        <div><strong>USDA</strong><span>nguồn số liệu dinh dưỡng</span></div>
         <div><strong>4</strong><span>công cụ sức khỏe</span></div>
       </div>
     </div>
@@ -28,7 +28,7 @@
           <span class="badge badge-good">{{ icon("check", 14) }} Đã nhận dạng</span>
           <span class="muted small">Ví dụ kết quả</span>
         </div>
-        <div class="hero-photo"><span>{{ hero.emoji }}</span><div class="scan"></div></div>
+        <div class="hero-photo {{ 'has-photo' if hero.image_path }}">{% if hero.image_path %}{{ food_img(hero, eager=True) }}{% else %}<span>{{ hero.emoji }}</span>{% endif %}<div class="scan"></div></div>
         <div class="hero-result">
           <div><h3>{{ hero.name_vi }}</h3><span class="muted small">{{ hero.serving }} · {{ hero.cuisine }}</span></div>
           <div class="donut sm" style="--c: {{ hp.carbohydrate }}; --p: {{ hp.protein }};"><div class="donut-center"><strong>{{ hero.calories|num }}</strong><span>kcal</span></div></div>
@@ -116,7 +116,7 @@
       <div class="step reveal">
         <div class="step-num">2</div>
         <h3>AI phân tích</h3>
-        <p>Mạng nơ-ron tích chập (CNN) được huấn luyện trên bộ dữ liệu Food-101 nhận dạng món ăn trong vài giây.</p>
+        <p>Mạng nơ-ron tích chập (CNN) được huấn luyện trên bộ dữ liệu Food-101 nhận dạng 20 món phổ biến trong vài giây.</p>
       </div>
       <div class="step reveal">
         <div class="step-num">3</div>

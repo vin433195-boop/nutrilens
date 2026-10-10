@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from datetime import date, datetime, timezone
 
+from functools import lru_cache
+
 import markdown
 from flask_login import UserMixin
 from markupsafe import Markup
@@ -171,6 +173,8 @@ class Food(NutritionMixin, db.Model):
     notes: Mapped[list["FoodNote"]] = relationship(order_by="FoodNote.position", lazy="selectin",
                                                    cascade="all, delete-orphan")
     tag_objs: Mapped[list[Tag]] = relationship(secondary=food_tags, lazy="selectin")
+    ingredients: Mapped[list["FoodIngredient"]] = relationship(order_by="FoodIngredient.position", lazy="selectin",
+                                                               cascade="all, delete-orphan")
 
     # Giữ nguyên giao diện cũ để template và API không phải thay đổi
     @property
@@ -201,6 +205,23 @@ class FoodNote(db.Model):
     position: Mapped[int] = mapped_column(Integer, default=0)
 
 
+class FoodIngredient(db.Model):
+    """Thành phần dùng để tính dinh dưỡng của món (số gram và mã tra cứu USDA FoodData Central)."""
+    __tablename__ = "food_ingredients"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    food_id: Mapped[int] = mapped_column(ForeignKey("foods.id", ondelete="CASCADE"), index=True)
+    position: Mapped[int] = mapped_column(Integer, default=0)
+    name: Mapped[str] = mapped_column(String(120))
+    grams: Mapped[float] = mapped_column(Float)
+    fdc_id: Mapped[int | None] = mapped_column(Integer)
+    usda_name: Mapped[str | None] = mapped_column(String(255))
+
+    @property
+    def usda_url(self) -> str | None:
+        return f"https://fdc.nal.usda.gov/food-details/{self.fdc_id}/nutrients" if self.fdc_id else None
+
+
 class ModelLabel(db.Model):
     """Ánh xạ nhãn đầu ra của model AI sang món ăn trong thư viện."""
     __tablename__ = "model_labels"
@@ -209,6 +230,12 @@ class ModelLabel(db.Model):
     food_id: Mapped[int] = mapped_column(ForeignKey("foods.id", ondelete="CASCADE"))
 
     food: Mapped[Food] = relationship()
+
+
+@lru_cache(maxsize=256)
+def _render_markdown(text: str) -> str:
+    """Lưu đệm HTML theo nội dung: bài viết sửa xong thì nội dung khác nên tự render lại."""
+    return markdown.markdown(text, extensions=["extra", "sane_lists"])
 
 
 # ════════════════════════════════════════════════════════════
@@ -235,7 +262,7 @@ class Article(db.Model):
     @property
     def html(self) -> Markup:
         # Nội dung do biên tập viên soạn, không phải dữ liệu người dùng gửi lên
-        return Markup(markdown.markdown(self.body_md, extensions=["extra", "sane_lists"]))
+        return Markup(_render_markdown(self.body_md))
 
     @property
     def date_vi(self) -> str:
@@ -275,6 +302,7 @@ class DiaryEntry(db.Model):
     def to_dict(self) -> dict:
         return {
             "id": self.id, "slug": self.food.slug, "name": self.food.name_vi, "emoji": self.food.emoji,
+            "image": f"/static/{self.food.image_path}" if self.food.image_path else None,
             "serving": self.food.serving, "meal": self.meal, "servings": self.servings,
             "kcal": self.kcal, "carb": self.carb, "protein": self.protein, "fat": self.fat,
         }
@@ -304,6 +332,7 @@ class Recognition(db.Model):
             "slug": shown.slug if shown else self.predicted_label,
             "name": shown.name_vi if shown else self.predicted_label,
             "emoji": shown.emoji if shown else "🍽️",
+            "image": f"/static/{shown.image_path}" if shown and shown.image_path else None,
             "kcal": shown.calories if shown else None,
             "confidence": self.confidence,
             "corrected": self.corrected_food_id is not None,

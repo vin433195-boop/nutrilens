@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% from "partials/macros.html" import icon with context %}
+
+{% block title %}Phương pháp và nguồn số liệu · {{ site_name }}{% endblock %}
+{% block description %}NutriLens tính dinh dưỡng từ cơ sở dữ liệu USDA FoodData Central, dùng ảnh Wikimedia Commons có giấy phép tự do và công khai cách tính điểm sức khỏe.{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+  <div class="container">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="{{ url_for('main.index') }}">Trang chủ</a>{{ icon("chevron-right", 14) }}<span>Phương pháp</span></nav>
+    <h1>Phương pháp và nguồn số liệu</h1>
+    <p>Chúng tôi công khai số liệu lấy từ đâu và được tính như thế nào, để bạn tự đánh giá mức độ tin cậy.</p>
+  </div>
+</section>
+
+<section class="section-sm">
+  <div class="container">
+    <article class="prose">
+      <h2 id="nguon">Nguồn số liệu dinh dưỡng</h2>
+      <p>Toàn bộ số liệu calo, protein, carbohydrate, chất béo, chất xơ, đường và natri được lấy từ <a href="https://fdc.nal.usda.gov/" target="_blank" rel="noopener">USDA FoodData Central</a>, cơ sở dữ liệu thành phần thực phẩm của Bộ Nông nghiệp Hoa Kỳ, phát hành công khai và miễn phí:</p>
+      <ul>
+        <li><strong>FNDDS 2021–2023:</strong> số liệu cho món ăn hoàn chỉnh như phở, pizza, sushi, hamburger.</li>
+        <li><strong>SR Legacy:</strong> số liệu cho từng nguyên liệu như gạo, thịt, rau, nước mắm.</li>
+      </ul>
+
+      <h2 id="cach-tinh">Cách tính cho từng món</h2>
+      <p>Có hai cách, tùy món đã có sẵn trong USDA hay chưa:</p>
+      <ol>
+        <li><strong>Lấy trực tiếp:</strong> món có sẵn trong FNDDS thì dùng giá trị cho 100 g nhân với khối lượng khẩu phần.</li>
+        <li><strong>Tính theo công thức:</strong> các món Việt như cơm tấm, bún chả, bánh xèo chưa có trong USDA. Chúng tôi lập công thức một khẩu phần điển hình gồm từng nguyên liệu và số gram, tra từng nguyên liệu trong USDA rồi cộng lại.</li>
+      </ol>
+      <p>Trang chi tiết mỗi món đều có bảng <strong>Cách tính số liệu</strong>, liệt kê thành phần, khối lượng và link tra cứu từng mục trên website USDA.</p>
+      <blockquote><p>Món ăn thực tế khác nhau rất nhiều theo quán và cách nấu. Hãy xem số liệu như ước tính có cơ sở, không phải con số chính xác cho đĩa ăn trước mặt bạn.</p></blockquote>
+
+      <h2 id="nhu-cau">Giá trị tham chiếu hằng ngày</h2>
+      <p>Phần trăm nhu cầu hằng ngày được tính cho chế độ ăn 2.000 kcal:</p>
+      <ul>
+        <li>Carbohydrate {{ daily_values.carbohydrate }} g, protein {{ daily_values.protein }} g, chất béo {{ daily_values.lipid }} g.</li>
+        <li>Chất xơ ít nhất {{ daily_values.fiber }} g, theo khuyến nghị của WHO.</li>
+        <li>Natri dưới {{ daily_values.sodium|num }} mg, tương đương 5 g muối, theo khuyến nghị của WHO.</li>
+        <li>Đường dưới {{ daily_values.sugar }} g, tức 10% năng lượng. Số liệu USDA là đường tổng, gồm cả đường tự nhiên trong trái cây và sữa.</li>
+      </ul>
+
+      <h2 id="diem-suc-khoe">Điểm sức khỏe</h2>
+      <p>Điểm từ 1 đến 10 là công thức đơn giản do NutriLens đặt ra để so sánh nhanh, <strong>không phải</strong> thang điểm y khoa được công nhận. Mỗi món bắt đầu từ 10 điểm rồi bị trừ hoặc cộng như sau:</p>
+      <ul>
+        <li>Năng lượng trên 400 kcal trừ 1,5 điểm, trên 300 kcal trừ 0,75 điểm.</li>
+        <li>Trên 45% năng lượng từ chất béo trừ 2 điểm, trên 35% trừ 1 điểm.</li>
+        <li>Dưới 10% năng lượng từ protein trừ 1,5 điểm, dưới 15% trừ 0,75 điểm.</li>
+        <li>Đường trên 20 g trừ 2 điểm, trên 10 g trừ 1 điểm.</li>
+        <li>Natri trên 1.200 mg trừ 1,5 điểm, trên 800 mg trừ 0,75 điểm.</li>
+        <li>Chất xơ từ 3 g trở lên cộng 0,5 điểm.</li>
+      </ul>
+      <p>Từ 7,5 điểm được xếp <em>Lành mạnh</em>, từ 5,5 điểm là <em>Cân bằng</em>, thấp hơn là <em>Nên hạn chế</em>. Vì tính theo cả khẩu phần, các món nước như phở hay bún bò thường bị trừ điểm do natri trong nước dùng. Bạn có thể giảm đáng kể lượng natri bằng cách không uống hết nước.</p>
+
+      <h2 id="ai">Nhận dạng món ăn bằng AI</h2>
+      <p>Mô hình CNN nhận dạng được 20 món trong bộ dữ liệu Food-101, với độ chính xác khoảng 40% trên tập kiểm thử. Các món Việt mới thêm vào thư viện chưa được mô hình nhận dạng. Khi bạn chọn lại món đúng, lựa chọn đó được lưu ẩn danh để huấn luyện lại mô hình sau này.</p>
+
+      <h2 id="anh">Hình ảnh</h2>
+      <p>Ảnh món ăn được lấy từ <a href="https://commons.wikimedia.org/" target="_blank" rel="noopener">Wikimedia Commons</a> với giấy phép tự do như CC BY, CC BY-SA hoặc CC0. Tên tác giả, giấy phép và link ảnh gốc được ghi ngay dưới ảnh trên trang chi tiết món.</p>
+    </article>
+  </div>
+</section>
+{% endblock %}

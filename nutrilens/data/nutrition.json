@@ -1,0 +1,1615 @@
+{
+ "apple_pie": {
+  "serving": "1 miếng (~125 g)",
+  "serving_grams": 125,
+  "nutrition": {
+   "calories": 370,
+   "carbohydrate": 46.9,
+   "protein": 3.4,
+   "lipid": 19.1,
+   "fiber": 2.2,
+   "sugar": 19.9,
+   "sodium": 271
+  },
+  "per100": {
+   "calories": 296.0,
+   "carbohydrate": 37.5,
+   "protein": 2.7,
+   "lipid": 15.3,
+   "fiber": 1.8,
+   "sugar": 15.9,
+   "sodium": 217.0
+  },
+  "ingredients": [
+   {
+    "name": "Bánh táo nướng",
+    "grams": 125,
+    "fdc_id": 2707995,
+    "usda": "Pie, apple"
+   }
+  ],
+  "source": "Số liệu trực tiếp từ USDA FNDDS 2021–2023"
+ },
+ "caesar_salad": {
+  "serving": "1 đĩa kèm sốt (~180 g)",
+  "serving_grams": 180,
+  "nutrition": {
+   "calories": 278,
+   "carbohydrate": 12.2,
+   "protein": 6.7,
+   "lipid": 22.5,
+   "fiber": 2.9,
+   "sugar": 2.7,
+   "sodium": 720
+  },
+  "per100": {
+   "calories": 154.5,
+   "carbohydrate": 6.8,
+   "protein": 3.7,
+   "lipid": 12.5,
+   "fiber": 1.6,
+   "sugar": 1.5,
+   "sodium": 399.8
+  },
+  "ingredients": [
+   {
+    "name": "Salad Caesar (xà lách romaine, phô mai, bánh mì nướng)",
+    "grams": 150,
+    "fdc_id": 2709591,
+    "usda": "Caesar salad, with romaine, no dressing"
+   },
+   {
+    "name": "Sốt Caesar",
+    "grams": 30,
+    "fdc_id": 2710199,
+    "usda": "Caesar dressing"
+   }
+  ],
+  "source": "Số liệu tính theo công thức từ USDA FNDDS 2021–2023"
+ },
+ "cheesecake": {
+  "serving": "1 miếng (~100 g)",
+  "serving_grams": 100,
+  "nutrition": {
+   "calories": 399,
+   "carbohydrate": 34.8,
+   "protein": 5.3,
+   "lipid": 26.5,
+   "fiber": 0.5,
+   "sugar": 26.6,
+   "sodium": 277
+  },
+  "per100": {
+   "calories": 399.0,
+   "carbohydrate": 34.8,
+   "protein": 5.3,
+   "lipid": 26.5,
+   "fiber": 0.5,
+   "sugar": 26.6,
+   "sodium": 277.0
+  },
+  "ingredients": [
+   {
+    "name": "Bánh phô mai",
+    "grams": 100,
+    "fdc_id": 2707861,
+    "usda": "Cheesecake, plain"
+   }
+  ],
+  "source": "Số liệu trực tiếp từ USDA FNDDS 2021–2023"
+ },
+ "chicken_curry": {
+  "serving": "1 chén (~240 g)",
+  "serving_grams": 240,
+  "nutrition": {
+   "calories": 257,
+   "carbohydrate": 15.7,
+   "protein": 15.6,
+   "lipid": 15.6,
+   "fiber": 3.4,
+   "sugar": 6.1,
+   "sodium": 902
+  },
+  "per100": {
+   "calories": 107.0,
+   "carbohydrate": 6.5,
+   "protein": 6.5,
+   "lipid": 6.5,
+   "fiber": 1.4,
+   "sugar": 2.6,
+   "sodium": 376.0
+  },
+  "ingredients": [
+   {
+    "name": "Cà ri gà",
+    "grams": 240,
+    "fdc_id": 2706437,
+    "usda": "Chicken curry"
+   }
+  ],
+  "source": "Số liệu trực tiếp từ USDA FNDDS 2021–2023"
+ },
+ "cup_cakes": {
+  "serving": "1 chiếc (~90 g)",
+  "serving_grams": 90,
+  "nutrition": {
+   "calories": 317,
+   "carbohydrate": 48.2,
+   "protein": 2.6,
+   "lipid": 13.3,
+   "fiber": 0.9,
+   "sugar": 35.6,
+   "sodium": 274
+  },
+  "per100": {
+   "calories": 352.0,
+   "carbohydrate": 53.6,
+   "protein": 2.8,
+   "lipid": 14.8,
+   "fiber": 1.0,
+   "sugar": 39.5,
+   "sodium": 304.0
+  },
+  "ingredients": [
+   {
+    "name": "Bánh cupcake",
+    "grams": 90,
+    "fdc_id": 2707853,
+    "usda": "Cake or cupcake, NFS"
+   }
+  ],
+  "source": "Số liệu trực tiếp từ USDA FNDDS 2021–2023"
+ },
+ "donuts": {
+  "serving": "1 chiếc (~60 g)",
+  "serving_grams": 60,
+  "nutrition": {
+   "calories": 259,
+   "carbohydrate": 30.7,
+   "protein": 2.5,
+   "lipid": 13.9,
+   "fiber": 0.8,
+   "sugar": 16.3,
+   "sodium": 251
+  },
+  "per100": {
+   "calories": 431.0,
+   "carbohydrate": 51.2,
+   "protein": 4.2,
+   "lipid": 23.2,
+   "fiber": 1.4,
+   "sugar": 27.1,
+   "sodium": 418.0
+  },
+  "ingredients": [
+   {
+    "name": "Bánh donut phủ kem đường",
+    "grams": 60,
+    "fdc_id": 2708066,
+    "usda": "Doughnut, cake type, with icing"
+   }
+  ],
+  "source": "Số liệu trực tiếp từ USDA FNDDS 2021–2023"
+ },
+ "fried_rice": {
+  "serving": "1 đĩa (~250 g)",
+  "serving_grams": 250,
+  "nutrition": {
+   "calories": 448,
+   "carbohydrate": 69.0,
+   "protein": 18.9,
+   "lipid": 10.4,
+   "fiber": 2.2,
+   "sugar": 1.3,
+   "sodium": 790
+  },
+  "per100": {
+   "calories": 179.0,
+   "carbohydrate": 27.6,
+   "protein": 7.6,
+   "lipid": 4.2,
+   "fiber": 0.9,
+   "sugar": 0.5,
+   "sodium": 316.0
+  },
+  "ingredients": [
+   {
+    "name": "Cơm chiên thịt heo",
+    "grams": 250,
+    "fdc_id": 2708954,
+    "usda": "Rice, fried, with pork"
+   }
+  ],
+  "source": "Số liệu trực tiếp từ USDA FNDDS 2021–2023"
+ },
+ "hamburger": {
+  "serving": "1 chiếc (~145 g)",
+  "serving_grams": 145,
+  "nutrition": {
+   "calories": 418,
+   "carbohydrate": 30.0,
+   "protein": 25.4,
+   "lipid": 20.9,
+   "fiber": 1.0,
+   "sugar": 4.3,
+   "sodium": 515
+  },
+  "per100": {
+   "calories": 288.0,
+   "carbohydrate": 20.7,
+   "protein": 17.5,
+   "lipid": 14.4,
+   "fiber": 0.7,
+   "sugar": 3.0,
+   "sodium": 355.0
+  },
+  "ingredients": [
+   {
+    "name": "Hamburger",
+    "grams": 145,
+    "fdc_id": 2706920,
+    "usda": "Hamburger, NFS"
+   }
+  ],
+  "source": "Số liệu trực tiếp từ USDA FNDDS 2021–2023"
+ },
+ "hot_dog": {
+  "serving": "1 chiếc (~107 g)",
+  "serving_grams": 107,
+  "nutrition": {
+   "calories": 310,
+   "carbohydrate": 26.2,
+   "protein": 11.4,
+   "lipid": 17.8,
+   "fiber": 1.1,
+   "sugar": 3.4,
+   "sodium": 697
+  },
+  "per100": {
+   "calories": 289.9,
+   "carbohydrate": 24.5,
+   "protein": 10.6,
+   "lipid": 16.6,
+   "fiber": 1.1,
+   "sugar": 3.2,
+   "sodium": 651.4
+  },
+  "ingredients": [
+   {
+    "name": "Xúc xích",
+    "grams": 57,
+    "fdc_id": 2706166,
+    "usda": "Hot dog, NFS"
+   },
+   {
+    "name": "Bánh mì hot dog",
+    "grams": 50,
+    "fdc_id": 2707656,
+    "usda": "Roll, white, hot dog bun"
+   }
+  ],
+  "source": "Số liệu tính theo công thức từ USDA FNDDS 2021–2023"
+ },
+ "ice_cream": {
+  "serving": "1 cốc nhỏ (~100 g)",
+  "serving_grams": 100,
+  "nutrition": {
+   "calories": 207,
+   "carbohydrate": 23.6,
+   "protein": 3.5,
+   "lipid": 11.0,
+   "fiber": 0.7,
+   "sugar": 21.2,
+   "sodium": 80
+  },
+  "per100": {
+   "calories": 207.0,
+   "carbohydrate": 23.6,
+   "protein": 3.5,
+   "lipid": 11.0,
+   "fiber": 0.7,
+   "sugar": 21.2,
+   "sodium": 80.0
+  },
+  "ingredients": [
+   {
+    "name": "Kem vani",
+    "grams": 100,
+    "fdc_id": 2705630,
+    "usda": "Ice cream, vanilla"
+   }
+  ],
+  "source": "Số liệu trực tiếp từ USDA FNDDS 2021–2023"
+ },
+ "omelette": {
+  "serving": "2 quả trứng (~110 g)",
+  "serving_grams": 110,
+  "nutrition": {
+   "calories": 204,
+   "carbohydrate": 1.0,
+   "protein": 12.7,
+   "lipid": 16.5,
+   "fiber": 0.0,
+   "sugar": 0.2,
+   "sodium": 273
+  },
+  "per100": {
+   "calories": 185.0,
+   "carbohydrate": 0.9,
+   "protein": 11.6,
+   "lipid": 15.0,
+   "fiber": 0.0,
+   "sugar": 0.2,
+   "sodium": 248.0
+  },
+  "ingredients": [
+   {
+    "name": "Trứng ốp lết",
+    "grams": 110,
+    "fdc_id": 2707198,
+    "usda": "Egg omelet or scrambled egg, NS as to fat"
+   }
+  ],
+  "source": "Số liệu trực tiếp từ USDA FNDDS 2021–2023"
+ },
+ "pizza": {
+  "serving": "1 lát lớn (~110 g)",
+  "serving_grams": 110,
+  "nutrition": {
+   "calories": 293,
+   "carbohydrate": 36.7,
+   "protein": 12.5,
+   "lipid": 10.7,
+   "fiber": 2.5,
+   "sugar": 3.9,
+   "sodium": 594
+  },
+  "per100": {
+   "calories": 266.0,
+   "carbohydrate": 33.3,
+   "protein": 11.4,
+   "lipid": 9.7,
+   "fiber": 2.3,
+   "sugar": 3.6,
+   "sodium": 540.0
+  },
+  "ingredients": [
+   {
+    "name": "Pizza phô mai, đế vừa",
+    "grams": 110,
+    "fdc_id": 2708616,
+    "usda": "Pizza, cheese, from restaurant or fast food, medium crust"
+   }
+  ],
+  "source": "Số liệu trực tiếp từ USDA FNDDS 2021–2023"
+ },
+ "pho": {
+  "serving": "1 tô (~550 g)",
+  "serving_grams": 550,
+  "nutrition": {
+   "calories": 424,
+   "carbohydrate": 30.8,
+   "protein": 32.0,
+   "lipid": 18.3,
+   "fiber": 2.2,
+   "sugar": 2.5,
+   "sodium": 2008
+  },
+  "per100": {
+   "calories": 77.0,
+   "carbohydrate": 5.6,
+   "protein": 5.8,
+   "lipid": 3.3,
+   "fiber": 0.4,
+   "sugar": 0.5,
+   "sodium": 365.0
+  },
+  "ingredients": [
+   {
+    "name": "Phở có thịt (bánh phở, thịt, nước dùng)",
+    "grams": 550,
+    "fdc_id": 2707124,
+    "usda": "Soup, pho, with meat"
+   }
+  ],
+  "source": "Số liệu trực tiếp từ USDA FNDDS 2021–2023"
+ },
+ "ramen": {
+  "serving": "1 tô (~500 g)",
+  "serving_grams": 500,
+  "nutrition": {
+   "calories": 635,
+   "carbohydrate": 69.8,
+   "protein": 35.6,
+   "lipid": 22.9,
+   "fiber": 4.5,
+   "sugar": 2.1,
+   "sodium": 1665
+  },
+  "per100": {
+   "calories": 127.0,
+   "carbohydrate": 13.9,
+   "protein": 7.1,
+   "lipid": 4.6,
+   "fiber": 0.9,
+   "sugar": 0.4,
+   "sodium": 333.0
+  },
+  "ingredients": [
+   {
+    "name": "Mì ramen có thịt và trứng",
+    "grams": 500,
+    "fdc_id": 2709158,
+    "usda": "Ramen bowl with meat and egg"
+   }
+  ],
+  "source": "Số liệu trực tiếp từ USDA FNDDS 2021–2023"
+ },
+ "spaghetti_bolognese": {
+  "serving": "1 đĩa (~380 g)",
+  "serving_grams": 380,
+  "nutrition": {
+   "calories": 478,
+   "carbohydrate": 73.5,
+   "protein": 22.3,
+   "lipid": 9.7,
+   "fiber": 6.3,
+   "sugar": 9.2,
+   "sodium": 744
+  },
+  "per100": {
+   "calories": 125.8,
+   "carbohydrate": 19.3,
+   "protein": 5.9,
+   "lipid": 2.6,
+   "fiber": 1.7,
+   "sugar": 2.4,
+   "sodium": 195.7
+  },
+  "ingredients": [
+   {
+    "name": "Mì spaghetti luộc",
+    "grams": 200,
+    "fdc_id": 169737,
+    "usda": "Pasta, cooked, enriched, without added salt"
+   },
+   {
+    "name": "Sốt cà chua thịt bò bằm",
+    "grams": 180,
+    "fdc_id": 2706470,
+    "usda": "Spaghetti sauce with meat"
+   }
+  ],
+  "source": "Số liệu tính theo công thức từ USDA SR Legacy (2018), USDA FNDDS 2021–2023"
+ },
+ "spring_rolls": {
+  "serving": "2 cuốn (~128 g)",
+  "serving_grams": 128,
+  "nutrition": {
+   "calories": 348,
+   "carbohydrate": 34.6,
+   "protein": 9.7,
+   "lipid": 18.8,
+   "fiber": 2.6,
+   "sugar": 6.5,
+   "sodium": 572
+  },
+  "per100": {
+   "calories": 272.0,
+   "carbohydrate": 27.0,
+   "protein": 7.6,
+   "lipid": 14.7,
+   "fiber": 2.0,
+   "sugar": 5.1,
+   "sodium": 447.0
+  },
+  "ingredients": [
+   {
+    "name": "Chả giò nhân thịt heo",
+    "grams": 128,
+    "fdc_id": 2708702,
+    "usda": "Egg roll, with beef and/or pork"
+   }
+  ],
+  "source": "Số liệu trực tiếp từ USDA FNDDS 2021–2023"
+ },
+ "steak": {
+  "serving": "1 miếng (~150 g)",
+  "serving_grams": 150,
+  "nutrition": {
+   "calories": 344,
+   "carbohydrate": 0.0,
+   "protein": 40.5,
+   "lipid": 19.3,
+   "fiber": 0.0,
+   "sugar": 0.0,
+   "sodium": 554
+  },
+  "per100": {
+   "calories": 229.0,
+   "carbohydrate": 0.0,
+   "protein": 27.0,
+   "lipid": 12.9,
+   "fiber": 0.0,
+   "sugar": 0.0,
+   "sodium": 369.0
+  },
+  "ingredients": [
+   {
+    "name": "Thịt bò bít tết đã nấu",
+    "grams": 150,
+    "fdc_id": 2705824,
+    "usda": "Beef, steak, NFS"
+   }
+  ],
+  "source": "Số liệu trực tiếp từ USDA FNDDS 2021–2023"
+ },
+ "sushi": {
+  "serving": "6 miếng (~180 g)",
+  "serving_grams": 180,
+  "nutrition": {
+   "calories": 169,
+   "carbohydrate": 33.1,
+   "protein": 5.3,
+   "lipid": 1.2,
+   "fiber": 1.8,
+   "sugar": 3.8,
+   "sodium": 770
+  },
+  "per100": {
+   "calories": 94.0,
+   "carbohydrate": 18.4,
+   "protein": 2.9,
+   "lipid": 0.7,
+   "fiber": 1.0,
+   "sugar": 2.1,
+   "sodium": 428.0
+  },
+  "ingredients": [
+   {
+    "name": "Sushi",
+    "grams": 180,
+    "fdc_id": 2708959,
+    "usda": "Sushi, NFS"
+   }
+  ],
+  "source": "Số liệu trực tiếp từ USDA FNDDS 2021–2023"
+ },
+ "tacos": {
+  "serving": "1 chiếc (~105 g)",
+  "serving_grams": 105,
+  "nutrition": {
+   "calories": 258,
+   "carbohydrate": 16.4,
+   "protein": 16.1,
+   "lipid": 14.2,
+   "fiber": 2.3,
+   "sugar": 0.3,
+   "sodium": 385
+  },
+  "per100": {
+   "calories": 246.0,
+   "carbohydrate": 15.6,
+   "protein": 15.3,
+   "lipid": 13.6,
+   "fiber": 2.2,
+   "sugar": 0.3,
+   "sodium": 367.0
+  },
+  "ingredients": [
+   {
+    "name": "Taco nhân thịt",
+    "grams": 105,
+    "fdc_id": 2708514,
+    "usda": "Taco, NFS"
+   }
+  ],
+  "source": "Số liệu trực tiếp từ USDA FNDDS 2021–2023"
+ },
+ "waffles": {
+  "serving": "1 chiếc vừa (~75 g)",
+  "serving_grams": 75,
+  "nutrition": {
+   "calories": 280,
+   "carbohydrate": 31.1,
+   "protein": 6.5,
+   "lipid": 14.1,
+   "fiber": 1.9,
+   "sugar": 6.2,
+   "sodium": 448
+  },
+  "per100": {
+   "calories": 373.0,
+   "carbohydrate": 41.5,
+   "protein": 8.7,
+   "lipid": 18.8,
+   "fiber": 2.5,
+   "sugar": 8.3,
+   "sodium": 597.0
+  },
+  "ingredients": [
+   {
+    "name": "Bánh waffle",
+    "grams": 75,
+    "fdc_id": 2708325,
+    "usda": "Waffle, plain"
+   }
+  ],
+  "source": "Số liệu trực tiếp từ USDA FNDDS 2021–2023"
+ },
+ "com_tam": {
+  "serving": "1 đĩa (~450 g)",
+  "serving_grams": 449,
+  "nutrition": {
+   "calories": 684,
+   "carbohydrate": 67.7,
+   "protein": 39.5,
+   "lipid": 26.8,
+   "fiber": 1.4,
+   "sugar": 10.1,
+   "sodium": 945
+  },
+  "per100": {
+   "calories": 152.4,
+   "carbohydrate": 15.1,
+   "protein": 8.8,
+   "lipid": 6.0,
+   "fiber": 0.3,
+   "sugar": 2.2,
+   "sodium": 210.5
+  },
+  "ingredients": [
+   {
+    "name": "Cơm tấm (gạo trắng nấu chín)",
+    "grams": 200,
+    "fdc_id": 168878,
+    "usda": "Rice, white, long-grain, regular, enriched, cooked"
+   },
+   {
+    "name": "Sườn heo nướng",
+    "grams": 110,
+    "fdc_id": 167831,
+    "usda": "Pork, fresh, loin, center rib (chops), bone-in, separable lean and fat, cooked, broiled"
+   },
+   {
+    "name": "Trứng ốp la",
+    "grams": 46,
+    "fdc_id": 173423,
+    "usda": "Egg, whole, cooked, fried"
+   },
+   {
+    "name": "Nước mắm",
+    "grams": 10,
+    "fdc_id": 2706457,
+    "usda": "Fish sauce"
+   },
+   {
+    "name": "Đường (nước mắm pha)",
+    "grams": 8,
+    "fdc_id": 169655,
+    "usda": "Sugars, granulated"
+   },
+   {
+    "name": "Dưa leo",
+    "grams": 40,
+    "fdc_id": 168409,
+    "usda": "Cucumber, with peel, raw"
+   },
+   {
+    "name": "Cà chua",
+    "grams": 30,
+    "fdc_id": 170457,
+    "usda": "Tomatoes, red, ripe, raw, year round average"
+   },
+   {
+    "name": "Mỡ hành (dầu ăn)",
+    "grams": 5,
+    "fdc_id": 171411,
+    "usda": "Oil, soybean, salad or cooking"
+   }
+  ],
+  "source": "Số liệu tính theo công thức từ USDA SR Legacy (2018), USDA FNDDS 2021–2023"
+ },
+ "bun_bo_hue": {
+  "serving": "1 tô (~715 g)",
+  "serving_grams": 716,
+  "nutrition": {
+   "calories": 569,
+   "carbohydrate": 51.6,
+   "protein": 39.6,
+   "lipid": 21.4,
+   "fiber": 2.7,
+   "sugar": 2.7,
+   "sodium": 1647
+  },
+  "per100": {
+   "calories": 79.5,
+   "carbohydrate": 7.2,
+   "protein": 5.5,
+   "lipid": 3.0,
+   "fiber": 0.4,
+   "sugar": 0.4,
+   "sodium": 230.0
+  },
+  "ingredients": [
+   {
+    "name": "Bún gạo",
+    "grams": 200,
+    "fdc_id": 168914,
+    "usda": "Rice noodles, cooked"
+   },
+   {
+    "name": "Bắp bò chín",
+    "grams": 60,
+    "fdc_id": 169442,
+    "usda": "Beef, shank crosscuts, separable lean only, trimmed to 1/4\" fat, choice, cooked, simmered"
+   },
+   {
+    "name": "Giò heo chín",
+    "grams": 50,
+    "fdc_id": 168223,
+    "usda": "Pork, fresh, leg (ham), whole, separable lean and fat, cooked, roasted"
+   },
+   {
+    "name": "Nước dùng xương",
+    "grams": 350,
+    "fdc_id": 172923,
+    "usda": "Soup, beef broth, cubed, prepared with water"
+   },
+   {
+    "name": "Nước mắm",
+    "grams": 8,
+    "fdc_id": 2706457,
+    "usda": "Fish sauce"
+   },
+   {
+    "name": "Sa tế, dầu điều",
+    "grams": 8,
+    "fdc_id": 171411,
+    "usda": "Oil, soybean, salad or cooking"
+   },
+   {
+    "name": "Giá, rau sống",
+    "grams": 40,
+    "fdc_id": 169957,
+    "usda": "Mung beans, mature seeds, sprouted, raw"
+   }
+  ],
+  "source": "Số liệu tính theo công thức từ USDA SR Legacy (2018), USDA FNDDS 2021–2023"
+ },
+ "banh_mi": {
+  "serving": "1 ổ (~205 g)",
+  "serving_grams": 203,
+  "nutrition": {
+   "calories": 464,
+   "carbohydrate": 51.1,
+   "protein": 19.0,
+   "lipid": 20.3,
+   "fiber": 2.7,
+   "sugar": 5.5,
+   "sodium": 1061
+  },
+  "per100": {
+   "calories": 228.4,
+   "carbohydrate": 25.2,
+   "protein": 9.3,
+   "lipid": 10.0,
+   "fiber": 1.3,
+   "sugar": 2.7,
+   "sodium": 522.6
+  },
+  "ingredients": [
+   {
+    "name": "Bánh mì",
+    "grams": 90,
+    "fdc_id": 172675,
+    "usda": "Bread, french or vienna (includes sourdough)"
+   },
+   {
+    "name": "Chả lụa, thịt nguội",
+    "grams": 40,
+    "fdc_id": 173856,
+    "usda": "Bologna, pork"
+   },
+   {
+    "name": "Pa tê gan",
+    "grams": 20,
+    "fdc_id": 172928,
+    "usda": "Pate, chicken liver, canned"
+   },
+   {
+    "name": "Bơ trứng (mayonnaise)",
+    "grams": 10,
+    "fdc_id": 2710204,
+    "usda": "Mayonnaise, regular"
+   },
+   {
+    "name": "Đồ chua cà rốt",
+    "grams": 20,
+    "fdc_id": 170393,
+    "usda": "Carrots, raw"
+   },
+   {
+    "name": "Dưa leo",
+    "grams": 20,
+    "fdc_id": 168409,
+    "usda": "Cucumber, with peel, raw"
+   },
+   {
+    "name": "Ngò rí",
+    "grams": 3,
+    "fdc_id": 169997,
+    "usda": "Coriander (cilantro) leaves, raw"
+   }
+  ],
+  "source": "Số liệu tính theo công thức từ USDA SR Legacy (2018), USDA FNDDS 2021–2023"
+ },
+ "bun_cha": {
+  "serving": "1 suất (~405 g)",
+  "serving_grams": 404,
+  "nutrition": {
+   "calories": 612,
+   "carbohydrate": 60.0,
+   "protein": 37.2,
+   "lipid": 24.3,
+   "fiber": 3.3,
+   "sugar": 14.3,
+   "sodium": 1103
+  },
+  "per100": {
+   "calories": 151.5,
+   "carbohydrate": 14.8,
+   "protein": 9.2,
+   "lipid": 6.0,
+   "fiber": 0.8,
+   "sugar": 3.5,
+   "sodium": 273.1
+  },
+  "ingredients": [
+   {
+    "name": "Bún gạo",
+    "grams": 180,
+    "fdc_id": 168914,
+    "usda": "Rice noodles, cooked"
+   },
+   {
+    "name": "Chả viên thịt heo nướng",
+    "grams": 70,
+    "fdc_id": 168374,
+    "usda": "Pork, ground, 84% lean / 16% fat, cooked, pan-broiled"
+   },
+   {
+    "name": "Thịt heo nướng",
+    "grams": 50,
+    "fdc_id": 168223,
+    "usda": "Pork, fresh, leg (ham), whole, separable lean and fat, cooked, roasted"
+   },
+   {
+    "name": "Nước mắm",
+    "grams": 12,
+    "fdc_id": 2706457,
+    "usda": "Fish sauce"
+   },
+   {
+    "name": "Đường (nước chấm)",
+    "grams": 12,
+    "fdc_id": 169655,
+    "usda": "Sugars, granulated"
+   },
+   {
+    "name": "Cà rốt, đu đủ ngâm",
+    "grams": 30,
+    "fdc_id": 170393,
+    "usda": "Carrots, raw"
+   },
+   {
+    "name": "Rau sống",
+    "grams": 50,
+    "fdc_id": 169249,
+    "usda": "Lettuce, green leaf, raw"
+   }
+  ],
+  "source": "Số liệu tính theo công thức từ USDA SR Legacy (2018), USDA FNDDS 2021–2023"
+ },
+ "goi_cuon": {
+  "serving": "2 cuốn kèm tương (~152 g)",
+  "serving_grams": 152,
+  "nutrition": {
+   "calories": 218,
+   "carbohydrate": 26.6,
+   "protein": 10.5,
+   "lipid": 8.7,
+   "fiber": 3.5,
+   "sugar": 6.0,
+   "sodium": 562
+  },
+  "per100": {
+   "calories": 143.2,
+   "carbohydrate": 17.5,
+   "protein": 6.9,
+   "lipid": 5.7,
+   "fiber": 2.3,
+   "sugar": 4.0,
+   "sodium": 369.4
+  },
+  "ingredients": [
+   {
+    "name": "Gỏi cuốn tôm thịt (bánh tráng, bún, rau)",
+    "grams": 142,
+    "fdc_id": 2708704,
+    "usda": "Roll with meat and/or shrimp, vegetables and rice paper, not fried"
+   },
+   {
+    "name": "Đậu phộng rang (tương chấm)",
+    "grams": 10,
+    "fdc_id": 173806,
+    "usda": "Peanuts, all types, dry-roasted, without salt"
+   }
+  ],
+  "source": "Số liệu tính theo công thức từ USDA FNDDS 2021–2023, USDA SR Legacy (2018)"
+ },
+ "banh_xeo": {
+  "serving": "1 cái kèm rau, nước chấm (~315 g)",
+  "serving_grams": 315,
+  "nutrition": {
+   "calories": 636,
+   "carbohydrate": 64.9,
+   "protein": 27.4,
+   "lipid": 30.3,
+   "fiber": 3.8,
+   "sugar": 14.0,
+   "sodium": 878
+  },
+  "per100": {
+   "calories": 202.0,
+   "carbohydrate": 20.6,
+   "protein": 8.7,
+   "lipid": 9.6,
+   "fiber": 1.2,
+   "sugar": 4.4,
+   "sodium": 278.7
+  },
+  "ingredients": [
+   {
+    "name": "Bột gạo",
+    "grams": 60,
+    "fdc_id": 169714,
+    "usda": "Rice flour, white, unenriched"
+   },
+   {
+    "name": "Nước cốt dừa",
+    "grams": 30,
+    "fdc_id": 170172,
+    "usda": "Nuts, coconut milk, raw (liquid expressed from grated meat and water)"
+   },
+   {
+    "name": "Dầu chiên",
+    "grams": 15,
+    "fdc_id": 171411,
+    "usda": "Oil, soybean, salad or cooking"
+   },
+   {
+    "name": "Tôm",
+    "grams": 40,
+    "fdc_id": 175180,
+    "usda": "Crustaceans, shrimp, cooked"
+   },
+   {
+    "name": "Thịt heo",
+    "grams": 40,
+    "fdc_id": 168223,
+    "usda": "Pork, fresh, leg (ham), whole, separable lean and fat, cooked, roasted"
+   },
+   {
+    "name": "Giá đỗ",
+    "grams": 50,
+    "fdc_id": 169957,
+    "usda": "Mung beans, mature seeds, sprouted, raw"
+   },
+   {
+    "name": "Rau sống, cải xanh",
+    "grams": 60,
+    "fdc_id": 169249,
+    "usda": "Lettuce, green leaf, raw"
+   },
+   {
+    "name": "Nước mắm",
+    "grams": 10,
+    "fdc_id": 2706457,
+    "usda": "Fish sauce"
+   },
+   {
+    "name": "Đường (nước chấm)",
+    "grams": 10,
+    "fdc_id": 169655,
+    "usda": "Sugars, granulated"
+   }
+  ],
+  "source": "Số liệu tính theo công thức từ USDA SR Legacy (2018), USDA FNDDS 2021–2023"
+ },
+ "hu_tieu": {
+  "serving": "1 tô (~700 g)",
+  "serving_grams": 700,
+  "nutrition": {
+   "calories": 416,
+   "carbohydrate": 51.1,
+   "protein": 30.8,
+   "lipid": 8.8,
+   "fiber": 2.5,
+   "sugar": 2.3,
+   "sodium": 1522
+  },
+  "per100": {
+   "calories": 59.4,
+   "carbohydrate": 7.3,
+   "protein": 4.4,
+   "lipid": 1.3,
+   "fiber": 0.4,
+   "sugar": 0.3,
+   "sodium": 217.4
+  },
+  "ingredients": [
+   {
+    "name": "Hủ tiếu (bánh gạo)",
+    "grams": 200,
+    "fdc_id": 168914,
+    "usda": "Rice noodles, cooked"
+   },
+   {
+    "name": "Thịt heo nạc",
+    "grams": 50,
+    "fdc_id": 168250,
+    "usda": "Pork, fresh, loin, tenderloin, separable lean only, cooked, roasted"
+   },
+   {
+    "name": "Tôm",
+    "grams": 40,
+    "fdc_id": 175180,
+    "usda": "Crustaceans, shrimp, cooked"
+   },
+   {
+    "name": "Trứng cút",
+    "grams": 20,
+    "fdc_id": 172191,
+    "usda": "Egg, quail, whole, fresh, raw"
+   },
+   {
+    "name": "Nước dùng xương",
+    "grams": 350,
+    "fdc_id": 172923,
+    "usda": "Soup, beef broth, cubed, prepared with water"
+   },
+   {
+    "name": "Giá",
+    "grams": 30,
+    "fdc_id": 169957,
+    "usda": "Mung beans, mature seeds, sprouted, raw"
+   },
+   {
+    "name": "Nước mắm",
+    "grams": 6,
+    "fdc_id": 2706457,
+    "usda": "Fish sauce"
+   },
+   {
+    "name": "Tỏi phi, dầu",
+    "grams": 4,
+    "fdc_id": 171411,
+    "usda": "Oil, soybean, salad or cooking"
+   }
+  ],
+  "source": "Số liệu tính theo công thức từ USDA SR Legacy (2018), USDA FNDDS 2021–2023"
+ },
+ "chao_ga": {
+  "serving": "1 tô (~485 g)",
+  "serving_grams": 485,
+  "nutrition": {
+   "calories": 360,
+   "carbohydrate": 43.3,
+   "protein": 23.6,
+   "lipid": 9.1,
+   "fiber": 0.8,
+   "sugar": 0.7,
+   "sodium": 522
+  },
+  "per100": {
+   "calories": 74.2,
+   "carbohydrate": 8.9,
+   "protein": 4.9,
+   "lipid": 1.9,
+   "fiber": 0.2,
+   "sugar": 0.1,
+   "sodium": 107.7
+  },
+  "ingredients": [
+   {
+    "name": "Gạo nấu nhừ",
+    "grams": 150,
+    "fdc_id": 168878,
+    "usda": "Rice, white, long-grain, regular, enriched, cooked"
+   },
+   {
+    "name": "Nước",
+    "grams": 250,
+    "fdc_id": null,
+    "usda": "Nước (0 kcal)"
+   },
+   {
+    "name": "Thịt gà xé",
+    "grams": 70,
+    "fdc_id": 171451,
+    "usda": "Chicken, broilers or fryers, meat only, cooked, stewed"
+   },
+   {
+    "name": "Hành tím phi",
+    "grams": 5,
+    "fdc_id": 170499,
+    "usda": "Shallots, raw"
+   },
+   {
+    "name": "Dầu ăn",
+    "grams": 4,
+    "fdc_id": 171411,
+    "usda": "Oil, soybean, salad or cooking"
+   },
+   {
+    "name": "Nước mắm",
+    "grams": 6,
+    "fdc_id": 2706457,
+    "usda": "Fish sauce"
+   }
+  ],
+  "source": "Số liệu tính theo công thức từ USDA SR Legacy (2018), USDA FNDDS 2021–2023"
+ },
+ "ca_kho_to": {
+  "serving": "1 phần cá (~160 g, chưa gồm cơm)",
+  "serving_grams": 161,
+  "nutrition": {
+   "calories": 279,
+   "carbohydrate": 9.3,
+   "protein": 24.7,
+   "lipid": 15.4,
+   "fiber": 0.2,
+   "sugar": 8.8,
+   "sodium": 1098
+  },
+  "per100": {
+   "calories": 173.3,
+   "carbohydrate": 5.8,
+   "protein": 15.3,
+   "lipid": 9.5,
+   "fiber": 0.1,
+   "sugar": 5.5,
+   "sodium": 681.7
+  },
+  "ingredients": [
+   {
+    "name": "Cá kho",
+    "grams": 130,
+    "fdc_id": 175166,
+    "usda": "Fish, catfish, channel, farmed, cooked, dry heat"
+   },
+   {
+    "name": "Đường (nước màu)",
+    "grams": 8,
+    "fdc_id": 169655,
+    "usda": "Sugars, granulated"
+   },
+   {
+    "name": "Nước mắm",
+    "grams": 12,
+    "fdc_id": 2706457,
+    "usda": "Fish sauce"
+   },
+   {
+    "name": "Dầu, mỡ",
+    "grams": 6,
+    "fdc_id": 171411,
+    "usda": "Oil, soybean, salad or cooking"
+   },
+   {
+    "name": "Hành tím",
+    "grams": 5,
+    "fdc_id": 170499,
+    "usda": "Shallots, raw"
+   }
+  ],
+  "source": "Số liệu tính theo công thức từ USDA SR Legacy (2018), USDA FNDDS 2021–2023"
+ },
+ "canh_chua_ca": {
+  "serving": "1 tô (~515 g)",
+  "serving_grams": 514,
+  "nutrition": {
+   "calories": 215,
+   "carbohydrate": 24.1,
+   "protein": 17.7,
+   "lipid": 6.1,
+   "fiber": 3.3,
+   "sugar": 17.4,
+   "sodium": 733
+  },
+  "per100": {
+   "calories": 41.8,
+   "carbohydrate": 4.7,
+   "protein": 3.4,
+   "lipid": 1.2,
+   "fiber": 0.6,
+   "sugar": 3.4,
+   "sodium": 142.7
+  },
+  "ingredients": [
+   {
+    "name": "Cá",
+    "grams": 80,
+    "fdc_id": 175166,
+    "usda": "Fish, catfish, channel, farmed, cooked, dry heat"
+   },
+   {
+    "name": "Cà chua",
+    "grams": 60,
+    "fdc_id": 170457,
+    "usda": "Tomatoes, red, ripe, raw, year round average"
+   },
+   {
+    "name": "Thơm (dứa)",
+    "grams": 40,
+    "fdc_id": 169124,
+    "usda": "Pineapple, raw, all varieties"
+   },
+   {
+    "name": "Giá",
+    "grams": 30,
+    "fdc_id": 169957,
+    "usda": "Mung beans, mature seeds, sprouted, raw"
+   },
+   {
+    "name": "Đậu bắp",
+    "grams": 30,
+    "fdc_id": 169260,
+    "usda": "Okra, raw"
+   },
+   {
+    "name": "Me",
+    "grams": 10,
+    "fdc_id": 167763,
+    "usda": "Tamarinds, raw"
+   },
+   {
+    "name": "Đường",
+    "grams": 6,
+    "fdc_id": 169655,
+    "usda": "Sugars, granulated"
+   },
+   {
+    "name": "Nước mắm",
+    "grams": 8,
+    "fdc_id": 2706457,
+    "usda": "Fish sauce"
+   },
+   {
+    "name": "Nước",
+    "grams": 250,
+    "fdc_id": null,
+    "usda": "Nước (0 kcal)"
+   }
+  ],
+  "source": "Số liệu tính theo công thức từ USDA SR Legacy (2018), USDA FNDDS 2021–2023"
+ },
+ "rau_muong_xao": {
+  "serving": "1 đĩa (~220 g)",
+  "serving_grams": 221,
+  "nutrition": {
+   "calories": 139,
+   "carbohydrate": 9.6,
+   "protein": 4.8,
+   "lipid": 10.5,
+   "fiber": 3.9,
+   "sugar": 0.2,
+   "sodium": 638
+  },
+  "per100": {
+   "calories": 62.9,
+   "carbohydrate": 4.3,
+   "protein": 2.2,
+   "lipid": 4.8,
+   "fiber": 1.8,
+   "sugar": 0.1,
+   "sodium": 288.5
+  },
+  "ingredients": [
+   {
+    "name": "Rau muống",
+    "grams": 200,
+    "fdc_id": 169302,
+    "usda": "Water convolvulus, cooked, boiled, drained, without salt"
+   },
+   {
+    "name": "Dầu ăn",
+    "grams": 10,
+    "fdc_id": 171411,
+    "usda": "Oil, soybean, salad or cooking"
+   },
+   {
+    "name": "Tỏi",
+    "grams": 6,
+    "fdc_id": 169230,
+    "usda": "Garlic, raw"
+   },
+   {
+    "name": "Nước mắm",
+    "grams": 5,
+    "fdc_id": 2706457,
+    "usda": "Fish sauce"
+   }
+  ],
+  "source": "Số liệu tính theo công thức từ USDA SR Legacy (2018), USDA FNDDS 2021–2023"
+ },
+ "com_ga": {
+  "serving": "1 đĩa (~360 g)",
+  "serving_grams": 362,
+  "nutrition": {
+   "calories": 576,
+   "carbohydrate": 63.8,
+   "protein": 33.1,
+   "lipid": 19.4,
+   "fiber": 1.1,
+   "sugar": 6.9,
+   "sodium": 550
+  },
+  "per100": {
+   "calories": 159.1,
+   "carbohydrate": 17.6,
+   "protein": 9.2,
+   "lipid": 5.4,
+   "fiber": 0.3,
+   "sugar": 1.9,
+   "sodium": 151.9
+  },
+  "ingredients": [
+   {
+    "name": "Cơm nấu nước luộc gà",
+    "grams": 200,
+    "fdc_id": 168878,
+    "usda": "Rice, white, long-grain, regular, enriched, cooked"
+   },
+   {
+    "name": "Gà luộc (cả da)",
+    "grams": 110,
+    "fdc_id": 171051,
+    "usda": "Chicken, broilers or fryers, meat and skin, cooked, stewed"
+   },
+   {
+    "name": "Mỡ gà",
+    "grams": 5,
+    "fdc_id": 171411,
+    "usda": "Oil, soybean, salad or cooking"
+   },
+   {
+    "name": "Dưa leo",
+    "grams": 30,
+    "fdc_id": 168409,
+    "usda": "Cucumber, with peel, raw"
+   },
+   {
+    "name": "Rau răm, hành",
+    "grams": 5,
+    "fdc_id": 169997,
+    "usda": "Coriander (cilantro) leaves, raw"
+   },
+   {
+    "name": "Nước mắm",
+    "grams": 6,
+    "fdc_id": 2706457,
+    "usda": "Fish sauce"
+   },
+   {
+    "name": "Đường",
+    "grams": 6,
+    "fdc_id": 169655,
+    "usda": "Sugars, granulated"
+   }
+  ],
+  "source": "Số liệu tính theo công thức từ USDA SR Legacy (2018), USDA FNDDS 2021–2023"
+ },
+ "banh_cuon": {
+  "serving": "1 đĩa (~340 g)",
+  "serving_grams": 340,
+  "nutrition": {
+   "calories": 479,
+   "carbohydrate": 53.9,
+   "protein": 20.0,
+   "lipid": 20.3,
+   "fiber": 1.9,
+   "sugar": 12.0,
+   "sodium": 1096
+  },
+  "per100": {
+   "calories": 140.9,
+   "carbohydrate": 15.9,
+   "protein": 5.9,
+   "lipid": 6.0,
+   "fiber": 0.6,
+   "sugar": 3.5,
+   "sodium": 322.4
+  },
+  "ingredients": [
+   {
+    "name": "Bột gạo",
+    "grams": 50,
+    "fdc_id": 169714,
+    "usda": "Rice flour, white, unenriched"
+   },
+   {
+    "name": "Nước (tráng bánh)",
+    "grams": 150,
+    "fdc_id": null,
+    "usda": "Nước (0 kcal)"
+   },
+   {
+    "name": "Thịt heo xay",
+    "grams": 40,
+    "fdc_id": 168374,
+    "usda": "Pork, ground, 84% lean / 16% fat, cooked, pan-broiled"
+   },
+   {
+    "name": "Mộc nhĩ",
+    "grams": 10,
+    "fdc_id": 169237,
+    "usda": "Jew's ear, (pepeao), raw"
+   },
+   {
+    "name": "Chả lụa",
+    "grams": 30,
+    "fdc_id": 173856,
+    "usda": "Bologna, pork"
+   },
+   {
+    "name": "Hành phi",
+    "grams": 5,
+    "fdc_id": 170499,
+    "usda": "Shallots, raw"
+   },
+   {
+    "name": "Dầu ăn",
+    "grams": 5,
+    "fdc_id": 171411,
+    "usda": "Oil, soybean, salad or cooking"
+   },
+   {
+    "name": "Nước mắm",
+    "grams": 10,
+    "fdc_id": 2706457,
+    "usda": "Fish sauce"
+   },
+   {
+    "name": "Đường (nước chấm)",
+    "grams": 10,
+    "fdc_id": 169655,
+    "usda": "Sugars, granulated"
+   },
+   {
+    "name": "Giá, rau thơm",
+    "grams": 30,
+    "fdc_id": 169957,
+    "usda": "Mung beans, mature seeds, sprouted, raw"
+   }
+  ],
+  "source": "Số liệu tính theo công thức từ USDA SR Legacy (2018), USDA FNDDS 2021–2023"
+ },
+ "che_dau_xanh": {
+  "serving": "1 ly (~275 g)",
+  "serving_grams": 275,
+  "nutrition": {
+   "calories": 292,
+   "carbohydrate": 49.6,
+   "protein": 9.1,
+   "lipid": 7.6,
+   "fiber": 9.8,
+   "sugar": 28.4,
+   "sodium": 7
+  },
+  "per100": {
+   "calories": 106.1,
+   "carbohydrate": 18.0,
+   "protein": 3.3,
+   "lipid": 2.8,
+   "fiber": 3.6,
+   "sugar": 10.3,
+   "sodium": 2.6
+  },
+  "ingredients": [
+   {
+    "name": "Đậu xanh nấu",
+    "grams": 120,
+    "fdc_id": 174257,
+    "usda": "Mung beans, mature seeds, cooked, boiled, without salt"
+   },
+   {
+    "name": "Đường",
+    "grams": 25,
+    "fdc_id": 169655,
+    "usda": "Sugars, granulated"
+   },
+   {
+    "name": "Nước cốt dừa",
+    "grams": 30,
+    "fdc_id": 170172,
+    "usda": "Nuts, coconut milk, raw (liquid expressed from grated meat and water)"
+   },
+   {
+    "name": "Nước, đá",
+    "grams": 100,
+    "fdc_id": null,
+    "usda": "Nước (0 kcal)"
+   }
+  ],
+  "source": "Số liệu tính theo công thức từ USDA SR Legacy (2018)"
+ },
+ "bun_rieu": {
+  "serving": "1 tô (~680 g)",
+  "serving_grams": 678,
+  "nutrition": {
+   "calories": 365,
+   "carbohydrate": 56.4,
+   "protein": 19.2,
+   "lipid": 7.2,
+   "fiber": 4.6,
+   "sugar": 5.0,
+   "sodium": 1614
+  },
+  "per100": {
+   "calories": 53.8,
+   "carbohydrate": 8.3,
+   "protein": 2.8,
+   "lipid": 1.1,
+   "fiber": 0.7,
+   "sugar": 0.7,
+   "sodium": 238.1
+  },
+  "ingredients": [
+   {
+    "name": "Bún gạo",
+    "grams": 200,
+    "fdc_id": 168914,
+    "usda": "Rice noodles, cooked"
+   },
+   {
+    "name": "Riêu cua",
+    "grams": 40,
+    "fdc_id": 174205,
+    "usda": "Crustaceans, crab, blue, cooked, moist heat"
+   },
+   {
+    "name": "Cà chua",
+    "grams": 60,
+    "fdc_id": 170457,
+    "usda": "Tomatoes, red, ripe, raw, year round average"
+   },
+   {
+    "name": "Đậu phụ chiên",
+    "grams": 30,
+    "fdc_id": 172451,
+    "usda": "Tofu, fried"
+   },
+   {
+    "name": "Nước dùng",
+    "grams": 300,
+    "fdc_id": 172923,
+    "usda": "Soup, beef broth, cubed, prepared with water"
+   },
+   {
+    "name": "Nước mắm",
+    "grams": 8,
+    "fdc_id": 2706457,
+    "usda": "Fish sauce"
+   },
+   {
+    "name": "Rau, giá",
+    "grams": 40,
+    "fdc_id": 169957,
+    "usda": "Mung beans, mature seeds, sprouted, raw"
+   }
+  ],
+  "source": "Số liệu tính theo công thức từ USDA SR Legacy (2018), USDA FNDDS 2021–2023"
+ }
+}

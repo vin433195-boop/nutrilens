@@ -34,4 +34,4 @@ Sau đó nhân BMR với hệ số vận động, từ 1,2 nếu ít vận độ
 
 ## Chất lượng quan trọng không kém số lượng
 
-Một chiếc donut và một tô phở có thể chênh nhau không nhiều về calo, nhưng tô phở mang lại nhiều protein hơn và giữ no lâu hơn. Hãy xem calo như ngân sách, còn dinh dưỡng là cách bạn chi tiêu ngân sách đó.
+Hai chiếc [donut](/mon-an/donuts) (khoảng 520 kcal) và một tô [phở bò](/mon-an/pho) (khoảng 420 kcal) không chênh nhau nhiều về calo, nhưng tô phở có lượng protein gấp khoảng sáu lần và giữ no lâu hơn. Hãy xem calo như ngân sách, còn dinh dưỡng là cách bạn chi tiêu ngân sách đó.

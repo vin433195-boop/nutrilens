@@ -53,14 +53,13 @@ def index():
 
 @bp.route("/mon-an")
 def foods():
-    foods = sorted(catalog().all(), key=lambda f: f.name_vi)
-    return render_template(
-        "foods.html",
-        foods=foods,
-        categories=catalog().categories(),
-        query=request.args.get("q", "").strip(),
-        active_category=request.args.get("danh-muc", ""),
-    )
+    from .catalog import SORTS
+    q = request.args.get("q", "").strip()[:80]
+    category = request.args.get("danh-muc", "")
+    sort = request.args.get("sap-xep", "ten")
+    page = catalog().browse(q=q, category=category, sort=sort, page=request.args.get("trang", 1, type=int))
+    return render_template("foods.html", page=page, categories=catalog().categories(), query=q,
+                           active_category=category, sort=sort, sorts=SORTS)
 
 
 @bp.route("/mon-an/<slug>")
@@ -82,8 +81,10 @@ def compare():
 @bp.route("/nhan-dang")
 def recognize():
     predictor = current_app.extensions["predictor"]
+    labels = catalog().class_names
+    foods = [f for f in (catalog().by_label(l) for l in labels) if f]
     return render_template("recognize.html", model_status=predictor.status,
-                           foods=sorted(catalog().all(), key=lambda f: f.name_vi))
+                           foods=sorted(foods, key=lambda f: f.name_vi))
 
 
 @bp.route("/cong-cu")
@@ -116,6 +117,11 @@ def article_detail(slug):
 @bp.route("/gioi-thieu")
 def about():
     return render_template("about.html")
+
+
+@bp.route("/phuong-phap")
+def methodology():
+    return render_template("methodology.html")
 
 
 @bp.route("/chinh-sach-quyen-rieng-tu")
@@ -182,7 +188,7 @@ def robots():
 def sitemap():
     urls = [url_for(e, _external=True) for e in (
         "main.index", "main.foods", "main.recognize", "main.calculator", "main.diary",
-        "main.compare", "main.article_list", "main.about", "main.contact", "main.privacy")]
+        "main.compare", "main.article_list", "main.about", "main.contact", "main.privacy", "main.methodology")]
     urls += [url_for("main.food_detail", slug=f.slug, _external=True) for f in catalog().all()]
     urls += [url_for("main.article_detail", slug=a.slug, _external=True) for a in articles().all()]
     xml = ['<?xml version="1.0" encoding="UTF-8"?>',

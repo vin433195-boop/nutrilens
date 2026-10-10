@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "partials/macros.html" import icon, macro_donut, health_badge, tile_class with context %}
+{% from "partials/macros.html" import icon, food_img, macro_donut, health_badge, tile_class with context %}
 
 {% block title %}So sánh {{ a.name_vi }} và {{ b.name_vi }} · {{ site_name }}{% endblock %}
 {% block description %}So sánh calo, protein, carbohydrate, chất béo, chất xơ, đường và natri giữa {{ a.name_vi }} và {{ b.name_vi }}.{% endblock %}
@@ -30,7 +30,7 @@
       <div class="compare-heads">
         {% for f in [a, b] %}
           <div class="compare-head">
-            <div class="e {{ tile_class(f) }}" aria-hidden="true">{{ f.emoji }}</div>
+            <div class="e {{ tile_class(f) }} {{ 'has-photo' if f.image_path }}" aria-hidden="true">{% if f.image_path %}{{ food_img(f) }}{% else %}{{ f.emoji }}{% endif %}</div>
             <div>
               <h2><a href="{{ url_for('main.food_detail', slug=f.slug) }}" style="color:inherit">{{ f.name_vi }}</a></h2>
               <div class="muted small">{{ f.serving }}</div>

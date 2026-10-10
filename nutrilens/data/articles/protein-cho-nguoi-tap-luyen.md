@@ -19,13 +19,14 @@ Thay vì dồn hết vào bữa tối, hãy chia protein thành 3–5 bữa, m�
 
 ## Gợi ý từ thư viện món ăn
 
-- **[Bít tết](/mon-an/steak):** khoảng 26 g protein mỗi miếng 120 g.
-- **[Phở bò](/mon-an/pho):** khoảng 20 g mỗi tô.
-- **[Cà ri gà](/mon-an/chicken_curry):** khoảng 18 g mỗi chén.
-- **[Trứng ốp lết](/mon-an/omelette):** khoảng 11 g với 2 quả trứng.
+- **[Bít tết](/mon-an/steak):** khoảng 40 g protein mỗi miếng 150 g.
+- **[Bún chả](/mon-an/bun_cha):** khoảng 37 g mỗi suất.
+- **[Cơm gà](/mon-an/com_ga):** khoảng 33 g mỗi đĩa.
+- **[Phở bò](/mon-an/pho):** khoảng 32 g mỗi tô.
+- **[Trứng ốp lết](/mon-an/omelette):** khoảng 13 g với 2 quả trứng.
 
 ## Đừng quên carbohydrate
 
-Sau buổi tập, cơ bắp cần carbohydrate để nạp lại glycogen. Một bữa có cả protein và carb, như cơm với cá hoặc phở bò, là lựa chọn phục hồi rất tốt.
+Sau buổi tập, cơ bắp cần carbohydrate để nạp lại glycogen. Một bữa có cả protein và carb, như [cơm gà](/mon-an/com_ga) hoặc [phở bò](/mon-an/pho), là lựa chọn phục hồi rất tốt.
 
 > Người có bệnh thận hoặc bệnh mạn tính nên hỏi ý kiến bác sĩ trước khi tăng lượng protein.

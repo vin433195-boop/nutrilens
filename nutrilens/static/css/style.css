@@ -748,3 +748,27 @@ code { font-family: ui-monospace, Consolas, monospace; font-size: .85em; backgro
 .verify-bar .container { display: flex; align-items: center; gap: 10px; padding-top: 10px; padding-bottom: 10px; flex-wrap: wrap; }
 .verify-bar .icon { color: var(--ok); }
 .verify-bar form { margin-left: auto; }
+
+/* ── Ảnh thật cho món ăn và bài viết ─────────────────────── */
+.food-tile.has-photo, .dish-photo.has-photo, .article-cover.has-photo { overflow: hidden; background: var(--surface-3); }
+.food-tile .food-photo, .article-cover img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .5s cubic-bezier(.2, .8, .2, 1); }
+.article-cover { position: relative; }
+.food-card:hover .food-tile .food-photo, .article-card:hover .article-cover img { transform: scale(1.06); }
+.food-tile .badge, .food-tile .kcal { z-index: 1; }
+.food-tile.has-photo::after { content: ""; position: absolute; inset: auto 0 0 0; height: 45%; background: linear-gradient(transparent, rgba(0, 0, 0, .28)); pointer-events: none; }
+.food-tile.has-photo .badge { box-shadow: 0 2px 8px rgba(0, 0, 0, .18); }
+.dish-figure { margin: 0; }
+.dish-photo.has-photo .food-photo { position: absolute; inset: 0; }
+.dish-photo .badge { z-index: 1; }
+.hero-photo.has-photo { padding: 0; }
+.hero-photo.has-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.hero-photo .scan { z-index: 1; }
+.compare-head .e.has-photo, .result-top .e.has-photo, .mini-link .e.has-photo { overflow: hidden; padding: 0; }
+.compare-head .e img, .result-top .e img, .mini-link .e img, .meal-items img.e { width: 100%; height: 100%; object-fit: cover; display: block; }
+.meal-items img.e { width: 44px; height: 44px; border-radius: 10px; flex: none; }
+.chip-photo { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px 3px 3px; border-radius: 999px; background: var(--surface-2); color: var(--muted); font-size: .8rem; }
+.chip-photo img { width: 22px; height: 22px; border-radius: 50%; object-fit: cover; }
+.article-hero { margin: 0 0 28px; }
+.article-hero img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: var(--radius-lg); }
+
+.table a svg, .prose a svg, .photo-credit a svg { display: inline-block; vertical-align: -2px; }

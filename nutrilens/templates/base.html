@@ -12,6 +12,8 @@
   <meta property="og:title" content="{{ self.title() }}">
   <meta property="og:description" content="{{ self.description() }}">
   <meta property="og:type" content="website">
+  {% set og_img = self.og_image()|trim %}
+  {% if og_img %}<meta property="og:image" content="{{ og_img }}"><meta name="twitter:card" content="summary_large_image">{% endif %}
   <link rel="icon" href="{{ url_for('static', filename='img/favicon.svg') }}" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -23,6 +25,7 @@
     })();
   </script>
   {% block head %}{% endblock %}
+  {% if false %}{% block og_image %}{% endblock %}{% endif %}
 </head>
 <body data-auth="{{ 1 if current_user.is_authenticated else 0 }}">
   <a class="skip-link" href="#main">Bỏ qua đến nội dung chính</a>
@@ -150,6 +153,7 @@
             <li><a href="{{ url_for('main.foods') }}">Thư viện món ăn</a></li>
             <li><a href="{{ url_for('main.compare') }}">So sánh món ăn</a></li>
             <li><a href="{{ url_for('main.article_list') }}">Kiến thức dinh dưỡng</a></li>
+            <li><a href="{{ url_for('main.methodology') }}">Nguồn số liệu</a></li>
           </ul>
         </div>
         <div>
@@ -172,7 +176,7 @@
       </div>
       <div class="footer-bottom">
         <span>© {{ current_year }} {{ site_name }}. Dự án học tập Python Web.</span>
-        <span>Thông tin chỉ mang tính tham khảo, không thay thế tư vấn y tế.</span>
+        <span>Số liệu dinh dưỡng: USDA FoodData Central · Ảnh: Wikimedia Commons · Chỉ mang tính tham khảo, không thay thế tư vấn y tế.</span>
       </div>
     </div>
   </footer>

@@ -23,7 +23,7 @@ ACTIVITIES = [
 ]
 REFERENCE_WEIGHT_KG = 60
 
-CATEGORY_ORDER = ["Món chính", "Món nước", "Ăn nhẹ", "Salad", "Tráng miệng"]
+CATEGORY_ORDER = ["Món chính", "Món nước", "Ăn nhẹ", "Món rau", "Salad", "Tráng miệng"]
 
 
 def pretty(name: str) -> str:
@@ -126,5 +126,6 @@ class NutritionMixin:
             "health_label": label,
             "health_level": level,
             "tags": self.tags,
+            "image": f"/static/{self.image_path}" if getattr(self, "image_path", None) else None,
             "url": f"/mon-an/{self.slug}",
         }

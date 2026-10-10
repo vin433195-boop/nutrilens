@@ -101,6 +101,23 @@ class AppTestCase(unittest.TestCase):
 
 # ════════════════════════════════════════════════════════════
 class PageTests(AppTestCase):
+    def test_library_pagination_and_filters(self):
+        html = self.client.get("/mon-an").get_data(as_text=True)
+        self.assertIn("Hiển thị 1–12 trong 35 món", html)
+        self.assertIn('rel="next"', html)
+        html = self.client.get("/mon-an?trang=3").get_data(as_text=True)
+        self.assertIn("Hiển thị 25–35 trong 35 món", html)
+        html = self.client.get("/mon-an?danh-muc=Món nước&sap-xep=calo-tang").get_data(as_text=True)
+        self.assertLess(html.index("Canh chua cá"), html.index("Mì ramen"))
+        self.assertIn("Không tìm thấy món phù hợp", self.client.get("/mon-an?q=xyzabc").get_data(as_text=True))
+
+    def test_methodology_and_detail_sources(self):
+        self.assertEqual(self.client.get("/phuong-phap").status_code, 200)
+        html = self.client.get("/mon-an/com_tam").get_data(as_text=True)
+        self.assertIn("Cách tính số liệu", html)
+        self.assertIn("fdc.nal.usda.gov", html)
+        self.assertIn('"@type": "NutritionInformation"', html)
+
     def test_all_pages_render(self):
         pages = ["/", "/mon-an", "/mon-an/pho", "/so-sanh", "/so-sanh?a=steak&b=donuts", "/nhan-dang",
                  "/cong-cu", "/nhat-ky", "/kien-thuc", "/kien-thuc/hieu-dung-ve-calo", "/gioi-thieu",
@@ -132,7 +149,7 @@ class PageTests(AppTestCase):
         food.is_published = False
         db.session.commit()
         self.assertEqual(self.client.get("/mon-an/donuts").status_code, 404)
-        self.assertEqual(self.client.get("/api/foods").get_json()["count"], 19)
+        self.assertEqual(self.client.get("/api/foods").get_json()["count"], 34)
 
     def test_header_shows_login_for_guests_and_menu_for_users(self):
         self.assertIn("Đăng ký", self.client.get("/").get_data(as_text=True))
@@ -145,12 +162,19 @@ class PageTests(AppTestCase):
 
 class SeedTests(AppTestCase):
     def test_seed_loads_all_data(self):
-        self.assertEqual(db.session.scalar(select(func.count(Food.id))), 20)
+        self.assertEqual(db.session.scalar(select(func.count(Food.id))), 35)
         self.assertEqual(len(self.app.extensions["articles"].all()), 6)
 
-    def test_macros_come_from_mapping_file(self):
+    def test_nutrition_comes_from_usda(self):
         pho = self.app.extensions["catalog"].get("pho")
-        self.assertEqual((pho.calories, pho.carbohydrate, pho.protein, pho.lipid), (350, 45, 20, 8))
+        self.assertEqual((pho.calories, pho.carbohydrate, pho.protein, pho.lipid), (424, 30.8, 32.0, 18.3))
+        self.assertEqual(pho.serving_grams, 550)
+        self.assertIn("USDA FNDDS", pho.source)
+        com_tam = self.app.extensions["catalog"].get("com_tam")
+        self.assertEqual(len(com_tam.ingredients), 8)
+        self.assertEqual(sum(i.grams for i in com_tam.ingredients), com_tam.serving_grams)
+        self.assertTrue(com_tam.ingredients[0].usda_url.startswith("https://fdc.nal.usda.gov/"))
+        self.assertIn("424", self.client.get("/").get_data(as_text=True))  # Hero trang chủ dùng số liệu thật
         self.assertEqual(pho.category, "Món nước")
         self.assertTrue(pho.tips and pho.highlights and pho.tags)
 
@@ -162,7 +186,7 @@ class SeedTests(AppTestCase):
         self.assertEqual(result["foods"], (0, 0))
         self.assertEqual(self.app.extensions["catalog"].get("pho").calories, 999)
         seed_all(overwrite=True)
-        self.assertEqual(self.app.extensions["catalog"].get("pho").calories, 350)
+        self.assertEqual(self.app.extensions["catalog"].get("pho").calories, 424)
 
     def test_model_label_mapping(self):
         self.assertEqual(self.app.extensions["catalog"].by_label("spring_rolls").name_vi, "Chả giò")
@@ -170,6 +194,7 @@ class SeedTests(AppTestCase):
     def test_search_and_related(self):
         catalog = self.app.extensions["catalog"]
         self.assertEqual({f.slug for f in catalog.search("Nhật")}, {"ramen", "sushi"})
+        self.assertEqual({f.slug for f in catalog.search("bun bo")}, {"bun_bo_hue"})  # Không phân biệt dấu
         related = catalog.related(catalog.get("pho"))
         self.assertEqual(len(related), 4)
         self.assertEqual(related[0].category, "Món nước")
@@ -421,7 +446,7 @@ class DiaryApiTests(AppTestCase):
         res = self.api("POST", "/api/diary", {"slug": "pho", "meal": "lunch", "servings": 1.5, "date": today})
         self.assertEqual(res.status_code, 201)
         entry = res.get_json()
-        self.assertEqual((entry["kcal"], entry["servings"]), (350, 1.5))
+        self.assertEqual((entry["kcal"], entry["servings"]), (424, 1.5))
 
         self.api("PATCH", f"/api/diary/{entry['id']}", {"servings": 2})
         day = self.client.get(f"/api/diary?date={today}").get_json()
@@ -435,7 +460,7 @@ class DiaryApiTests(AppTestCase):
         pho = self.app.extensions["catalog"].get("pho")
         pho.calories = 500
         db.session.commit()
-        self.assertEqual(self.client.get("/api/diary").get_json()["entries"][0]["kcal"], 350)
+        self.assertEqual(self.client.get("/api/diary").get_json()["entries"][0]["kcal"], 424)
 
     def test_validation(self):
         bad = [{"slug": "khongco", "meal": "lunch"}, {"slug": "pho", "meal": "brunch"},
@@ -460,8 +485,8 @@ class DiaryApiTests(AppTestCase):
         self.api("POST", "/api/diary", {"slug": "sushi", "meal": "dinner"})
         days = self.client.get("/api/diary/summary").get_json()["days"]
         self.assertEqual(len(days), 7)
-        self.assertEqual(days[-2], {"date": yesterday, "kcal": 700})
-        self.assertEqual(days[-1]["kcal"], 200)
+        self.assertEqual(days[-2], {"date": yesterday, "kcal": 848})
+        self.assertEqual(days[-1]["kcal"], 169)
 
     def test_clear_day(self):
         self.api("POST", "/api/diary", {"slug": "pho", "meal": "lunch"})
@@ -510,7 +535,7 @@ class PredictApiTests(AppTestCase):
         self.assertEqual(len(data["predictions"]), 3)
         top = data["predictions"][0]
         self.assertEqual((top["label"], top["level"]), ("pho", "high"))
-        self.assertEqual(top["food"]["nutrition"]["calories"], 350)
+        self.assertEqual(top["food"]["nutrition"]["calories"], 424)
         self.assertEqual(self.model.calls[-1], (1, 64, 64, 3))
         self.assertIsNone(data["recognition_id"])  # Khách: không trả id
 
@@ -595,7 +620,7 @@ class AdminTests(AppTestCase):
         return self.client.post(url, data={"csrf_token": self.csrf("/"), **(data or {})}, **kw)
 
     def food_form(self, **override):
-        data = {"name_vi": "Bún chả", "name_en": "Bun cha", "slug": "", "category": "Món chính", "new_category": "",
+        data = {"name_vi": "Bún đậu mắm tôm", "name_en": "Bun dau", "slug": "", "category": "Món chính", "new_category": "",
                 "cuisine": "Việt Nam", "serving": "1 suất (~400 g)", "serving_grams": "400", "description": "Bún chả Hà Nội",
                 "highlights": "Nhiều rau\nĐạm từ thịt", "tips": "Ăn nhiều rau sống", "tags": "Việt Nam, nướng",
                 "calories": "450", "carbohydrate": "55", "protein": "22", "lipid": "15", "fiber": "3", "sugar": "8",
@@ -630,12 +655,12 @@ class AdminTests(AppTestCase):
         data["image"] = (make_image(), "bun.jpg")
         res = self.post("/quan-tri/mon-an/them", data, content_type="multipart/form-data")
         self.assertEqual(res.status_code, 302, res.get_data(as_text=True)[:500])
-        food = self.app.extensions["catalog"].get("bun_cha")
+        food = self.app.extensions["catalog"].get("bun_dau_mam_tom")
         self.assertIsNotNone(food)
         self.assertEqual((food.calories, food.serving_grams, food.category), (450, 400, "Món chính"))
         self.assertEqual(food.highlights, ["Nhiều rau", "Đạm từ thịt"])
         self.assertEqual(set(food.tags), {"việt nam", "nướng"})
-        self.assertTrue(food.image_path.startswith("uploads/foods/bun_cha-"))
+        self.assertTrue(food.image_path.startswith("uploads/foods/bun_dau_mam_tom-"))
         path = Path(self.app.static_folder) / food.image_path
         self.assertTrue(path.exists())
         with Image.open(path) as im:

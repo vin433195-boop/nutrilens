@@ -79,13 +79,10 @@ tile-{{ m.get(food.category, 5) }}
 {%- endmacro %}
 
 {% macro food_card(food) -%}
-<a class="food-card reveal" href="{{ url_for('main.food_detail', slug=food.slug) }}"
-   data-name="{{ (food.name_vi ~ ' ' ~ food.name_en ~ ' ' ~ food.cuisine ~ ' ' ~ food.tags|join(' '))|lower }}"
-   data-category="{{ food.category }}" data-calories="{{ food.calories }}" data-protein="{{ food.protein }}"
-   data-score="{{ food.health_score }}" data-title="{{ food.name_vi }}">
-  <div class="food-tile {{ tile_class(food) }}">
+<a class="food-card reveal" href="{{ url_for('main.food_detail', slug=food.slug) }}">
+  <div class="food-tile {{ tile_class(food) }} {{ 'has-photo' if food.image_path }}">
+    {% if food.image_path %}{{ food_img(food) }}{% else %}<span class="emoji" aria-hidden="true">{{ food.emoji }}</span>{% endif %}
     {{ health_badge(food) }}
-    <span class="emoji" aria-hidden="true">{{ food.emoji }}</span>
     <span class="kcal">{{ food.calories|num }} kcal</span>
   </div>
   <div class="food-body">
@@ -120,7 +117,9 @@ tile-{{ m.get(food.category, 5) }}
 {% macro article_card(a) -%}
 {%- set tiles = {"Cơ bản": 2, "Thực hành": 1, "Sức khỏe": 3, "Thể thao": 4} -%}
 <a class="article-card reveal" href="{{ url_for('main.article_detail', slug=a.slug) }}" data-category="{{ a.category }}">
-  <div class="article-cover tile-{{ tiles.get(a.category, 5) }}" aria-hidden="true">{{ a.emoji }}</div>
+  <div class="article-cover tile-{{ tiles.get(a.category, 5) }} {{ 'has-photo' if a.cover_image }}" aria-hidden="true">
+    {% if a.cover_image %}<img src="{{ url_for('static', filename=a.cover_image) }}" alt="" loading="lazy" decoding="async">{% else %}{{ a.emoji }}{% endif %}
+  </div>
   <div class="article-body">
     <span class="badge" style="align-self: start">{{ a.category }}</span>
     <h3>{{ a.title }}</h3>

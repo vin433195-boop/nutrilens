@@ -3,7 +3,7 @@
   "use strict";
   const root = document.querySelector("[data-diary]");
   if (!root) return;
-  const { fmt, diary, toast, escapeHtml } = window.NL;
+  const { fmt, diary, toast, escapeHtml, foodThumb } = window.NL;
 
   const FOODS = Object.fromEntries((window.NL_FOODS || []).map((f) => [f.slug, f]));
   const MEALS = [
@@ -61,7 +61,7 @@
       const list = entries.filter((it) => it.meal === key);
       const kcal = list.reduce((s, it) => s + it.kcal * it.servings, 0);
       const rows = list.map((it) => `<li>
-          <span class="e" aria-hidden="true">${escapeHtml(it.emoji)}</span>
+          ${foodThumb(it)}
           <div class="info"><strong>${escapeHtml(it.name)}</strong><span>${escapeHtml(it.serving)} · ${fmt.num(it.kcal * it.servings)} kcal</span></div>
           <label class="sr-only" for="q-${it.id}">Số khẩu phần</label>
           <input class="input qty" id="q-${it.id}" type="number" min="0.25" max="20" step="0.25" value="${it.servings}" data-qty="${it.id}">

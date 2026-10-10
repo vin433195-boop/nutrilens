@@ -50,9 +50,9 @@
       <div class="result-empty" data-result-empty>
         <div class="big">🍽️</div>
         <h3>Kết quả sẽ hiển thị ở đây</h3>
-        <p>Chọn một ảnh rồi bấm <b>Phân tích</b>. Mô hình có thể nhận dạng {{ dish_count }} món:</p>
+        <p>Chọn một ảnh rồi bấm <b>Phân tích</b>. Mô hình có thể nhận dạng {{ foods|length }} món:</p>
         <div class="chips" style="justify-content:center; margin-top:12px">
-          {% for f in foods %}<span class="tag">{{ f.emoji }} {{ f.name_vi }}</span>{% endfor %}
+          {% for f in foods %}<span class="chip-photo">{% if f.image_path %}<img src="{{ url_for('static', filename=f.image_path) }}" alt="" loading="lazy">{% else %}{{ f.emoji }}{% endif %}{{ f.name_vi }}</span>{% endfor %}
         </div>
       </div>
       <div data-result hidden></div>

@@ -1,8 +1,10 @@
 """Nạp dữ liệu khởi tạo từ các file JSON/Markdown vào cơ sở dữ liệu.
 
 Nguồn dữ liệu:
-- class_names.json, Mapping_Calories.json (thư mục gốc): nhãn model và calo/macro gốc
-- nutrilens/data/foods.json: tên tiếng Việt, mô tả, khẩu phần, điểm cộng, mẹo, thẻ
+- nutrilens/data/foods.json: danh sách món, tên, mô tả, điểm cộng, mẹo, thẻ
+- nutrilens/data/nutrition.json: dinh dưỡng tính từ USDA FoodData Central (scripts/build_nutrition.py)
+- nutrilens/data/images.json: ảnh món ăn (Wikimedia Commons) kèm tác giả và giấy phép
+- class_names.json: nhãn đầu ra của model AI, dùng để gắn nhãn cho món tương ứng
 - nutrilens/data/articles/*.md: bài viết
 
 Mặc định chỉ thêm bản ghi chưa có (theo slug) để không ghi đè nội dung đã sửa trên CSDL.
@@ -21,10 +23,15 @@ from flask import current_app
 from sqlalchemy import select
 
 from .extensions import db
-from .models import Article, Category, Food, FoodNote, ModelLabel, Tag
+from .models import Article, Category, Food, FoodIngredient, FoodNote, ModelLabel, Tag
 from .nutrition import CATEGORY_ORDER, pretty
 
-FEATURED = ["pho", "sushi", "spring_rolls", "omelette", "tacos", "chicken_curry"]
+FEATURED = ["pho", "com_tam", "banh_mi", "goi_cuon", "bun_cha", "sushi"]
+# Ảnh bìa bài viết lấy từ ảnh món ăn liên quan
+ARTICLE_COVERS = {
+    "hieu-dung-ve-calo": "com_tam", "ba-nhom-chat-da-luong": "steak", "dia-an-can-bang-kieu-viet": "canh_chua_ca",
+    "giam-muoi-mon-nuoc": "pho", "duong-an-trong-do-ngot": "cup_cakes", "protein-cho-nguoi-tap-luyen": "com_ga",
+}
 
 
 def slugify(text: str) -> str:
@@ -61,21 +68,31 @@ def _get_tag(name: str, cache: dict) -> Tag:
     return cache[name]
 
 
+def _load_optional(path: Path) -> dict:
+    return _load_json(path) if path.exists() else {}
+
+
 def seed_foods(overwrite: bool = False) -> tuple[int, int]:
+    """Nạp món ăn. Món đã có chỉ được bổ sung phần còn thiếu (ảnh, thành phần) trừ khi overwrite=True."""
     cfg = current_app.config
-    class_names = _load_json(cfg["CLASSES_PATH"])
-    mapping = _load_json(cfg["MAPPING_PATH"])
+    data_dir = Path(cfg["FOODS_PATH"]).parent
     content = _load_json(cfg["FOODS_PATH"])
+    nutrition = _load_optional(data_dir / "nutrition.json")
+    images = _load_optional(data_dir / "images.json")
+    mapping = _load_optional(Path(cfg["MAPPING_PATH"]))
+    class_names = set(_load_json(cfg["CLASSES_PATH"]))
     categories, tags = {}, {}
     created = updated = 0
 
     # Tắt autoflush: món mới chỉ được ghi xuống CSDL sau khi đã gán đủ danh mục, thẻ
     with db.session.no_autoflush:
-        for slug in class_names:
-            macros, extra = mapping.get(slug, {}), content.get(slug, {})
+        for slug, extra in content.items():
             food = db.session.scalar(select(Food).where(Food.slug == slug))
+            nut = nutrition.get(slug)
             if food is not None and not overwrite:
-                _ensure_label(slug, food)
+                _fill_missing(food, nut, images.get(slug))
+                if slug in class_names:
+                    _ensure_label(slug, food)
                 continue
             is_new = food is None
             if is_new:
@@ -89,15 +106,18 @@ def seed_foods(overwrite: bool = False) -> tuple[int, int]:
             food.emoji = extra.get("emoji", "🍽️")
             food.category_ref = _get_category(extra.get("category", "Món chính"), categories)
             food.cuisine = extra.get("cuisine", "Quốc tế")
-            food.serving = extra.get("serving", "1 khẩu phần")
             food.description = extra.get("description", "")
-            food.calories = macros.get("calories", 0)
-            food.carbohydrate = macros.get("carbohydrate", 0)
-            food.protein = macros.get("protein", 0)
-            food.lipid = macros.get("lipid", 0)
-            food.fiber = extra.get("fiber", 0)
-            food.sugar = extra.get("sugar", 0)
-            food.sodium = extra.get("sodium", 0)
+            if nut:
+                _apply_nutrition(food, nut)
+            else:  # Dự phòng: số liệu gốc của dự án (không rõ khẩu phần)
+                m = mapping.get(slug, {})
+                food.serving = extra.get("serving", "100 g")
+                food.serving_grams = 100
+                food.calories, food.carbohydrate = m.get("calories", 0), m.get("carbohydrate", 0)
+                food.protein, food.lipid = m.get("protein", 0), m.get("lipid", 0)
+                food.fiber = food.sugar = food.sodium = 0
+                food.source = "Mapping_Calories.json của dự án gốc (chưa kiểm chứng)"
+            _apply_image(food, images.get(slug), force=True)
             food.is_featured = slug in FEATURED
             food.notes = (
                 [FoodNote(kind="highlight", text=t, position=i) for i, t in enumerate(extra.get("highlights", []))]
@@ -107,10 +127,40 @@ def seed_foods(overwrite: bool = False) -> tuple[int, int]:
             if is_new:
                 db.session.add(food)
             db.session.flush()
-            _ensure_label(slug, food)
+            if slug in class_names:
+                _ensure_label(slug, food)
 
     db.session.commit()
     return created, updated
+
+
+def _apply_nutrition(food: Food, nut: dict) -> None:
+    n = nut["nutrition"]
+    food.serving = nut["serving"]
+    food.serving_grams = nut["serving_grams"]
+    food.calories, food.carbohydrate, food.protein, food.lipid = (
+        n["calories"], n["carbohydrate"], n["protein"], n["lipid"])
+    food.fiber, food.sugar, food.sodium = n["fiber"], n["sugar"], n["sodium"]
+    food.source = nut["source"]
+    food.ingredients = [FoodIngredient(position=i, name=it["name"], grams=it["grams"], fdc_id=it["fdc_id"],
+                                       usda_name=it["usda"][:255])
+                        for i, it in enumerate(nut["ingredients"])]
+
+
+def _apply_image(food: Food, img: dict | None, force: bool = False) -> None:
+    if img and (force or not food.image_path):
+        food.image_path = img["file"]
+        food.image_credit = img.get("credit")
+        food.image_license = img.get("license")
+        food.image_source = img.get("source")
+
+
+def _fill_missing(food: Food, nut: dict | None, img: dict | None) -> None:
+    _apply_image(food, img)
+    if nut and not food.ingredients:
+        food.ingredients = [FoodIngredient(position=i, name=it["name"], grams=it["grams"], fdc_id=it["fdc_id"],
+                                           usda_name=it["usda"][:255])
+                            for i, it in enumerate(nut["ingredients"])]
 
 
 def _ensure_label(label: str, food: Food) -> None:
@@ -153,8 +203,18 @@ def seed_articles(overwrite: bool = False) -> tuple[int, int]:
             updated += 1
         for key, value in data.items():
             setattr(article, key, value)
+        _apply_cover(article)
+    for article in db.session.scalars(select(Article).where(Article.cover_image.is_(None))):
+        _apply_cover(article)
     db.session.commit()
     return created, updated
+
+
+def _apply_cover(article: Article) -> None:
+    food = db.session.scalar(select(Food).where(Food.slug == ARTICLE_COVERS.get(article.slug, "")))
+    if food is not None and food.image_path and not article.cover_image:
+        article.cover_image = food.image_path
+        article.cover_credit = " · ".join(x for x in (food.image_credit, food.image_license) if x) or None
 
 
 def seed_all(overwrite: bool = False) -> dict:

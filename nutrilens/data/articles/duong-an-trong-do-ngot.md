@@ -1,5 +1,5 @@
 title: Đường ẩn trong đồ tráng miệng và cách ăn ngọt thông minh
-excerpt: Một chiếc cupcake có thể chứa hơn 25 g đường, vượt mức WHO khuyến khích cho cả ngày. Đây là cách thưởng thức đồ ngọt mà không quá đà.
+excerpt: Một chiếc cupcake có thể chứa hơn 35 g đường, vượt mức WHO khuyến khích cho cả ngày. Đây là cách thưởng thức đồ ngọt mà không quá đà.
 category: Sức khỏe
 emoji: 🍬
 date: 2026-08-02
@@ -13,12 +13,13 @@ WHO khuyến nghị lượng **đường tự do** nên dưới 10% tổng năng
 
 ## Đồ tráng miệng chứa bao nhiêu đường?
 
-Theo dữ liệu ước tính trong thư viện NutriLens:
+Theo số liệu USDA trong thư viện NutriLens (đường tổng, cho một khẩu phần):
 
-- **Cupcake:** khoảng 28 g đường mỗi chiếc
-- **Donut:** khoảng 22 g mỗi chiếc
-- **Kem:** khoảng 21 g mỗi cốc 100 g
-- **Bánh phô mai:** khoảng 20 g mỗi miếng
+- **[Cupcake](/mon-an/cup_cakes):** khoảng 36 g mỗi chiếc 90 g
+- **[Chè đậu xanh](/mon-an/che_dau_xanh):** khoảng 28 g mỗi ly
+- **[Bánh phô mai](/mon-an/cheesecake):** khoảng 27 g mỗi miếng 100 g
+- **[Kem vani](/mon-an/ice_cream):** khoảng 21 g mỗi cốc 100 g
+- **[Donut phủ đường](/mon-an/donuts):** khoảng 16 g mỗi chiếc 60 g
 
 Chỉ một món tráng miệng đã gần chạm mức khuyến nghị cả ngày, chưa tính đồ uống có đường.
 

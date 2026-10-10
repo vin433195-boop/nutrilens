@@ -3,7 +3,7 @@
   "use strict";
   const root = document.querySelector("[data-recognizer]");
   if (!root) return;
-  const { store, fmt, diary, toast, escapeHtml, api, isAuthed } = window.NL;
+  const { store, fmt, diary, toast, escapeHtml, api, isAuthed, foodThumb } = window.NL;
 
   const MAX_BYTES = 8 * 1024 * 1024;
   const HISTORY_KEY = "nl-history";
@@ -108,7 +108,7 @@
 
     const confRows = lastPredictions.map((p, i) => `
       <button type="button" class="conf-item" data-pick="${i}" style="all:unset; display:grid; grid-template-columns:1fr auto; gap:6px 12px; font-size:.92rem; cursor:pointer" aria-pressed="${i === selected}">
-        <span>${p.food ? p.food.emoji + " " + escapeHtml(p.food.name_vi) : escapeHtml(p.label)} ${i === selected ? '<span class="badge badge-good" style="margin-left:6px">Đang xem</span>' : ""}</span>
+        <span>${p.food ? escapeHtml(p.food.name_vi) : escapeHtml(p.label)} ${i === selected ? '<span class="badge badge-good" style="margin-left:6px">Đang xem</span>' : ""}</span>
         <b>${pct(p.confidence)}%</b>
         <span class="track" style="grid-column:1/-1; height:10px; border-radius:10px; background:var(--surface-3); overflow:hidden; display:block">
           <i style="display:block; height:100%; border-radius:10px; width:0; background:${["var(--primary)", "var(--ok)", "var(--limit)"][i] || "var(--muted)"}; transition: width .8s" data-w="${p.confidence * 100}"></i>
@@ -142,7 +142,7 @@
 
     resultBox.innerHTML = `
       <div class="result-top">
-        <div class="e" aria-hidden="true">${f ? f.emoji : "🍽️"}</div>
+        <div class="e ${f && f.image ? "has-photo" : ""}">${foodThumb(f, "")}</div>
         <div>
           <span class="badge badge-${pick.level}">Độ tin cậy ${pick.level_vi.toLowerCase()} · ${pct(pick.confidence)}%</span>
           <h2>${f ? escapeHtml(f.name_vi) : escapeHtml(pick.label)}</h2>
@@ -201,6 +201,7 @@
     slug: pred.food ? pred.food.slug : pred.label,
     name: pred.food ? pred.food.name_vi : pred.label,
     emoji: pred.food ? pred.food.emoji : "🍽️",
+    image: pred.food ? pred.food.image : null,
     kcal: pred.food ? pred.food.nutrition.calories : null,
   });
 
@@ -246,7 +247,7 @@
     clearHistoryBtn.hidden = list.length === 0;
     historyBox.innerHTML = list.map((h) => `
       <div class="history-item">
-        ${h.thumb && h.thumb.startsWith("data:image/") ? `<img src="${h.thumb}" alt="">` : `<span style="font-size:2rem; width:52px; text-align:center">${escapeHtml(h.emoji)}</span>`}
+        ${h.thumb && h.thumb.startsWith("data:image/") ? `<img src="${h.thumb}" alt="">` : foodThumb(h, "thumb")}
         <div class="info">
           <strong><a href="/mon-an/${encodeURIComponent(h.slug)}" style="color:inherit">${escapeHtml(h.name)}</a>${h.corrected ? ' <span class="badge" title="Bạn đã chọn lại món này">đã sửa</span>' : ""}</strong>
           <span>${(h.conf * 100).toFixed(1).replace(".", ",")}% · ${h.kcal != null ? fmt.num(h.kcal) + " kcal · " : ""}${escapeHtml(h.time)}</span>

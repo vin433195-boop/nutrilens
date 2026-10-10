@@ -64,7 +64,7 @@
       const foods = foodsBySlug();
       return this._raw(date).filter((it) => foods[it.slug]).map((it) => {
         const f = foods[it.slug], n = f.nutrition;
-        return { id: it.id, slug: f.slug, name: f.name_vi, emoji: f.emoji, serving: f.serving, meal: it.meal,
+        return { id: it.id, slug: f.slug, name: f.name_vi, emoji: f.emoji, image: f.image, serving: f.serving, meal: it.meal,
                  servings: it.qty, kcal: n.calories, carb: n.carbohydrate, protein: n.protein, fat: n.lipid };
       });
     },
@@ -133,7 +133,15 @@
     setTimeout(() => el.remove(), 4000);
   }
 
-  window.NL = { store, fmt, diary, toast, escapeHtml, api, isAuthed };
+  // Ảnh món ăn (nếu có) hoặc emoji dự phòng. Chỉ nhận đường dẫn nội bộ /static/ để tránh chèn URL lạ.
+  function foodThumb(item, cls = "e") {
+    if (item && typeof item.image === "string" && item.image.startsWith("/static/")) {
+      return `<img class="${cls}" src="${escapeHtml(item.image)}" alt="" loading="lazy">`;
+    }
+    return `<span class="${cls}" aria-hidden="true">${escapeHtml((item && item.emoji) || "🍽️")}</span>`;
+  }
+
+  window.NL = { store, fmt, diary, toast, escapeHtml, api, isAuthed, foodThumb };
 
   // ── Giao diện sáng/tối ──
   document.querySelectorAll("[data-theme-toggle]").forEach((btn) => {

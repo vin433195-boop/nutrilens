@@ -21,6 +21,6 @@ Tổ chức Y tế Thế giới (WHO) khuyến nghị người trưởng thành 
 
 ## Theo dõi natri trên NutriLens
 
-Trang chi tiết của từng món hiển thị lượng natri ước tính trong một khẩu phần, kèm phần trăm so với mức 2.000 mg mỗi ngày. Ví dụ, [mì ramen](/mon-an/ramen) và [phở bò](/mon-an/pho) là hai món có lượng natri cao nhất trong thư viện.
+Trang chi tiết của từng món hiển thị lượng natri ước tính trong một khẩu phần, kèm phần trăm so với mức 2.000 mg mỗi ngày. Theo số liệu USDA, một tô [phở bò](/mon-an/pho) chứa khoảng 2.000 mg natri, đã bằng cả mức khuyến nghị trong ngày. [Mì ramen](/mon-an/ramen), [bún bò Huế](/mon-an/bun_bo_hue) và [bún riêu](/mon-an/bun_rieu) cũng đều trên 1.600 mg.
 
-> Các con số natri chỉ là ước tính tham khảo. Lượng thực tế thay đổi rất nhiều theo cách nấu của từng quán.
+> Phần lớn lượng natri này nằm trong nước dùng. Lượng thực tế thay đổi rất nhiều theo cách nấu của từng quán.

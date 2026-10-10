@@ -1,8 +1,23 @@
 {% extends "base.html" %}
-{% from "partials/macros.html" import icon, food_card, macro_donut, health_badge, tile_class with context %}
+{% from "partials/macros.html" import icon, food_card, food_img, macro_donut, health_badge, tile_class with context %}
 
 {% block title %}{{ food.name_vi }}: {{ food.calories|num }} kcal và thông tin dinh dưỡng · {{ site_name }}{% endblock %}
 {% block description %}{{ food.name_vi }} ({{ food.serving }}) chứa {{ food.calories|num }} kcal, {{ food.protein|num }} g protein, {{ food.carbohydrate|num }} g carbohydrate và {{ food.lipid|num }} g chất béo. {{ food.description }}{% endblock %}
+
+{% block og_image %}{% if food.image_path %}{{ url_for('static', filename=food.image_path, _external=True) }}{% endif %}{% endblock %}
+{% block head %}
+<script type="application/ld+json" nonce="{{ csp_nonce() }}">{{ {
+  "@context": "https://schema.org", "@type": "Recipe", "name": food.name_vi, "alternateName": food.name_en,
+  "description": food.description, "recipeCuisine": food.cuisine, "recipeCategory": food.category,
+  "image": url_for('static', filename=food.image_path, _external=True) if food.image_path else none,
+  "recipeIngredient": food.ingredients|map(attribute="name")|list,
+  "nutrition": {"@type": "NutritionInformation", "servingSize": food.serving,
+                "calories": (food.calories|int|string) ~ " kcal", "proteinContent": (food.protein|string) ~ " g",
+                "carbohydrateContent": (food.carbohydrate|string) ~ " g", "fatContent": (food.lipid|string) ~ " g",
+                "fiberContent": (food.fiber|string) ~ " g", "sugarContent": (food.sugar|string) ~ " g",
+                "sodiumContent": (food.sodium|int|string) ~ " mg"}
+}|tojson }}</script>
+{% endblock %}
 
 {% block content %}
 {% set label, level = food.health_label %}
@@ -14,10 +29,15 @@
       <span>{{ food.name_vi }}</span>
     </nav>
     <div class="dish-hero">
-      <div class="dish-photo {{ tile_class(food) }}" aria-hidden="true">
-        {{ health_badge(food) }}
-        <span>{{ food.emoji }}</span>
-      </div>
+      <figure class="dish-figure">
+        <div class="dish-photo {{ tile_class(food) }} {{ 'has-photo' if food.image_path }}">
+          {% if food.image_path %}{{ food_img(food, eager=True) }}{% else %}<span aria-hidden="true">{{ food.emoji }}</span>{% endif %}
+          {{ health_badge(food) }}
+        </div>
+        {% if food.image_path and food.image_credit %}
+          <figcaption class="photo-credit">Ảnh: {{ food.image_credit }}{% if food.image_license %} · {{ food.image_license }}{% endif %}{% if food.image_source %} · <a href="{{ food.image_source }}" target="_blank" rel="noopener nofollow">Wikimedia Commons</a>{% endif %}</figcaption>
+        {% endif %}
+      </figure>
       <div>
         <span class="eyebrow">{{ food.category }} · {{ food.cuisine }}</span>
         <h1>{{ food.name_vi }}</h1>
@@ -70,6 +90,32 @@
         </div>
       </div>
 
+      {% if food.ingredients %}
+      <div class="card">
+        <h2 class="card-title">{{ icon("book") }} Cách tính số liệu</h2>
+        <p class="muted small" style="margin-top:-6px">{{ food.source or "Nguồn chưa được ghi" }}. Mỗi thành phần được tra trong USDA FoodData Central rồi cộng lại theo khối lượng.</p>
+        <div class="table-wrap" style="border:0">
+          <table class="table">
+            <thead><tr><th>Thành phần</th><th class="num">Khối lượng</th><th>Tra cứu USDA</th></tr></thead>
+            <tbody>
+              {% for ing in food.ingredients %}
+                <tr><td>{{ ing.name }}</td><td class="num">{{ ing.grams|num }} g</td>
+                  <td>{% if ing.usda_url %}<a href="{{ ing.usda_url }}" target="_blank" rel="noopener nofollow" class="small">{{ ing.usda_name|truncate(48) }} {{ icon("external", 12) }}</a>{% else %}<span class="muted small">{{ ing.usda_name }}</span>{% endif %}</td></tr>
+              {% endfor %}
+              <tr><td><strong>Tổng khẩu phần</strong></td><td class="num"><strong>{{ food.serving_grams|num }} g</strong></td><td></td></tr>
+            </tbody>
+          </table>
+        </div>
+        {% if food.serving_grams %}
+          {% set k = 100 / food.serving_grams %}
+          <p class="small" style="margin:14px 0 0"><strong>Cho 100 g:</strong> {{ (food.calories * k)|round|int }} kcal · protein {{ (food.protein * k)|round(1)|num(1) }} g · carb {{ (food.carbohydrate * k)|round(1)|num(1) }} g · chất béo {{ (food.lipid * k)|round(1)|num(1) }} g</p>
+        {% endif %}
+        <p class="muted small" style="margin:10px 0 0">Món ăn thực tế khác nhau theo công thức từng nơi. Xem <a href="{{ url_for('main.methodology') }}">phương pháp tính</a>.</p>
+      </div>
+      {% elif food.source %}
+      <p class="muted small">{{ icon("info", 14) }} Nguồn số liệu: {{ food.source }}</p>
+      {% endif %}
+
       <div class="card">
         <h2 class="card-title">{{ icon("flame") }} Vận động bao lâu để đốt {{ food.calories|num }} kcal?</h2>
         <div class="burn-list" style="grid-template-columns: repeat(auto-fit, minmax(130px, 1fr))">
@@ -86,7 +132,7 @@
         <div class="score-ring {{ level }}" style="--s: {{ food.health_score * 10 }}"><span>{{ food.health_score }}</span></div>
         <div>
           <strong>Điểm sức khỏe: {{ label }}</strong>
-          <p class="muted small" style="margin:4px 0 0">Tính từ tỉ lệ chất béo, protein, lượng đường, natri và chất xơ. Chỉ mang tính tham khảo.</p>
+          <p class="muted small" style="margin:4px 0 0">Tính từ tỉ lệ chất béo, protein, lượng đường, natri và chất xơ. <a href="{{ url_for('main.methodology') }}#diem-suc-khoe">Cách tính</a>.</p>
         </div>
       </div>
 
@@ -105,7 +151,7 @@
             <tr><td><b>Protein</b> {{ food.protein|num }} g</td><td>{{ food.daily_percent("protein") }}%</td></tr>
           </tbody>
         </table>
-        <p class="foot">* Dựa trên chế độ ăn 2.000 kcal mỗi ngày. Chất xơ, đường và natri là số liệu ước tính, có thể thay đổi theo công thức chế biến.</p>
+        <p class="foot">* Dựa trên chế độ ăn 2.000 kcal mỗi ngày. {{ food.source or "" }}.</p>
       </div>
     </aside>
   </div>

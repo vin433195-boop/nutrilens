@@ -240,6 +240,7 @@ def food_new():
     db.session.flush()
     _set_model_label(food, data["model_label"])
     db.session.commit()
+    current_app.extensions["catalog"].invalidate()
     flash(f"Đã thêm món {food.name_vi}.", "success")
     return redirect(url_for("admin.food_edit", food_id=food.id))
 
@@ -261,6 +262,7 @@ def food_edit(food_id):
         return _render_food_form(food, data, errors, 422)
     _set_model_label(food, data["model_label"])
     db.session.commit()
+    current_app.extensions["catalog"].invalidate()
     flash(f"Đã lưu thay đổi cho {food.name_vi}.", "success")
     return redirect(url_for("admin.food_edit", food_id=food.id))
 
@@ -288,6 +290,7 @@ def food_delete(food_id):
     name = food.name_vi
     db.session.delete(food)
     db.session.commit()
+    current_app.extensions["catalog"].invalidate()
     flash(f"Đã xóa món {name}.", "success")
     return redirect(url_for("admin.foods"))
 

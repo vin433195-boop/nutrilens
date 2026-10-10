@@ -3,6 +3,7 @@
 
 {% block title %}{{ article.title }} · {{ site_name }}{% endblock %}
 {% block description %}{{ article.excerpt }}{% endblock %}
+{% block og_image %}{% if article.cover_image %}{{ url_for('static', filename=article.cover_image, _external=True) }}{% endif %}{% endblock %}
 
 {% block content %}
 <section class="page-hero">
@@ -21,13 +22,21 @@
 
 <section class="section-sm">
   <div class="container article-layout">
-    <article class="prose">{{ article.html }}</article>
+    <article class="prose">
+      {% if article.cover_image %}
+        <figure class="article-hero">
+          <img src="{{ url_for('static', filename=article.cover_image) }}" alt="{{ article.title }}">
+          {% if article.cover_credit %}<figcaption class="photo-credit">Ảnh: {{ article.cover_credit }}</figcaption>{% endif %}
+        </figure>
+      {% endif %}
+      {{ article.html }}
+    </article>
     <aside>
       <div class="card">
         <h3 class="card-title">{{ icon("book") }} Đọc tiếp</h3>
         {% for a in more %}
           <a class="mini-link" href="{{ url_for('main.article_detail', slug=a.slug) }}">
-            <span class="e tile-{{ loop.index + 1 }}" aria-hidden="true">{{ a.emoji }}</span>
+            <span class="e tile-{{ loop.index + 1 }} {{ 'has-photo' if a.cover_image }}" aria-hidden="true">{% if a.cover_image %}<img src="{{ url_for('static', filename=a.cover_image) }}" alt="" loading="lazy">{% else %}{{ a.emoji }}{% endif %}</span>
             <span><strong>{{ a.title }}</strong><span>{{ a.read_time }} phút đọc</span></span>
           </a>
         {% endfor %}

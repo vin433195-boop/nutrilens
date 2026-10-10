@@ -1,182 +1,777 @@
 {
   "apple_pie": {
-    "name_vi": "Bánh táo nướng", "name_en": "Apple Pie", "emoji": "🥧",
-    "category": "Tráng miệng", "cuisine": "Mỹ", "serving": "1 miếng (~125 g)",
-    "fiber": 2, "sugar": 16, "sodium": 200,
+    "name_vi": "Bánh táo nướng",
+    "name_en": "Apple Pie",
+    "emoji": "🥧",
+    "category": "Tráng miệng",
+    "cuisine": "Mỹ",
     "description": "Vỏ bánh bơ giòn xốp ôm lấy nhân táo nấu cùng quế và đường. Món tráng miệng kinh điển của ẩm thực Mỹ, thường dùng kèm kem vani.",
-    "highlights": ["Táo cung cấp chất xơ pectin", "Quế giúp tăng hương vị mà không thêm calo"],
-    "tips": ["Ăn miếng nhỏ và bỏ phần kem đi kèm", "Tự làm với ít đường, thêm táo và yến mạch cho phần vỏ", "Dùng sau bữa ăn giàu protein để hạn chế tăng đường huyết"],
-    "tags": ["ngọt", "nướng", "bơ"]
+    "highlights": [
+      "Táo cung cấp chất xơ pectin",
+      "Quế giúp tăng hương vị mà không thêm calo"
+    ],
+    "tips": [
+      "Ăn miếng nhỏ và bỏ phần kem đi kèm",
+      "Tự làm với ít đường, thêm táo và yến mạch cho phần vỏ",
+      "Dùng sau bữa ăn giàu protein để hạn chế tăng đường huyết"
+    ],
+    "tags": [
+      "ngọt",
+      "nướng",
+      "bơ"
+    ]
   },
   "caesar_salad": {
-    "name_vi": "Salad Caesar", "name_en": "Caesar Salad", "emoji": "🥗",
-    "category": "Salad", "cuisine": "Mỹ - Ý", "serving": "1 đĩa (~150 g)",
-    "fiber": 2, "sugar": 2, "sodium": 470,
+    "name_vi": "Salad Caesar",
+    "name_en": "Caesar Salad",
+    "emoji": "🥗",
+    "category": "Salad",
+    "cuisine": "Mỹ - Ý",
     "description": "Xà lách romaine giòn trộn sốt Caesar béo ngậy từ lòng đỏ trứng, phô mai Parmesan, cá cơm và bánh mì nướng giòn.",
-    "highlights": ["Rau romaine giàu vitamin A và K", "Ít carbohydrate"],
-    "tips": ["Gọi sốt để riêng và chỉ dùng một nửa", "Thêm ức gà nướng để tăng protein", "Giảm bánh mì croutons để bớt tinh bột"],
-    "tags": ["rau xanh", "ít carb", "phô mai"]
+    "highlights": [
+      "Rau romaine giàu vitamin A và K",
+      "Ít carbohydrate"
+    ],
+    "tips": [
+      "Gọi sốt để riêng và chỉ dùng một nửa",
+      "Thêm ức gà nướng để tăng protein",
+      "Giảm bánh mì croutons để bớt tinh bột"
+    ],
+    "tags": [
+      "rau xanh",
+      "ít carb",
+      "phô mai"
+    ]
   },
   "cheesecake": {
-    "name_vi": "Bánh phô mai", "name_en": "Cheesecake", "emoji": "🍰",
-    "category": "Tráng miệng", "cuisine": "Mỹ", "serving": "1 miếng (~100 g)",
-    "fiber": 0, "sugar": 20, "sodium": 250,
+    "name_vi": "Bánh phô mai",
+    "name_en": "Cheesecake",
+    "emoji": "🍰",
+    "category": "Tráng miệng",
+    "cuisine": "Mỹ",
     "description": "Lớp phô mai kem mịn mượt nằm trên đế bánh quy giòn. Món tráng miệng đậm vị, giàu chất béo và năng lượng.",
-    "highlights": ["Có canxi từ phô mai", "Một lượng protein vừa phải"],
-    "tips": ["Chia sẻ một miếng với bạn bè", "Chọn phiên bản dùng sữa chua Hy Lạp", "Ăn kèm trái cây tươi thay vì sốt caramel"],
-    "tags": ["ngọt", "phô mai", "béo"]
+    "highlights": [
+      "Có canxi từ phô mai",
+      "Một lượng protein vừa phải"
+    ],
+    "tips": [
+      "Chia sẻ một miếng với bạn bè",
+      "Chọn phiên bản dùng sữa chua Hy Lạp",
+      "Ăn kèm trái cây tươi thay vì sốt caramel"
+    ],
+    "tags": [
+      "ngọt",
+      "phô mai",
+      "béo"
+    ]
   },
   "chicken_curry": {
-    "name_vi": "Cà ri gà", "name_en": "Chicken Curry", "emoji": "🍛",
-    "category": "Món chính", "cuisine": "Ấn Độ", "serving": "1 chén (~200 g)",
-    "fiber": 2, "sugar": 4, "sodium": 600,
+    "name_vi": "Cà ri gà",
+    "name_en": "Chicken Curry",
+    "emoji": "🍛",
+    "category": "Món chính",
+    "cuisine": "Ấn Độ",
     "description": "Thịt gà mềm hầm trong nước sốt cà ri thơm nồng từ nghệ, gừng, tỏi và nước cốt dừa. Dùng với cơm hoặc bánh mì.",
-    "highlights": ["Giàu protein từ thịt gà", "Nghệ chứa curcumin có tính chống viêm"],
-    "tips": ["Dùng sữa chua hoặc nước dùng thay một phần nước cốt dừa", "Thêm cà rốt, khoai lang, đậu để tăng chất xơ", "Ăn với cơm gạo lứt"],
-    "tags": ["cay", "protein", "gia vị"]
+    "highlights": [
+      "Giàu protein từ thịt gà",
+      "Nghệ chứa curcumin có tính chống viêm"
+    ],
+    "tips": [
+      "Dùng sữa chua hoặc nước dùng thay một phần nước cốt dừa",
+      "Thêm cà rốt, khoai lang, đậu để tăng chất xơ",
+      "Ăn với cơm gạo lứt"
+    ],
+    "tags": [
+      "cay",
+      "protein",
+      "gia vị"
+    ]
   },
   "cup_cakes": {
-    "name_vi": "Bánh cupcake", "name_en": "Cupcakes", "emoji": "🧁",
-    "category": "Tráng miệng", "cuisine": "Mỹ", "serving": "1 chiếc (~90 g)",
-    "fiber": 1, "sugar": 28, "sodium": 220,
+    "name_vi": "Bánh cupcake",
+    "name_en": "Cupcakes",
+    "emoji": "🧁",
+    "category": "Tráng miệng",
+    "cuisine": "Mỹ",
     "description": "Bánh bông lan nhỏ xinh phủ lớp kem bơ ngọt ngào. Lượng đường trong một chiếc đã vượt mức 25 g mà WHO khuyến khích cho cả ngày.",
-    "highlights": ["Khẩu phần nhỏ, dễ kiểm soát"],
-    "tips": ["Bỏ bớt lớp kem phủ", "Chọn loại mini", "Không dùng cùng đồ uống có đường"],
-    "tags": ["ngọt", "nướng", "kem bơ"]
+    "highlights": [
+      "Khẩu phần nhỏ, dễ kiểm soát"
+    ],
+    "tips": [
+      "Bỏ bớt lớp kem phủ",
+      "Chọn loại mini",
+      "Không dùng cùng đồ uống có đường"
+    ],
+    "tags": [
+      "ngọt",
+      "nướng",
+      "kem bơ"
+    ]
   },
   "donuts": {
-    "name_vi": "Bánh donut", "name_en": "Donuts", "emoji": "🍩",
-    "category": "Tráng miệng", "cuisine": "Mỹ", "serving": "1 chiếc (~100 g)",
-    "fiber": 1.5, "sugar": 22, "sodium": 330,
+    "name_vi": "Bánh donut",
+    "name_en": "Donuts",
+    "emoji": "🍩",
+    "category": "Tráng miệng",
+    "cuisine": "Mỹ",
     "description": "Bánh bột chiên vòng tròn phủ đường hoặc socola. Năng lượng cao chủ yếu từ tinh bột tinh chế và dầu chiên.",
-    "highlights": ["Cung cấp năng lượng nhanh"],
-    "tips": ["Xem đây là món thưởng thỉnh thoảng", "Chọn loại nướng thay vì chiên", "Ăn cùng cà phê đen thay vì đồ uống ngọt"],
-    "tags": ["chiên", "ngọt", "năng lượng cao"]
+    "highlights": [
+      "Cung cấp năng lượng nhanh"
+    ],
+    "tips": [
+      "Xem đây là món thưởng thỉnh thoảng",
+      "Chọn loại nướng thay vì chiên",
+      "Ăn cùng cà phê đen thay vì đồ uống ngọt"
+    ],
+    "tags": [
+      "chiên",
+      "ngọt",
+      "năng lượng cao"
+    ]
   },
   "fried_rice": {
-    "name_vi": "Cơm chiên", "name_en": "Fried Rice", "emoji": "🍚",
-    "category": "Món chính", "cuisine": "Trung Hoa - Việt Nam", "serving": "1 đĩa (~200 g)",
-    "fiber": 1.5, "sugar": 2, "sodium": 650,
+    "name_vi": "Cơm chiên",
+    "name_en": "Fried Rice",
+    "emoji": "🍚",
+    "category": "Món chính",
+    "cuisine": "Trung Hoa - Việt Nam",
     "description": "Cơm nguội đảo lửa lớn với trứng, rau củ, lạp xưởng hoặc tôm và nước tương. Món ăn quen thuộc, no lâu và dễ biến tấu.",
-    "highlights": ["Có thể bổ sung nhiều rau củ", "Trứng cung cấp protein chất lượng"],
-    "tips": ["Dùng ít dầu và chảo chống dính", "Tăng gấp đôi rau, giảm cơm", "Thay lạp xưởng bằng ức gà hoặc tôm"],
-    "tags": ["tinh bột", "chiên", "trứng"]
+    "highlights": [
+      "Có thể bổ sung nhiều rau củ",
+      "Trứng cung cấp protein chất lượng"
+    ],
+    "tips": [
+      "Dùng ít dầu và chảo chống dính",
+      "Tăng gấp đôi rau, giảm cơm",
+      "Thay lạp xưởng bằng ức gà hoặc tôm"
+    ],
+    "tags": [
+      "tinh bột",
+      "chiên",
+      "trứng"
+    ]
   },
   "hamburger": {
-    "name_vi": "Hamburger", "name_en": "Hamburger", "emoji": "🍔",
-    "category": "Món chính", "cuisine": "Mỹ", "serving": "1 chiếc (~120 g)",
-    "fiber": 1.5, "sugar": 6, "sodium": 500,
+    "name_vi": "Hamburger",
+    "name_en": "Hamburger",
+    "emoji": "🍔",
+    "category": "Món chính",
+    "cuisine": "Mỹ",
     "description": "Bánh mì tròn kẹp thịt bò xay nướng, rau xà lách, cà chua, hành và sốt. Biểu tượng của ẩm thực nhanh.",
-    "highlights": ["Protein và sắt từ thịt bò", "Có thể thêm nhiều rau"],
-    "tips": ["Chọn bánh mì nguyên cám", "Bỏ sốt mayonnaise và phô mai lát", "Ăn kèm salad thay vì khoai tây chiên"],
-    "tags": ["thịt bò", "nhanh", "protein"]
+    "highlights": [
+      "Protein và sắt từ thịt bò",
+      "Có thể thêm nhiều rau"
+    ],
+    "tips": [
+      "Chọn bánh mì nguyên cám",
+      "Bỏ sốt mayonnaise và phô mai lát",
+      "Ăn kèm salad thay vì khoai tây chiên"
+    ],
+    "tags": [
+      "thịt bò",
+      "nhanh",
+      "protein"
+    ]
   },
   "hot_dog": {
-    "name_vi": "Bánh mì xúc xích", "name_en": "Hot Dog", "emoji": "🌭",
-    "category": "Ăn nhẹ", "cuisine": "Mỹ", "serving": "1 chiếc (~100 g)",
-    "fiber": 1, "sugar": 5, "sodium": 750,
+    "name_vi": "Bánh mì xúc xích",
+    "name_en": "Hot Dog",
+    "emoji": "🌭",
+    "category": "Ăn nhẹ",
+    "cuisine": "Mỹ",
     "description": "Xúc xích nướng kẹp trong bánh mì mềm cùng mù tạt, tương cà và dưa chua. Lượng muối khá cao do thịt chế biến sẵn.",
-    "highlights": ["Tiện lợi, dễ ăn"],
-    "tips": ["Chọn xúc xích gà hoặc loại ít muối", "Thêm hành tây, dưa leo tươi", "Hạn chế thịt chế biến sẵn trong tuần"],
-    "tags": ["thịt chế biến", "mặn", "nhanh"]
+    "highlights": [
+      "Tiện lợi, dễ ăn"
+    ],
+    "tips": [
+      "Chọn xúc xích gà hoặc loại ít muối",
+      "Thêm hành tây, dưa leo tươi",
+      "Hạn chế thịt chế biến sẵn trong tuần"
+    ],
+    "tags": [
+      "thịt chế biến",
+      "mặn",
+      "nhanh"
+    ]
   },
   "ice_cream": {
-    "name_vi": "Kem", "name_en": "Ice Cream", "emoji": "🍨",
-    "category": "Tráng miệng", "cuisine": "Quốc tế", "serving": "1 cốc (~100 g)",
-    "fiber": 0.5, "sugar": 21, "sodium": 80,
+    "name_vi": "Kem",
+    "name_en": "Ice Cream",
+    "emoji": "🍨",
+    "category": "Tráng miệng",
+    "cuisine": "Quốc tế",
     "description": "Món tráng miệng lạnh từ sữa, kem và đường với vô vàn hương vị. Mát lạnh, béo ngậy và rất dễ ăn quá khẩu phần.",
-    "highlights": ["Cung cấp canxi", "Khẩu phần dễ đong đếm"],
-    "tips": ["Dùng cốc nhỏ thay vì ăn trực tiếp từ hộp", "Thử kem sữa chua hoặc kem trái cây xay", "Phủ trái cây tươi thay cho sốt và topping ngọt"],
-    "tags": ["lạnh", "ngọt", "sữa"]
+    "highlights": [
+      "Cung cấp canxi",
+      "Khẩu phần dễ đong đếm"
+    ],
+    "tips": [
+      "Dùng cốc nhỏ thay vì ăn trực tiếp từ hộp",
+      "Thử kem sữa chua hoặc kem trái cây xay",
+      "Phủ trái cây tươi thay cho sốt và topping ngọt"
+    ],
+    "tags": [
+      "lạnh",
+      "ngọt",
+      "sữa"
+    ]
   },
   "omelette": {
-    "name_vi": "Trứng ốp lết", "name_en": "Omelette", "emoji": "🍳",
-    "category": "Món chính", "cuisine": "Pháp", "serving": "2 quả trứng (~110 g)",
-    "fiber": 0, "sugar": 1, "sodium": 320,
+    "name_vi": "Trứng ốp lết",
+    "name_en": "Omelette",
+    "emoji": "🍳",
+    "category": "Món chính",
+    "cuisine": "Pháp",
     "description": "Trứng đánh tan rán mỏng, có thể cuộn cùng nấm, rau bina, cà chua hoặc phô mai. Bữa sáng nhanh gọn và giàu dinh dưỡng.",
-    "highlights": ["Protein hoàn chỉnh từ trứng", "Rất ít carbohydrate", "Giàu choline và vitamin B12"],
-    "tips": ["Thêm thật nhiều rau vào nhân", "Dùng ít bơ, có thể thay bằng dầu ô liu", "Ăn kèm bánh mì nguyên cám để no lâu"],
-    "tags": ["trứng", "bữa sáng", "ít carb"]
+    "highlights": [
+      "Protein hoàn chỉnh từ trứng",
+      "Rất ít carbohydrate",
+      "Giàu choline và vitamin B12"
+    ],
+    "tips": [
+      "Thêm thật nhiều rau vào nhân",
+      "Dùng ít bơ, có thể thay bằng dầu ô liu",
+      "Ăn kèm bánh mì nguyên cám để no lâu"
+    ],
+    "tags": [
+      "trứng",
+      "bữa sáng",
+      "ít carb"
+    ]
   },
   "pizza": {
-    "name_vi": "Pizza", "name_en": "Pizza", "emoji": "🍕",
-    "category": "Món chính", "cuisine": "Ý", "serving": "1 lát lớn (~110 g)",
-    "fiber": 2.5, "sugar": 3.5, "sodium": 600,
+    "name_vi": "Pizza",
+    "name_en": "Pizza",
+    "emoji": "🍕",
+    "category": "Món chính",
+    "cuisine": "Ý",
     "description": "Đế bánh nướng phủ sốt cà chua, phô mai mozzarella và đủ loại nhân. Một lát thì vừa phải, nhưng ít ai dừng lại ở một lát.",
-    "highlights": ["Lycopene từ sốt cà chua", "Canxi từ phô mai"],
-    "tips": ["Chọn đế mỏng và nhân rau", "Hạn chế xúc xích, pepperoni", "Ăn kèm salad để no nhanh hơn"],
-    "tags": ["phô mai", "nướng", "Ý"]
+    "highlights": [
+      "Lycopene từ sốt cà chua",
+      "Canxi từ phô mai"
+    ],
+    "tips": [
+      "Chọn đế mỏng và nhân rau",
+      "Hạn chế xúc xích, pepperoni",
+      "Ăn kèm salad để no nhanh hơn"
+    ],
+    "tags": [
+      "phô mai",
+      "nướng",
+      "Ý"
+    ]
   },
   "pho": {
-    "name_vi": "Phở bò", "name_en": "Pho", "emoji": "🍜",
-    "category": "Món nước", "cuisine": "Việt Nam", "serving": "1 tô (~500 g)",
-    "fiber": 1.5, "sugar": 3, "sodium": 1500,
+    "name_vi": "Phở bò",
+    "name_en": "Pho",
+    "emoji": "🍜",
+    "category": "Món nước",
+    "cuisine": "Việt Nam",
     "description": "Bánh phở mềm, thịt bò thái mỏng chan nước dùng ninh xương hàng giờ cùng quế, hồi, gừng nướng. Linh hồn của ẩm thực Việt.",
-    "highlights": ["Protein từ thịt bò", "Ít chất béo nếu chọn thịt nạc", "Rau thơm bổ sung vitamin"],
-    "tips": ["Không uống hết nước dùng để giảm muối", "Gọi thêm rau, giá, húng quế", "Chọn tái, nạm thay vì gầu mỡ"],
-    "tags": ["Việt Nam", "món nước", "thịt bò"]
+    "highlights": [
+      "Protein từ thịt bò",
+      "Ít chất béo nếu chọn thịt nạc",
+      "Rau thơm bổ sung vitamin"
+    ],
+    "tips": [
+      "Không uống hết nước dùng để giảm muối",
+      "Gọi thêm rau, giá, húng quế",
+      "Chọn tái, nạm thay vì gầu mỡ"
+    ],
+    "tags": [
+      "Việt Nam",
+      "món nước",
+      "thịt bò"
+    ]
   },
   "ramen": {
-    "name_vi": "Mì ramen", "name_en": "Ramen", "emoji": "🍥",
-    "category": "Món nước", "cuisine": "Nhật Bản", "serving": "1 tô (~450 g)",
-    "fiber": 2, "sugar": 4, "sodium": 1800,
+    "name_vi": "Mì ramen",
+    "name_en": "Ramen",
+    "emoji": "🍥",
+    "category": "Món nước",
+    "cuisine": "Nhật Bản",
     "description": "Sợi mì dai trong nước dùng đậm đà từ xương heo, miso hoặc nước tương, kèm thịt xá xíu, trứng lòng đào và rong biển.",
-    "highlights": ["Trứng và thịt cung cấp protein", "Bữa ăn no lâu"],
-    "tips": ["Để lại phần lớn nước dùng vì rất nhiều muối", "Chọn nước dùng shoyu thay vì tonkotsu béo", "Thêm rau cải, giá đỗ"],
-    "tags": ["Nhật Bản", "món nước", "mặn"]
+    "highlights": [
+      "Trứng và thịt cung cấp protein",
+      "Bữa ăn no lâu"
+    ],
+    "tips": [
+      "Để lại phần lớn nước dùng vì rất nhiều muối",
+      "Chọn nước dùng shoyu thay vì tonkotsu béo",
+      "Thêm rau cải, giá đỗ"
+    ],
+    "tags": [
+      "Nhật Bản",
+      "món nước",
+      "mặn"
+    ]
   },
   "spaghetti_bolognese": {
-    "name_vi": "Mì Ý sốt bò bằm", "name_en": "Spaghetti Bolognese", "emoji": "🍝",
-    "category": "Món chính", "cuisine": "Ý", "serving": "1 đĩa (~300 g)",
-    "fiber": 3.5, "sugar": 7, "sodium": 650,
+    "name_vi": "Mì Ý sốt bò bằm",
+    "name_en": "Spaghetti Bolognese",
+    "emoji": "🍝",
+    "category": "Món chính",
+    "cuisine": "Ý",
     "description": "Mì spaghetti trộn sốt cà chua hầm cùng thịt bò xay, hành, cà rốt và cần tây. Món ăn gia đình ấm áp và đủ chất.",
-    "highlights": ["Cân bằng tinh bột và protein", "Rau củ trong sốt bổ sung chất xơ"],
-    "tips": ["Dùng mì nguyên cám", "Tăng tỉ lệ sốt rau so với mì", "Rắc ít phô mai Parmesan"],
-    "tags": ["Ý", "mì", "thịt bò"]
+    "highlights": [
+      "Cân bằng tinh bột và protein",
+      "Rau củ trong sốt bổ sung chất xơ"
+    ],
+    "tips": [
+      "Dùng mì nguyên cám",
+      "Tăng tỉ lệ sốt rau so với mì",
+      "Rắc ít phô mai Parmesan"
+    ],
+    "tags": [
+      "Ý",
+      "mì",
+      "thịt bò"
+    ]
   },
   "spring_rolls": {
-    "name_vi": "Chả giò", "name_en": "Spring Rolls", "emoji": "🥟",
-    "category": "Ăn nhẹ", "cuisine": "Việt Nam", "serving": "2 cuốn nhỏ (~60 g)",
-    "fiber": 1.5, "sugar": 3, "sodium": 300,
+    "name_vi": "Chả giò",
+    "name_en": "Spring Rolls",
+    "emoji": "🥟",
+    "category": "Ăn nhẹ",
+    "cuisine": "Việt Nam",
     "description": "Cuốn bánh tráng giòn rụm bọc nhân thịt, miến, mộc nhĩ, cà rốt. Chấm nước mắm chua ngọt và ăn kèm rau sống.",
-    "highlights": ["Khẩu phần nhỏ", "Nhân có rau củ và nấm"],
-    "tips": ["Làm bằng nồi chiên không dầu", "Thử gỏi cuốn tươi thay thế", "Ăn nhiều rau sống đi kèm"],
-    "tags": ["Việt Nam", "chiên", "ăn nhẹ"]
+    "highlights": [
+      "Khẩu phần nhỏ",
+      "Nhân có rau củ và nấm"
+    ],
+    "tips": [
+      "Làm bằng nồi chiên không dầu",
+      "Thử gỏi cuốn tươi thay thế",
+      "Ăn nhiều rau sống đi kèm"
+    ],
+    "tags": [
+      "Việt Nam",
+      "chiên",
+      "ăn nhẹ"
+    ]
   },
   "steak": {
-    "name_vi": "Bít tết", "name_en": "Steak", "emoji": "🥩",
-    "category": "Món chính", "cuisine": "Âu - Mỹ", "serving": "1 miếng (~120 g)",
-    "fiber": 0, "sugar": 0, "sodium": 60,
+    "name_vi": "Bít tết",
+    "name_en": "Steak",
+    "emoji": "🥩",
+    "category": "Món chính",
+    "cuisine": "Âu - Mỹ",
     "description": "Thịt bò áp chảo hoặc nướng ở độ chín tùy chọn, thường ăn kèm khoai tây, rau củ và sốt tiêu. Không có carbohydrate.",
-    "highlights": ["Rất giàu protein", "Nguồn sắt, kẽm và vitamin B12 dồi dào", "Không chứa carbohydrate"],
-    "tips": ["Chọn phần thăn nạc", "Ăn kèm rau củ nướng thay vì khoai chiên", "Giới hạn thịt đỏ khoảng 500 g mỗi tuần"],
-    "tags": ["thịt bò", "protein cao", "ít carb"]
+    "highlights": [
+      "Rất giàu protein",
+      "Nguồn sắt, kẽm và vitamin B12 dồi dào",
+      "Không chứa carbohydrate"
+    ],
+    "tips": [
+      "Chọn phần thăn nạc",
+      "Ăn kèm rau củ nướng thay vì khoai chiên",
+      "Giới hạn thịt đỏ khoảng 500 g mỗi tuần"
+    ],
+    "tags": [
+      "thịt bò",
+      "protein cao",
+      "ít carb"
+    ]
   },
   "sushi": {
-    "name_vi": "Sushi", "name_en": "Sushi", "emoji": "🍣",
-    "category": "Món chính", "cuisine": "Nhật Bản", "serving": "6 miếng (~150 g)",
-    "fiber": 1, "sugar": 6, "sodium": 500,
+    "name_vi": "Sushi",
+    "name_en": "Sushi",
+    "emoji": "🍣",
+    "category": "Món chính",
+    "cuisine": "Nhật Bản",
     "description": "Cơm trộn giấm kết hợp cá tươi, rong biển và rau củ. Thanh nhẹ, cân bằng và giàu axit béo omega-3 nếu chọn cá hồi, cá ngừ.",
-    "highlights": ["Omega-3 từ cá", "Ít chất béo", "Rong biển chứa i-ốt"],
-    "tips": ["Dùng nước tương ít muối và chấm nhẹ", "Chọn sashimi hoặc nigiri thay vì cuộn tempura", "Thêm súp miso và salad rong biển"],
-    "tags": ["Nhật Bản", "cá", "cân bằng"]
+    "highlights": [
+      "Omega-3 từ cá",
+      "Ít chất béo",
+      "Rong biển chứa i-ốt"
+    ],
+    "tips": [
+      "Dùng nước tương ít muối và chấm nhẹ",
+      "Chọn sashimi hoặc nigiri thay vì cuộn tempura",
+      "Thêm súp miso và salad rong biển"
+    ],
+    "tags": [
+      "Nhật Bản",
+      "cá",
+      "cân bằng"
+    ]
   },
   "tacos": {
-    "name_vi": "Tacos", "name_en": "Tacos", "emoji": "🌮",
-    "category": "Ăn nhẹ", "cuisine": "Mexico", "serving": "1 chiếc (~100 g)",
-    "fiber": 3, "sugar": 2, "sodium": 400,
+    "name_vi": "Tacos",
+    "name_en": "Tacos",
+    "emoji": "🌮",
+    "category": "Ăn nhẹ",
+    "cuisine": "Mexico",
     "description": "Bánh ngô mỏng gói nhân thịt nướng, đậu, rau, salsa cà chua và bơ. Nhiều màu sắc, nhiều chất xơ.",
-    "highlights": ["Chất xơ từ bánh ngô và đậu", "Cân bằng các nhóm chất"],
-    "tips": ["Chọn nhân gà, cá nướng", "Thêm salsa, rau, bơ thay vì kem chua", "Dùng bánh ngô mềm thay vì vỏ chiên giòn"],
-    "tags": ["Mexico", "ngô", "cân bằng"]
+    "highlights": [
+      "Chất xơ từ bánh ngô và đậu",
+      "Cân bằng các nhóm chất"
+    ],
+    "tips": [
+      "Chọn nhân gà, cá nướng",
+      "Thêm salsa, rau, bơ thay vì kem chua",
+      "Dùng bánh ngô mềm thay vì vỏ chiên giòn"
+    ],
+    "tags": [
+      "Mexico",
+      "ngô",
+      "cân bằng"
+    ]
   },
   "waffles": {
-    "name_vi": "Bánh waffle", "name_en": "Waffles", "emoji": "🧇",
-    "category": "Tráng miệng", "cuisine": "Bỉ", "serving": "1 chiếc (~90 g)",
-    "fiber": 1.5, "sugar": 10, "sodium": 450,
+    "name_vi": "Bánh waffle",
+    "name_en": "Waffles",
+    "emoji": "🧇",
+    "category": "Tráng miệng",
+    "cuisine": "Bỉ",
     "description": "Bánh nướng kẹp ô vuông giòn ngoài mềm trong, thường rưới siro, bơ hoặc kem. Món bữa sáng ngọt ngào.",
-    "highlights": ["Dễ kết hợp với trái cây và sữa chua"],
-    "tips": ["Thay siro bằng trái cây tươi và sữa chua", "Làm bột từ yến mạch", "Ăn kèm trứng để thêm protein"],
-    "tags": ["bữa sáng", "ngọt", "nướng"]
+    "highlights": [
+      "Dễ kết hợp với trái cây và sữa chua"
+    ],
+    "tips": [
+      "Thay siro bằng trái cây tươi và sữa chua",
+      "Làm bột từ yến mạch",
+      "Ăn kèm trứng để thêm protein"
+    ],
+    "tags": [
+      "bữa sáng",
+      "ngọt",
+      "nướng"
+    ]
+  },
+  "com_tam": {
+    "name_vi": "Cơm tấm sườn",
+    "name_en": "Broken Rice with Grilled Pork",
+    "emoji": "🍛",
+    "category": "Món chính",
+    "cuisine": "Việt Nam",
+    "description": "Hạt cơm tấm mềm tơi ăn cùng sườn heo nướng than thơm lừng, trứng ốp la, đồ chua và nước mắm pha chua ngọt. Món ăn sáng và trưa quen thuộc của người Sài Gòn.",
+    "highlights": [
+      "Nhiều protein từ sườn và trứng",
+      "Năng lượng dồi dào cho buổi sáng bận rộn"
+    ],
+    "tips": [
+      "Xin bớt mỡ hành và nước mắm",
+      "Thêm dưa leo, cà chua, đồ chua",
+      "Chọn sườn nạc, bỏ phần mỡ"
+    ],
+    "tags": [
+      "Việt Nam",
+      "cơm",
+      "nướng",
+      "Sài Gòn"
+    ]
+  },
+  "bun_bo_hue": {
+    "name_vi": "Bún bò Huế",
+    "name_en": "Hue Spicy Beef Noodle Soup",
+    "emoji": "🍜",
+    "category": "Món nước",
+    "cuisine": "Việt Nam",
+    "description": "Sợi bún to trong nước dùng đỏ cam đậm vị sả, mắm ruốc và sa tế, ăn cùng bắp bò, giò heo và rau sống. Đặc sản cay nồng của cố đô Huế.",
+    "highlights": [
+      "Protein từ bắp bò và giò heo",
+      "Sả và ớt giúp món ăn đậm vị mà không cần nhiều dầu mỡ"
+    ],
+    "tips": [
+      "Để lại phần lớn nước dùng vì rất mặn",
+      "Gọi thêm rau sống, bắp chuối",
+      "Bỏ bớt giò heo nhiều mỡ"
+    ],
+    "tags": [
+      "Việt Nam",
+      "món nước",
+      "cay",
+      "Huế"
+    ]
+  },
+  "banh_mi": {
+    "name_vi": "Bánh mì thịt",
+    "name_en": "Banh Mi",
+    "emoji": "🥖",
+    "category": "Ăn nhẹ",
+    "cuisine": "Việt Nam",
+    "description": "Ổ bánh mì vỏ giòn ruột xốp kẹp chả lụa, thịt nguội, pa tê, bơ trứng, đồ chua, dưa leo và ngò. Món ăn đường phố Việt nổi tiếng khắp thế giới.",
+    "highlights": [
+      "Tiện lợi, đủ cả tinh bột, đạm và rau",
+      "Đồ chua và dưa leo thêm chất xơ"
+    ],
+    "tips": [
+      "Bớt pa tê và bơ trứng để giảm chất béo",
+      "Chọn nhân trứng ốp la hoặc gà xé",
+      "Xin thêm dưa leo, rau thơm"
+    ],
+    "tags": [
+      "Việt Nam",
+      "bữa sáng",
+      "đường phố"
+    ]
+  },
+  "bun_cha": {
+    "name_vi": "Bún chả",
+    "name_en": "Bun Cha",
+    "emoji": "🥢",
+    "category": "Món chính",
+    "cuisine": "Việt Nam",
+    "description": "Chả viên và thịt heo nướng than hoa ngâm trong nước chấm chua ngọt, ăn kèm bún và rau sống. Linh hồn bữa trưa của người Hà Nội.",
+    "highlights": [
+      "Nhiều protein",
+      "Ăn kèm nhiều rau sống"
+    ],
+    "tips": [
+      "Không uống hết nước chấm vì nhiều đường và muối",
+      "Ăn nhiều rau sống hơn bún",
+      "Chọn thịt nạc thay vì ba chỉ"
+    ],
+    "tags": [
+      "Việt Nam",
+      "nướng",
+      "Hà Nội"
+    ]
+  },
+  "goi_cuon": {
+    "name_vi": "Gỏi cuốn",
+    "name_en": "Fresh Spring Rolls",
+    "emoji": "🌯",
+    "category": "Ăn nhẹ",
+    "cuisine": "Việt Nam",
+    "description": "Bánh tráng mỏng cuốn tôm, thịt luộc, bún và rau thơm tươi mát, chấm tương đậu phộng. Món khai vị thanh nhẹ, không chiên.",
+    "highlights": [
+      "Không chiên rán, ít chất béo",
+      "Nhiều rau tươi",
+      "Tôm và thịt nạc cung cấp protein"
+    ],
+    "tips": [
+      "Chấm vừa phải vì tương có nhiều đường và muối",
+      "Thêm rau, bớt bún",
+      "Lựa chọn thay thế tốt cho chả giò"
+    ],
+    "tags": [
+      "Việt Nam",
+      "ăn nhẹ",
+      "ít béo"
+    ]
+  },
+  "banh_xeo": {
+    "name_vi": "Bánh xèo",
+    "name_en": "Vietnamese Sizzling Pancake",
+    "emoji": "🥞",
+    "category": "Món chính",
+    "cuisine": "Việt Nam",
+    "description": "Bánh bột gạo pha nước cốt dừa và nghệ đổ giòn rụm, nhân tôm, thịt, giá đỗ. Cuốn với cải xanh, rau thơm rồi chấm nước mắm chua ngọt.",
+    "highlights": [
+      "Ăn kèm rất nhiều rau xanh",
+      "Tôm và thịt bổ sung protein"
+    ],
+    "tips": [
+      "Dùng chảo chống dính để bớt dầu",
+      "Ăn nhiều rau cuốn bên ngoài",
+      "Chia sẻ một cái thay vì ăn hai cái"
+    ],
+    "tags": [
+      "Việt Nam",
+      "chiên",
+      "miền Tây"
+    ]
+  },
+  "hu_tieu": {
+    "name_vi": "Hủ tiếu Nam Vang",
+    "name_en": "Hu Tieu Noodle Soup",
+    "emoji": "🍜",
+    "category": "Món nước",
+    "cuisine": "Việt Nam",
+    "description": "Sợi hủ tiếu dai trong nước dùng xương ngọt thanh, kèm thịt heo nạc, tôm, trứng cút, gan và hẹ. Món sáng phổ biến ở miền Nam.",
+    "highlights": [
+      "Ít chất béo nếu chọn thịt nạc",
+      "Protein từ tôm, thịt và trứng"
+    ],
+    "tips": [
+      "Để lại nửa nước dùng để giảm muối",
+      "Gọi thêm giá, hẹ, xà lách",
+      "Hạn chế tóp mỡ và tỏi phi"
+    ],
+    "tags": [
+      "Việt Nam",
+      "món nước",
+      "miền Nam"
+    ]
+  },
+  "chao_ga": {
+    "name_vi": "Cháo gà",
+    "name_en": "Chicken Rice Porridge",
+    "emoji": "🥣",
+    "category": "Món nước",
+    "cuisine": "Việt Nam",
+    "description": "Gạo nấu nhừ trong nước luộc gà, thêm thịt gà xé, hành phi, gừng và tiêu. Món ăn dễ tiêu, ấm bụng, hợp khi trời lạnh hoặc lúc mệt.",
+    "highlights": [
+      "Dễ tiêu hóa",
+      "Ít chất béo",
+      "Protein từ thịt gà"
+    ],
+    "tips": [
+      "Bỏ da gà để giảm chất béo",
+      "Thêm rau răm, hành lá, gừng",
+      "Nêm nhạt, hạn chế nước mắm"
+    ],
+    "tags": [
+      "Việt Nam",
+      "dễ tiêu",
+      "món nước"
+    ]
+  },
+  "ca_kho_to": {
+    "name_vi": "Cá kho tộ",
+    "name_en": "Caramelized Braised Fish",
+    "emoji": "🐟",
+    "category": "Món chính",
+    "cuisine": "Việt Nam",
+    "description": "Cá kho trong niêu đất với nước màu, nước mắm, tiêu và hành cho đến khi thấm đậm, nước sánh kẹo. Món mặn đưa cơm của mâm cơm Việt.",
+    "highlights": [
+      "Protein từ cá",
+      "Ít tinh bột"
+    ],
+    "tips": [
+      "Kho nhạt hơn, bớt nước mắm và đường",
+      "Ăn kèm nhiều rau luộc",
+      "Số liệu chưa gồm cơm ăn kèm"
+    ],
+    "tags": [
+      "Việt Nam",
+      "cá",
+      "cơm nhà"
+    ]
+  },
+  "canh_chua_ca": {
+    "name_vi": "Canh chua cá",
+    "name_en": "Sour Fish Soup",
+    "emoji": "🍲",
+    "category": "Món nước",
+    "cuisine": "Việt Nam",
+    "description": "Canh nấu me chua thanh với cá, cà chua, thơm, đậu bắp, giá và rau om. Món canh quen thuộc trong bữa cơm miền Nam.",
+    "highlights": [
+      "Ít năng lượng, nhiều rau",
+      "Protein từ cá",
+      "Vitamin C từ cà chua và thơm"
+    ],
+    "tips": [
+      "Nêm ít đường và nước mắm",
+      "Thêm nhiều rau, giá",
+      "Món canh tốt để ăn trước bữa cơm"
+    ],
+    "tags": [
+      "Việt Nam",
+      "canh",
+      "nhiều rau"
+    ]
+  },
+  "rau_muong_xao": {
+    "name_vi": "Rau muống xào tỏi",
+    "name_en": "Stir-fried Water Spinach",
+    "emoji": "🥬",
+    "category": "Món rau",
+    "cuisine": "Việt Nam",
+    "description": "Rau muống xào lửa lớn với tỏi đập dập, giữ màu xanh giòn. Món rau giản dị mà gần như mâm cơm Việt nào cũng có.",
+    "highlights": [
+      "Ít năng lượng",
+      "Giàu vitamin A, C và chất xơ"
+    ],
+    "tips": [
+      "Luộc thay vì xào để bớt dầu",
+      "Nêm ít nước mắm",
+      "Ăn kèm món đạm để đủ chất"
+    ],
+    "tags": [
+      "Việt Nam",
+      "rau xanh",
+      "ít calo"
+    ]
+  },
+  "com_ga": {
+    "name_vi": "Cơm gà",
+    "name_en": "Chicken Rice",
+    "emoji": "🍗",
+    "category": "Món chính",
+    "cuisine": "Việt Nam",
+    "description": "Cơm nấu bằng nước luộc gà thơm vàng, ăn cùng gà luộc xé, gỏi hành, rau răm và nước mắm gừng. Đặc sản nổi tiếng của Hội An và Tam Kỳ.",
+    "highlights": [
+      "Nhiều protein từ thịt gà",
+      "Rau răm, hành bổ sung chất xơ"
+    ],
+    "tips": [
+      "Bỏ da gà để giảm chất béo",
+      "Xin thêm gỏi rau",
+      "Bớt nửa phần cơm nếu đang giảm cân"
+    ],
+    "tags": [
+      "Việt Nam",
+      "gà",
+      "Hội An"
+    ]
+  },
+  "banh_cuon": {
+    "name_vi": "Bánh cuốn",
+    "name_en": "Steamed Rice Rolls",
+    "emoji": "🥟",
+    "category": "Món chính",
+    "cuisine": "Việt Nam",
+    "description": "Lớp bánh gạo tráng mỏng hấp chín cuốn nhân thịt heo và mộc nhĩ, rắc hành phi, ăn với chả lụa, rau thơm và nước chấm.",
+    "highlights": [
+      "Bánh hấp, không chiên",
+      "Mộc nhĩ bổ sung chất xơ"
+    ],
+    "tips": [
+      "Bớt hành phi và nước chấm",
+      "Thêm giá, rau thơm",
+      "Thay chả lụa bằng chả quế ít mỡ"
+    ],
+    "tags": [
+      "Việt Nam",
+      "hấp",
+      "bữa sáng"
+    ]
+  },
+  "che_dau_xanh": {
+    "name_vi": "Chè đậu xanh",
+    "name_en": "Mung Bean Sweet Soup",
+    "emoji": "🍧",
+    "category": "Tráng miệng",
+    "cuisine": "Việt Nam",
+    "description": "Đậu xanh nấu nhừ với đường, thêm nước cốt dừa béo ngậy và đá bào. Món giải nhiệt ngọt mát của mùa hè.",
+    "highlights": [
+      "Đậu xanh giàu chất xơ và protein thực vật"
+    ],
+    "tips": [
+      "Giảm một nửa đường khi tự nấu",
+      "Bớt nước cốt dừa",
+      "Ăn ly nhỏ, không dùng thay bữa chính"
+    ],
+    "tags": [
+      "Việt Nam",
+      "ngọt",
+      "giải nhiệt"
+    ]
+  },
+  "bun_rieu": {
+    "name_vi": "Bún riêu cua",
+    "name_en": "Crab Noodle Soup",
+    "emoji": "🍜",
+    "category": "Món nước",
+    "cuisine": "Việt Nam",
+    "description": "Nước dùng chua nhẹ từ cà chua và riêu cua đồng, ăn với bún, đậu phụ chiên, mắm tôm và rau sống. Món bún dân dã của miền Bắc.",
+    "highlights": [
+      "Canxi và protein từ cua",
+      "Cà chua giàu lycopene"
+    ],
+    "tips": [
+      "Để lại phần lớn nước dùng vì nhiều muối",
+      "Hạn chế mắm tôm",
+      "Ăn kèm nhiều rau sống"
+    ],
+    "tags": [
+      "Việt Nam",
+      "món nước",
+      "cua",
+      "miền Bắc"
+    ]
   }
 }
