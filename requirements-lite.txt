@@ -1,0 +1,4 @@
+# Nhận dạng món ăn bằng LiteRT (~25 MB) với food_model.tflite, dùng cho máy chủ ít RAM.
+# Chỉ có bản cho Linux/macOS; trên Windows dùng requirements-ml.txt (TensorFlow).
+-r requirements.txt
+ai-edge-litert==2.3.0

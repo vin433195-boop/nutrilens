@@ -35,7 +35,10 @@ class Config:
     # ── Tải ảnh và model ──
     MAX_CONTENT_LENGTH = 8 * 1024 * 1024
     ALLOWED_IMAGE_FORMATS = {"JPEG", "PNG", "WEBP"}
-    MODEL_PATH = Path(os.environ.get("MODEL_PATH", PROJECT_DIR / "food_model.h5"))
+    # Ưu tiên bản .tflite (nhẹ, chạy được trên máy chủ 512 MB RAM), không có thì dùng .h5
+    MODEL_PATH = Path(os.environ.get("MODEL_PATH") or next(
+        (p for p in (PROJECT_DIR / "food_model.tflite", PROJECT_DIR / "food_model.h5") if p.exists()),
+        PROJECT_DIR / "food_model.h5"))
     CLASSES_PATH = PROJECT_DIR / "class_names.json"
     # Nạp model ở luồng nền ngay khi có request đầu tiên. Đặt PRELOAD_MODEL=0 để chỉ nạp khi cần.
     PRELOAD_MODEL = _bool("PRELOAD_MODEL", "1")

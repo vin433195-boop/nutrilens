@@ -60,7 +60,7 @@ flask --app app send-test-email ban@gmail.com
 
 | Việc | Cách làm |
 |---|---|
-| Chạy production | `waitress-serve --port=8000 --threads=8 app:app` |
+| Chạy production | `waitress-serve --port=8000 --threads=4 app:app` |
 | Kiểm tra sức khỏe | `GET /healthz` trả về trạng thái CSDL và model |
 | Log | `logs/nutrilens.log`, tự xoay vòng 5 file × 5 MB |
 | Theo dõi lỗi | Cài `sentry-sdk[flask]` và đặt `SENTRY_DSN` |
@@ -76,7 +76,15 @@ docker compose up -d --build
 DOMAIN=nutrilens.vn COOKIE_SECURE=1 docker compose --profile https up -d
 ```
 
-Build nhẹ hơn, không có AI: `docker compose build --build-arg WITH_ML=0`.
+Image mặc định chạy AI bằng LiteRT với `food_model.tflite` (khoảng 150 MB RAM). Dùng TensorFlow đầy đủ: `docker compose build --build-arg ML=full`; không có AI: `--build-arg ML=none`. Sau khi huấn luyện lại `food_model.h5`, tạo lại bản .tflite bằng `python scripts/convert_tflite.py`.
+
+### Đưa lên Render (miễn phí)
+
+1. Tạo database MySQL trên mạng, ví dụ TiDB Cloud Serverless, rồi chạy `flask --app app setup-db` và `create-admin` từ máy với `DATABASE_URL` trỏ tới đó.
+2. Đẩy code lên GitHub. Trên https://dashboard.render.com chọn **New → Blueprint**, chọn repo. Render đọc `render.yaml` và tạo dịch vụ.
+3. Điền `DATABASE_URL` khi được hỏi. Với TiDB dùng `ssl_ca=/etc/ssl/certs/ca-certificates.crt&ssl_verify_cert=true&ssl_verify_identity=true`.
+
+Gói miễn phí tự ngủ sau 15 phút không có truy cập; lần mở lại chờ khoảng 1 phút. Ảnh tải lên qua trang quản trị mất khi dịch vụ khởi động lại.
 
 ## Kiểm thử
 

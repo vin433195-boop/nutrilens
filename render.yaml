@@ -1,0 +1,17 @@
+# Render Blueprint: New → Blueprint → chọn repo này. Xem mục "Đưa lên Render" trong README.
+services:
+  - type: web
+    name: nutrilens
+    runtime: docker
+    plan: free
+    region: singapore
+    healthCheckPath: /healthz
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: SECRET_KEY
+        generateValue: true
+      - key: COOKIE_SECURE
+        value: "1"
+      - key: PRELOAD_MODEL
+        value: "1"

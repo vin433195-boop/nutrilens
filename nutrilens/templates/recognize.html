@@ -38,7 +38,7 @@
       </div>
 
       {% if model_status == "missing" %}
-        <div class="notice error" style="margin-top:16px">{{ icon("info") }}<span>Chưa tìm thấy file <b>food_model.h5</b> trên máy chủ nên tính năng nhận dạng đang tạm tắt. Bạn vẫn có thể tra cứu trong <a href="{{ url_for('main.foods') }}">thư viện món ăn</a>.</span></div>
+        <div class="notice error" style="margin-top:16px">{{ icon("info") }}<span>Chưa tìm thấy file model (<b>food_model.tflite</b> hoặc <b>food_model.h5</b>) trên máy chủ nên tính năng nhận dạng đang tạm tắt. Bạn vẫn có thể tra cứu trong <a href="{{ url_for('main.foods') }}">thư viện món ăn</a>.</span></div>
       {% elif model_status == "error" %}
         <div class="notice error" style="margin-top:16px">{{ icon("info") }}<span>Không nạp được mô hình nhận dạng. Vui lòng kiểm tra cài đặt TensorFlow trên máy chủ.</span></div>
       {% elif model_status == "idle" %}

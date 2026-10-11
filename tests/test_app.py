@@ -580,6 +580,35 @@ class PredictApiTests(AppTestCase):
         self.assertEqual(self.predict().status_code, 503)
 
 
+def _has_tflite_runtime():
+    from nutrilens.predictor import _tflite_interpreter_class
+    try:
+        _tflite_interpreter_class()
+    except ImportError:
+        return False
+    return True
+
+
+TFLITE_PATH = Path(__file__).resolve().parent.parent / "food_model.tflite"
+
+
+@unittest.skipUnless(TFLITE_PATH.exists() and _has_tflite_runtime(), "cần food_model.tflite và LiteRT/TensorFlow")
+class TFLiteModelTests(unittest.TestCase):
+    def test_real_model_predicts_single_and_tta_batch(self):
+        import json
+        names = json.loads(Path(TestConfig.CLASSES_PATH).read_text(encoding="utf-8"))
+        predictor = Predictor(TFLITE_PATH, names)
+        img = Image.open(Path(__file__).resolve().parent.parent / "nutrilens/static/img/foods/pho.webp")
+        top = predictor.predict(img)
+        self.assertEqual(predictor.status, "ready")
+        self.assertEqual(len(top), 3)
+        self.assertAlmostEqual(sum(p for _, p in predictor.predict(img, top_k=len(names))), 1.0, places=4)
+        # TTA đổi kích thước batch 1 -> 5 -> 1 mà vẫn cho kết quả nhất quán
+        tta = predictor.predict(img, tta=True)
+        self.assertEqual(predictor.predict(img), top)
+        self.assertEqual(len(tta), 3)
+
+
 class FormTests(AppTestCase):
     def test_contact_validation(self):
         token = self.csrf("/lien-he")

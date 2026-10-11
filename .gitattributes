@@ -3,3 +3,4 @@
 *.webp binary
 *.jpg binary
 *.png binary
+*.tflite binary
