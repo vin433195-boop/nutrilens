@@ -54,7 +54,9 @@
       <p>Từ 7,5 điểm được xếp <em>Lành mạnh</em>, từ 5,5 điểm là <em>Cân bằng</em>, thấp hơn là <em>Nên hạn chế</em>. Vì tính theo cả khẩu phần, các món nước như phở hay bún bò thường bị trừ điểm do natri trong nước dùng. Bạn có thể giảm đáng kể lượng natri bằng cách không uống hết nước.</p>
 
       <h2 id="ai">Nhận dạng món ăn bằng AI</h2>
-      <p>Mô hình CNN nhận dạng được 20 món trong bộ dữ liệu Food-101, với độ chính xác khoảng 40% trên tập kiểm thử. Các món Việt mới thêm vào thư viện chưa được mô hình nhận dạng. Khi bạn chọn lại món đúng, lựa chọn đó được lưu ẩn danh để huấn luyện lại mô hình sau này.</p>
+      <p>Mô hình nhận dạng được 30 món Việt trong bộ dữ liệu <a href="https://www.kaggle.com/datasets/quandang/vietnamese-foods" target="_blank" rel="noopener">30VNFoods</a>. Mạng EfficientNetV2-B0 đã học sẵn trên ImageNet được tinh chỉnh lại với ảnh món Việt, đầu vào 224×224 điểm ảnh.</p>
+      <p>Trước khi huấn luyện, dữ liệu được làm sạch: gộp ảnh trùng lặp, bỏ ảnh trùng nhưng mang hai nhãn khác nhau và ảnh hỏng, rồi chia lại 70% huấn luyện, 15% kiểm định, 15% kiểm thử theo từng món. Trên 3.755 ảnh kiểm thử, mô hình đoán đúng ngay lần đầu 87,6% và có món đúng trong 3 gợi ý đầu 96,3%.</p>
+      <p>Các món Âu trong thư viện (pizza, sushi...) và một số món Việt như bún chả, cơm gà chưa được mô hình nhận dạng. Khi bạn chọn lại món đúng, lựa chọn đó được lưu ẩn danh để huấn luyện lại mô hình sau này.</p>
 
       <h2 id="anh">Hình ảnh</h2>
       <p>Ảnh món ăn được lấy từ <a href="https://commons.wikimedia.org/" target="_blank" rel="noopener">Wikimedia Commons</a> với giấy phép tự do như CC BY, CC BY-SA hoặc CC0. Tên tác giả, giấy phép và link ảnh gốc được ghi ngay dưới ảnh trên trang chi tiết món.</p>

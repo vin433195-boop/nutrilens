@@ -20,7 +20,7 @@ from datetime import date
 from pathlib import Path
 
 from flask import current_app
-from sqlalchemy import select
+from sqlalchemy import delete, select
 
 from .extensions import db
 from .models import Article, Category, Food, FoodIngredient, FoodNote, ModelLabel, Tag
@@ -129,6 +129,9 @@ def seed_foods(overwrite: bool = False) -> tuple[int, int]:
             db.session.flush()
             if slug in class_names:
                 _ensure_label(slug, food)
+
+        # Bỏ nhãn của model cũ không còn trong class_names.json
+        db.session.execute(delete(ModelLabel).where(ModelLabel.label.not_in(class_names)))
 
     db.session.commit()
     return created, updated

@@ -243,5 +243,138 @@
   "license": "CC BY 2.0",
   "source": "https://commons.wikimedia.org/wiki/File:Waffles_with_Strawberries.jpg",
   "title": "File:Waffles with Strawberries.jpg"
+ },
+ "banh_beo": {
+  "file": "img/foods/banh_beo.webp",
+  "credit": "Christopher Crouzet",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:B%C3%A1nh_B%C3%A8o,_Da_Nang,_Vietnam.jpg",
+  "title": "File:Bánh Bèo, Da Nang, Vietnam.jpg"
+ },
+ "banh_bot_loc": {
+  "file": "img/foods/banh_bot_loc.webp",
+  "credit": "Vietcuongdao",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:B%C3%A1nh_b%E1%BB%99t_l%E1%BB%8Dc_saigonnais.jpg",
+  "title": "File:Bánh bột lọc saigonnais.jpg"
+ },
+ "banh_can": {
+  "file": "img/foods/banh_can.webp",
+  "credit": "Saigon Time",
+  "license": "CC0",
+  "source": "https://commons.wikimedia.org/wiki/File:B%C3%A1nh_c%C4%83n_in_phan_rang,_vietnam.jpg",
+  "title": "File:Bánh căn in phan rang, vietnam.jpg"
+ },
+ "banh_canh": {
+  "file": "img/foods/banh_canh.webp",
+  "credit": "Kham Tran - www.khamtran.com",
+  "license": "CC BY 3.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Banh-Canh-Noodle-Soup.jpg",
+  "title": "File:Banh-Canh-Noodle-Soup.jpg"
+ },
+ "banh_chung": {
+  "file": "img/foods/banh_chung.webp",
+  "credit": "vi:user:Viethavvh",
+  "license": "Public domain",
+  "source": "https://commons.wikimedia.org/wiki/File:Banh_chung_vuong.jpg",
+  "title": "File:Banh chung vuong.jpg"
+ },
+ "banh_duc": {
+  "file": "img/foods/banh_duc.webp",
+  "credit": "hongnhung106",
+  "license": "CC BY 2.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Banhduc-northern.jpg",
+  "title": "File:Banhduc-northern.jpg"
+ },
+ "banh_gio": {
+  "file": "img/foods/banh_gio.webp",
+  "credit": "Thang Nguyen from Nottingham, United Kingdom",
+  "license": "CC BY-SA 2.0",
+  "source": "https://commons.wikimedia.org/wiki/File:B%C3%A1nh_gi%C3%B2.jpg",
+  "title": "File:Bánh giò.jpg"
+ },
+ "banh_khot": {
+  "file": "img/foods/banh_khot.webp",
+  "credit": "Nguyenhai314",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:B%C3%A1nh_kh%E1%BB%8Dt_by_Nguyenhai314.jpg",
+  "title": "File:Bánh khọt by Nguyenhai314.jpg"
+ },
+ "banh_pia": {
+  "file": "img/foods/banh_pia.webp",
+  "credit": "TonySam123",
+  "license": "CC BY-SA 3.0",
+  "source": "https://commons.wikimedia.org/wiki/File:B%C3%A1nh_p%C3%ADa_new.jpg",
+  "title": "File:Bánh pía new.jpg"
+ },
+ "banh_tet": {
+  "file": "img/foods/banh_tet.webp",
+  "credit": "viviandnguyen_",
+  "license": "CC BY-SA 2.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Banh_tet.jpg",
+  "title": "File:Banh tet.jpg"
+ },
+ "banh_trang_nuong": {
+  "file": "img/foods/banh_trang_nuong.webp",
+  "credit": "Light Write",
+  "license": "CC BY-SA 2.0",
+  "source": "https://commons.wikimedia.org/wiki/File:B%C3%A1nh_tr%C3%A1ng_n%C6%B0%E1%BB%9Bng_TP._H%E1%BB%93_Ch%C3%AD_Minh_-_street_food_in_Ho_Chi_Minh_City,_Vietnam.jpg",
+  "title": "File:Bánh tráng nướng TP. Hồ Chí Minh - street food in Ho Chi Minh City, Vietnam.jpg"
+ },
+ "bun_dau_mam_tom": {
+  "file": "img/foods/bun_dau_mam_tom.webp",
+  "credit": "trungnguyen299",
+  "license": "CC BY-SA 2.0",
+  "source": "https://commons.wikimedia.org/wiki/File:B%C3%BAn_%C4%91%E1%BA%ADu_m%E1%BA%AFm_t%C3%B4m.jpg",
+  "title": "File:Bún đậu mắm tôm.jpg"
+ },
+ "bun_mam": {
+  "file": "img/foods/bun_mam.webp",
+  "credit": "Alpha",
+  "license": "CC BY-SA 2.0",
+  "source": "https://commons.wikimedia.org/wiki/File:B%C3%BAn_M%E1%BA%AFm_S%C3%B3c_Tr%C4%83ng.jpg",
+  "title": "File:Bún Mắm Sóc Trăng.jpg"
+ },
+ "bun_thit_nuong": {
+  "file": "img/foods/bun_thit_nuong.webp",
+  "credit": "Calvin Neonardi",
+  "license": "CC BY-SA 3.0",
+  "source": "https://commons.wikimedia.org/wiki/File:B%C3%BAn_Th%E1%BB%8Bt_N%C6%B0%E1%BB%9Bng_Ch%E1%BA%A3_Gi%C3%B2.JPG",
+  "title": "File:Bún Thịt Nướng Chả Giò.JPG"
+ },
+ "cao_lau": {
+  "file": "img/foods/cao_lau.webp",
+  "credit": "Chainwit.",
+  "license": "CC BY 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Cao_l%E1%BA%A7u_H%E1%BB%99i_An_(2024).jpg",
+  "title": "File:Cao lầu Hội An (2024).jpg"
+ },
+ "chao_long": {
+  "file": "img/foods/chao_long.webp",
+  "credit": "hongnhung106",
+  "license": "CC BY 2.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Ch%C3%A1o_l%C3%B2ng.jpg",
+  "title": "File:Cháo lòng.jpg"
+ },
+ "mi_quang": {
+  "file": "img/foods/mi_quang.webp",
+  "credit": "Jpatokal",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Mi_Quang_1A_Danang.jpg",
+  "title": "File:Mi Quang 1A Danang.jpg"
+ },
+ "nem_chua": {
+  "file": "img/foods/nem_chua.webp",
+  "credit": "Vivian D Nguyen",
+  "license": "CC BY-SA 2.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Nem_Chua_after_cutting.jpg",
+  "title": "File:Nem Chua after cutting.jpg"
+ },
+ "xoi_xeo": {
+  "file": "img/foods/xoi_xeo.webp",
+  "credit": "Viethavvh",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:X%C3%B4i_x%C3%A9o.jpg",
+  "title": "File:Xôi xéo.jpg"
  }
 }

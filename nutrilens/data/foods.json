@@ -773,5 +773,436 @@
       "cua",
       "miền Bắc"
     ]
+  },
+  "banh_beo": {
+    "name_vi": "Bánh bèo",
+    "name_en": "Steamed Rice Cakes",
+    "emoji": "🥟",
+    "category": "Ăn nhẹ",
+    "cuisine": "Việt Nam",
+    "description": "Những chén bánh bột gạo hấp mỏng mềm, rắc tôm chấy, tóp mỡ và mỡ hành, chan nước mắm ngọt. Đặc sản xứ Huế, thường ăn từng chén nhỏ.",
+    "highlights": [
+      "Khẩu phần nhỏ, dễ kiểm soát lượng ăn",
+      "Tôm khô bổ sung protein và canxi"
+    ],
+    "tips": [
+      "Bớt tóp mỡ và mỡ hành để giảm chất béo",
+      "Chan vừa đủ nước mắm",
+      "Ăn kèm rau sống hoặc canh rau"
+    ],
+    "tags": [
+      "Việt Nam",
+      "Huế",
+      "hấp",
+      "ăn nhẹ"
+    ]
+  },
+  "banh_bot_loc": {
+    "name_vi": "Bánh bột lọc",
+    "name_en": "Tapioca Dumplings",
+    "emoji": "🥟",
+    "category": "Ăn nhẹ",
+    "cuisine": "Việt Nam",
+    "description": "Vỏ bột năng trong suốt, dai giòn, bọc tôm và thịt ba chỉ rim đậm đà. Bánh gói lá chuối hoặc để trần, chấm nước mắm ớt.",
+    "highlights": [
+      "Tôm và thịt cung cấp protein",
+      "Hấp hoặc luộc, không chiên"
+    ],
+    "tips": [
+      "Bột năng gần như chỉ có tinh bột, nên ăn vừa phải",
+      "Chọn nhân tôm nhiều, thịt mỡ ít",
+      "Kết hợp với món nhiều rau để cân bằng bữa"
+    ],
+    "tags": [
+      "Việt Nam",
+      "Huế",
+      "hấp",
+      "ăn nhẹ"
+    ]
+  },
+  "banh_can": {
+    "name_vi": "Bánh căn",
+    "name_en": "Mini Rice Pancakes",
+    "emoji": "🍳",
+    "category": "Ăn nhẹ",
+    "cuisine": "Việt Nam",
+    "description": "Bánh bột gạo đổ khuôn đất trên bếp than, đập trứng cút hoặc thêm tôm, mực lên trên. Món quen thuộc của Phan Rang, Nha Trang, chấm nước mắm hoặc nước cá kho.",
+    "highlights": [
+      "Nướng khuôn đất, gần như không dùng dầu",
+      "Trứng cút bổ sung protein"
+    ],
+    "tips": [
+      "Ăn kèm nhiều rau sống, xoài xanh",
+      "Chấm ít nước mắm",
+      "Chọn nhân hải sản thay vì nhân thịt mỡ"
+    ],
+    "tags": [
+      "Việt Nam",
+      "Nam Trung Bộ",
+      "nướng",
+      "trứng"
+    ]
+  },
+  "banh_canh": {
+    "name_vi": "Bánh canh",
+    "name_en": "Thick Noodle Soup",
+    "emoji": "🍜",
+    "category": "Món nước",
+    "cuisine": "Việt Nam",
+    "description": "Sợi bánh canh to, dai trong nước dùng xương ngọt thanh, ăn cùng giò heo, tôm, chả lụa. Có nhiều biến thể: bánh canh cua, bánh canh cá lóc, bánh canh giò heo.",
+    "highlights": [
+      "Nhiều protein từ giò heo, tôm, chả",
+      "Nước dùng ninh từ xương"
+    ],
+    "tips": [
+      "Chọn thịt nạc thay giò heo nhiều mỡ",
+      "Để lại một phần nước dùng vì nhiều muối",
+      "Thêm rau, hành, ngò"
+    ],
+    "tags": [
+      "Việt Nam",
+      "món nước",
+      "Sài Gòn"
+    ]
+  },
+  "banh_chung": {
+    "name_vi": "Bánh chưng",
+    "name_en": "Square Sticky Rice Cake",
+    "emoji": "🟩",
+    "category": "Món chính",
+    "cuisine": "Việt Nam",
+    "description": "Bánh vuông gói lá dong, nhân đậu xanh và thịt ba chỉ, bọc gạo nếp, luộc nhiều giờ. Món không thể thiếu trong ngày Tết của miền Bắc.",
+    "highlights": [
+      "Đậu xanh bổ sung protein thực vật và chất xơ",
+      "Luộc chín, không dùng dầu mỡ"
+    ],
+    "tips": [
+      "Gạo nếp và thịt mỡ nhiều năng lượng: ăn một miếng nhỏ mỗi bữa",
+      "Ăn kèm dưa hành, rau để dễ tiêu",
+      "Không chiên lại bánh nếu đang giảm cân"
+    ],
+    "tags": [
+      "Việt Nam",
+      "Tết",
+      "miền Bắc",
+      "nếp"
+    ]
+  },
+  "banh_duc": {
+    "name_vi": "Bánh đúc",
+    "name_en": "Rice Flour Pudding Cake",
+    "emoji": "🥣",
+    "category": "Ăn nhẹ",
+    "cuisine": "Việt Nam",
+    "description": "Bánh bột gạo mềm mịn, ăn nóng với thịt băm xào mộc nhĩ, hành phi và nước mắm chua ngọt. Món quà chiều dân dã của Hà Nội.",
+    "highlights": [
+      "Mềm, dễ ăn, dễ tiêu",
+      "Mộc nhĩ bổ sung chất xơ"
+    ],
+    "tips": [
+      "Bớt hành phi và mỡ",
+      "Chan ít nước mắm",
+      "Ăn kèm rau thơm"
+    ],
+    "tags": [
+      "Việt Nam",
+      "Hà Nội",
+      "ăn nhẹ"
+    ]
+  },
+  "banh_gio": {
+    "name_vi": "Bánh giò",
+    "name_en": "Pyramid Rice Dumpling",
+    "emoji": "🔺",
+    "category": "Món chính",
+    "cuisine": "Việt Nam",
+    "description": "Bánh bột gạo gói lá chuối hình chóp, nhân thịt băm, mộc nhĩ, trứng cút. Món ăn sáng hoặc ăn tối quen thuộc của người Hà Nội, thường ăn kèm chả quế.",
+    "highlights": [
+      "Hấp chín, ít dầu mỡ",
+      "Có thịt và trứng nên khá đủ chất"
+    ],
+    "tips": [
+      "Ăn kèm dưa góp hoặc rau để thêm chất xơ",
+      "Hạn chế ăn kèm chả, giò nhiều muối",
+      "Chấm ít tương ớt"
+    ],
+    "tags": [
+      "Việt Nam",
+      "Hà Nội",
+      "hấp",
+      "bữa sáng"
+    ]
+  },
+  "banh_khot": {
+    "name_vi": "Bánh khọt",
+    "name_en": "Crispy Mini Pancakes",
+    "emoji": "🍤",
+    "category": "Ăn nhẹ",
+    "cuisine": "Việt Nam",
+    "description": "Bánh bột gạo pha nước cốt dừa đổ khuôn, chiên giòn viền, đặt tôm lên trên. Cuốn cải xanh, rau thơm và chấm nước mắm chua ngọt. Đặc sản Vũng Tàu.",
+    "highlights": [
+      "Tôm giàu protein",
+      "Ăn kèm nhiều rau xanh"
+    ],
+    "tips": [
+      "Chiên nhiều dầu: ăn vừa phải",
+      "Thấm bánh qua giấy thấm dầu",
+      "Cuốn nhiều rau hơn bánh"
+    ],
+    "tags": [
+      "Việt Nam",
+      "Vũng Tàu",
+      "chiên",
+      "miền Nam"
+    ]
+  },
+  "banh_pia": {
+    "name_vi": "Bánh pía",
+    "name_en": "Sóc Trăng Flaky Pastry",
+    "emoji": "🥮",
+    "category": "Tráng miệng",
+    "cuisine": "Việt Nam",
+    "description": "Vỏ bánh nhiều lớp mỏng xốp, nhân đậu xanh, sầu riêng và trứng muối. Đặc sản Sóc Trăng, thường dùng với trà nóng.",
+    "highlights": [
+      "Nhân đậu xanh có protein và chất xơ",
+      "Dễ chia nhỏ để ăn"
+    ],
+    "tips": [
+      "Nhiều đường và mỡ: chia một cái cho 2–4 người",
+      "Dùng cùng trà không đường",
+      "Chọn loại ít ngọt, không trứng muối"
+    ],
+    "tags": [
+      "Việt Nam",
+      "miền Tây",
+      "ngọt",
+      "bánh"
+    ]
+  },
+  "banh_tet": {
+    "name_vi": "Bánh tét",
+    "name_en": "Cylindrical Sticky Rice Cake",
+    "emoji": "🍙",
+    "category": "Món chính",
+    "cuisine": "Việt Nam",
+    "description": "Bánh nếp gói lá chuối hình trụ, nhân đậu xanh và thịt ba chỉ, luộc nhiều giờ. Món bánh ngày Tết của miền Nam và miền Trung, cắt khoanh để ăn.",
+    "highlights": [
+      "Đậu xanh cung cấp protein thực vật",
+      "Luộc chín, không dùng dầu"
+    ],
+    "tips": [
+      "Ăn một khoanh mỗi bữa vì nhiều tinh bột",
+      "Ăn kèm dưa món, củ kiệu",
+      "Tránh chiên lại bánh"
+    ],
+    "tags": [
+      "Việt Nam",
+      "Tết",
+      "miền Nam",
+      "nếp"
+    ]
+  },
+  "banh_trang_nuong": {
+    "name_vi": "Bánh tráng nướng",
+    "name_en": "Grilled Rice Paper",
+    "emoji": "🍕",
+    "category": "Ăn nhẹ",
+    "cuisine": "Việt Nam",
+    "description": "Bánh tráng nướng trên than với trứng cút, hành lá, tôm khô, xúc xích và sốt mayonnaise. Món ăn vặt đường phố nổi tiếng của Đà Lạt, còn gọi là pizza Việt Nam.",
+    "highlights": [
+      "Trứng cút và tôm khô bổ sung protein",
+      "Khẩu phần nhỏ"
+    ],
+    "tips": [
+      "Bớt mayonnaise và tương ớt",
+      "Thay xúc xích bằng thịt gà xé",
+      "Ăn như món vặt, không thay bữa chính"
+    ],
+    "tags": [
+      "Việt Nam",
+      "Đà Lạt",
+      "nướng",
+      "đường phố"
+    ]
+  },
+  "bun_dau_mam_tom": {
+    "name_vi": "Bún đậu mắm tôm",
+    "name_en": "Rice Vermicelli with Tofu & Shrimp Paste",
+    "emoji": "🍢",
+    "category": "Món chính",
+    "cuisine": "Việt Nam",
+    "description": "Bún lá ăn với đậu phụ chiên vàng, thịt luộc, chả cốm, dưa leo, rau kinh giới, tía tô, chấm mắm tôm đánh bông. Món ăn trưa đặc trưng của Hà Nội.",
+    "highlights": [
+      "Đậu phụ giàu protein thực vật",
+      "Nhiều rau thơm"
+    ],
+    "tips": [
+      "Mắm tôm rất mặn: chấm ít",
+      "Ăn bớt đậu chiên, chọn thịt nạc luộc",
+      "Ăn nhiều rau thơm và dưa leo"
+    ],
+    "tags": [
+      "Việt Nam",
+      "Hà Nội",
+      "chiên",
+      "đậu phụ"
+    ]
+  },
+  "bun_mam": {
+    "name_vi": "Bún mắm",
+    "name_en": "Fermented Fish Noodle Soup",
+    "emoji": "🍲",
+    "category": "Món nước",
+    "cuisine": "Việt Nam",
+    "description": "Nước dùng nấu từ mắm cá linh, cá sặc, đậm đà, ăn với bún, cá, tôm, mực, thịt ba chỉ, cà tím và rất nhiều rau. Đặc sản miền Tây Nam Bộ.",
+    "highlights": [
+      "Nhiều loại hải sản giàu protein",
+      "Ăn kèm rất nhiều rau sống"
+    ],
+    "tips": [
+      "Rất nhiều muối: để lại phần lớn nước dùng",
+      "Bớt thịt ba chỉ",
+      "Ăn hết phần rau"
+    ],
+    "tags": [
+      "Việt Nam",
+      "món nước",
+      "miền Tây",
+      "hải sản"
+    ]
+  },
+  "bun_thit_nuong": {
+    "name_vi": "Bún thịt nướng",
+    "name_en": "Grilled Pork Vermicelli",
+    "emoji": "🥗",
+    "category": "Món chính",
+    "cuisine": "Việt Nam",
+    "description": "Thịt heo ướp sả nướng than, ăn với bún, rau sống, dưa leo, đồ chua, đậu phộng, mỡ hành, chan nước mắm chua ngọt. Món trộn quen thuộc của miền Nam.",
+    "highlights": [
+      "Nhiều protein từ thịt nướng",
+      "Nhiều rau sống và đồ chua"
+    ],
+    "tips": [
+      "Chọn thịt nạc vai thay ba chỉ",
+      "Chan vừa đủ nước mắm vì nhiều đường",
+      "Bỏ chả giò ăn kèm nếu đang giảm cân"
+    ],
+    "tags": [
+      "Việt Nam",
+      "nướng",
+      "Sài Gòn"
+    ]
+  },
+  "cao_lau": {
+    "name_vi": "Cao lầu",
+    "name_en": "Hoi An Noodles",
+    "emoji": "🍜",
+    "category": "Món chính",
+    "cuisine": "Việt Nam",
+    "description": "Sợi mì vàng dai đặc trưng, ăn với thịt xá xíu, rau sống Trà Quế, giá và bánh tráng chiên giòn, chan ít nước sốt. Đặc sản phố cổ Hội An.",
+    "highlights": [
+      "Ăn kèm nhiều rau sống",
+      "Ít nước, ít muối hơn các món nước"
+    ],
+    "tips": [
+      "Bớt bánh tráng chiên",
+      "Chọn thịt nạc",
+      "Ăn nhiều rau"
+    ],
+    "tags": [
+      "Việt Nam",
+      "Hội An",
+      "mì"
+    ]
+  },
+  "chao_long": {
+    "name_vi": "Cháo lòng",
+    "name_en": "Pork Offal Rice Porridge",
+    "emoji": "🥣",
+    "category": "Món nước",
+    "cuisine": "Việt Nam",
+    "description": "Cháo gạo nấu với nước luộc lòng, ăn cùng lòng, gan, tim, dồi, tiết heo, rắc hành lá, hành phi. Món ăn sáng và ăn khuya phổ biến khắp Việt Nam.",
+    "highlights": [
+      "Gan và tim heo giàu sắt, vitamin A, B12",
+      "Cháo dễ tiêu"
+    ],
+    "tips": [
+      "Nội tạng nhiều cholesterol: ăn không quá 1–2 lần mỗi tuần",
+      "Chọn quán đảm bảo vệ sinh, lòng nấu chín kỹ",
+      "Bớt dồi và mỡ"
+    ],
+    "tags": [
+      "Việt Nam",
+      "món nước",
+      "bữa sáng"
+    ]
+  },
+  "mi_quang": {
+    "name_vi": "Mì Quảng",
+    "name_en": "Quang Noodles",
+    "emoji": "🍜",
+    "category": "Món chính",
+    "cuisine": "Việt Nam",
+    "description": "Sợi mì gạo vàng nghệ, ít nước dùng đậm đà, ăn với tôm, thịt, trứng cút, đậu phộng rang, bánh tráng mè và rau sống. Đặc sản Quảng Nam, Đà Nẵng.",
+    "highlights": [
+      "Đa dạng protein: tôm, thịt, trứng",
+      "Nhiều rau sống"
+    ],
+    "tips": [
+      "Ăn nhiều rau",
+      "Bớt đậu phộng và bánh tráng nếu đang giảm cân",
+      "Không uống hết nước dùng vì khá mặn"
+    ],
+    "tags": [
+      "Việt Nam",
+      "Quảng Nam",
+      "mì"
+    ]
+  },
+  "nem_chua": {
+    "name_vi": "Nem chua",
+    "name_en": "Fermented Pork Roll",
+    "emoji": "🌶️",
+    "category": "Ăn nhẹ",
+    "cuisine": "Việt Nam",
+    "description": "Thịt heo nạc và bì lên men chua tự nhiên, gói lá chuối cùng tỏi, ớt, lá đinh lăng. Món nhắm và quà biếu nổi tiếng của Thanh Hóa.",
+    "highlights": [
+      "Nhiều protein, rất ít tinh bột",
+      "Khẩu phần nhỏ"
+    ],
+    "tips": [
+      "Là thịt sống lên men: chọn nơi sản xuất uy tín, phụ nữ có thai không nên ăn",
+      "Khá mặn, ăn vài cái là đủ",
+      "Ăn kèm rau thơm, lá sung"
+    ],
+    "tags": [
+      "Việt Nam",
+      "Thanh Hóa",
+      "ít carb",
+      "lên men"
+    ]
+  },
+  "xoi_xeo": {
+    "name_vi": "Xôi xéo",
+    "name_en": "Sticky Rice with Mung Bean",
+    "emoji": "🍚",
+    "category": "Món chính",
+    "cuisine": "Việt Nam",
+    "description": "Xôi nếp nhuộm nghệ vàng, phủ đậu xanh đồ nghiền thái mỏng, rưới mỡ hành và rắc hành phi giòn. Món ăn sáng bình dân của Hà Nội.",
+    "highlights": [
+      "Đậu xanh có protein và chất xơ",
+      "No lâu, phù hợp bữa sáng"
+    ],
+    "tips": [
+      "Nhiều tinh bột và mỡ hành: ăn nửa gói nếu ít vận động",
+      "Bớt hành phi",
+      "Ăn kèm trứng hoặc giò để thêm protein"
+    ],
+    "tags": [
+      "Việt Nam",
+      "Hà Nội",
+      "nếp",
+      "bữa sáng"
+    ]
   }
 }

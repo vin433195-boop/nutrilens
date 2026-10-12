@@ -33,8 +33,8 @@
   <div class="container">
     <div class="section-head"><div><span class="eyebrow">Công nghệ</span><h2>Bên trong NutriLens</h2></div></div>
     <div class="grid grid-3">
-      <div class="card"><h3>Mô hình nhận dạng</h3><p class="muted">CNN 3 tầng Conv2D với L2 Regularization và Dropout, xây dựng bằng TensorFlow/Keras, huấn luyện trên 20 lớp của bộ dữ liệu Food-101. Độ chính xác khoảng 40% trên 5.000 ảnh kiểm thử.</p></div>
-      <div class="card"><h3>Website</h3><p class="muted">Python Flask, Jinja2, SQLite. Giao diện viết bằng HTML, CSS và JavaScript thuần, hỗ trợ chế độ tối và hiển thị tốt trên điện thoại.</p></div>
+      <div class="card"><h3>Mô hình nhận dạng</h3><p class="muted">EfficientNetV2-B0 học chuyển giao từ ImageNet, tinh chỉnh bằng TensorFlow/Keras trên 30 món Việt của bộ dữ liệu 30VNFoods. Độ chính xác 87,6% (top-3: 96,3%) trên 3.755 ảnh kiểm thử.</p></div>
+      <div class="card"><h3>Website</h3><p class="muted">Python Flask, Jinja2, MySQL. Giao diện viết bằng HTML, CSS và JavaScript thuần, hỗ trợ chế độ tối và hiển thị tốt trên điện thoại.</p></div>
       <div class="card"><h3>API mở</h3><p class="muted">Dữ liệu món ăn có sẵn qua <a href="{{ url_for('api.list_foods') }}">/api/foods</a> và nhận dạng ảnh qua <code>POST /api/predict</code>.</p></div>
     </div>
   </div>

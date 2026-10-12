@@ -9,7 +9,7 @@
   <div class="container">
     <nav class="breadcrumb" aria-label="Breadcrumb"><a href="{{ url_for('main.index') }}">Trang chủ</a>{{ icon("chevron-right", 14) }}<span>Nhận dạng AI</span></nav>
     <h1>Nhận dạng món ăn bằng AI</h1>
-    <p>Tải lên ảnh món ăn, mô hình CNN sẽ đoán món và hiển thị thông tin dinh dưỡng. Ảnh chỉ được dùng để phân tích, không được lưu trên máy chủ.</p>
+    <p>Tải lên ảnh món Việt, mô hình AI sẽ đoán món và hiển thị thông tin dinh dưỡng. Ảnh chỉ được dùng để phân tích, không được lưu trên máy chủ.</p>
   </div>
 </section>
 
@@ -78,7 +78,7 @@
         <li>{{ icon("check", 18) }}<span>Mỗi ảnh chỉ nên có một món chính.</span></li>
         <li>{{ icon("check", 18) }}<span>Bật chế độ TTA khi kết quả chưa chắc chắn.</span></li>
       </ul>
-      <div class="notice warn" style="margin-top:18px">{{ icon("info") }}<span>Mô hình CNN cơ bản đạt độ chính xác khoảng 40% trên tập kiểm thử. Hãy xem cả 3 dự đoán và chọn món đúng nhất.</span></div>
+      <div class="notice warn" style="margin-top:18px">{{ icon("info") }}<span>Mô hình nhận dạng 30 món Việt, đoán đúng 87,6% ảnh kiểm thử (96,3% nếu tính cả 3 gợi ý). Món ngoài 30 món này sẽ không được nhận ra; khi đó hãy chọn món đúng hoặc tra trong thư viện.</span></div>
     </div>
   </div>
 </section>

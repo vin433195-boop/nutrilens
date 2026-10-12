@@ -1,0 +1,13 @@
+{
+  "model": "EfficientNetV2B0",
+  "img_size": 224,
+  "classes": 30,
+  "train": 17522,
+  "val": 3755,
+  "test": 3755,
+  "test_accuracy": 0.8759,
+  "test_top3": 0.9625,
+  "test_macro_f1": 0.8754,
+  "tflite_agreement": 0.9967,
+  "epochs_run": 24
+}

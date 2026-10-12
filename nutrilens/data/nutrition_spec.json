@@ -66,5 +66,43 @@
     [174257, 120, "Đậu xanh nấu"], [169655, 25, "Đường"], [170172, 30, "Nước cốt dừa"], [null, 100, "Nước, đá"]]},
   "bun_rieu": {"serving": "1 tô (~680 g)", "items": [
     [168914, 200, "Bún gạo"], [174205, 40, "Riêu cua"], [170457, 60, "Cà chua"], [172451, 30, "Đậu phụ chiên"],
-    [172923, 300, "Nước dùng"], [2706457, 8, "Nước mắm"], [169957, 40, "Rau, giá"]]}
+    [172923, 300, "Nước dùng"], [2706457, 8, "Nước mắm"], [169957, 40, "Rau, giá"]]},
+  "banh_beo": {"serving": "1 đĩa 8 chén nhỏ (~233 g)", "items": [
+    [169714, 60, "Bột gạo"], [null, 120, "Nước"], [2706366, 10, "Tôm khô chấy"], [2705902, 5, "Tóp mỡ"], [171411, 10, "Mỡ hành (dầu ăn)"], [170005, 10, "Hành lá"], [2706457, 10, "Nước mắm"], [169655, 8, "Đường (nước mắm pha)"]]},
+  "banh_bot_loc": {"serving": "10 cái kèm nước chấm (~214 g)", "items": [
+    [169717, 80, "Bột năng"], [null, 60, "Nước"], [175180, 30, "Tôm"], [167812, 25, "Thịt ba chỉ"], [171411, 5, "Mỡ hành (dầu ăn)"], [2706457, 8, "Nước mắm"], [169655, 6, "Đường (nước mắm pha)"]]},
+  "banh_can": {"serving": "1 khuôn 10 cái kèm nước chấm (~223 g)", "items": [
+    [169714, 70, "Bột gạo"], [null, 70, "Nước"], [172191, 30, "Trứng cút"], [175180, 20, "Tôm"], [171411, 8, "Mỡ hành (dầu ăn)"], [170005, 5, "Hành lá"], [2706457, 10, "Nước mắm"], [169655, 10, "Đường (nước mắm pha)"]]},
+  "banh_canh": {"serving": "1 tô (~653 g)", "items": [
+    [168914, 200, "Sợi bánh canh bột gạo (tính theo bún gạo)"], [168223, 80, "Giò heo"], [175180, 30, "Tôm"], [173856, 30, "Chả lụa"], [172923, 300, "Nước dùng"], [170005, 5, "Hành lá"], [2706457, 8, "Nước mắm"]]},
+  "banh_chung": {"serving": "1/4 cái bánh (~249 g)", "items": [
+    [169711, 150, "Gạo nếp nấu chín"], [174257, 50, "Đậu xanh"], [167812, 45, "Thịt ba chỉ"], [2706457, 3, "Nước mắm ướp thịt"], [173468, 1, "Muối"]]},
+  "banh_duc": {"serving": "1 chén bánh đúc nóng (~273 g)", "items": [
+    [169714, 50, "Bột gạo"], [null, 150, "Nước"], [167903, 40, "Thịt heo băm"], [169237, 5, "Mộc nhĩ"], [170499, 5, "Hành tím phi"], [171411, 8, "Dầu ăn"], [2706457, 10, "Nước mắm"], [169655, 5, "Đường"]]},
+  "banh_gio": {"serving": "1 cái (~211 g)", "items": [
+    [169714, 50, "Bột gạo"], [null, 100, "Nước dùng nấu bột"], [167903, 35, "Thịt heo băm"], [169237, 5, "Mộc nhĩ"], [172191, 10, "Trứng cút"], [170499, 3, "Hành tím"], [171411, 3, "Dầu ăn"], [2706457, 5, "Nước mắm"]]},
+  "banh_khot": {"serving": "1 khuôn 8 cái kèm rau (~250 g)", "items": [
+    [169714, 50, "Bột gạo"], [170172, 30, "Nước cốt dừa"], [null, 30, "Nước"], [175180, 40, "Tôm"], [171411, 20, "Dầu chiên"], [169249, 60, "Rau sống, cải xanh"], [2706457, 10, "Nước mắm"], [169655, 10, "Đường (nước mắm pha)"]]},
+  "banh_pia": {"serving": "1 cái (~100 g)", "items": [
+    [2708049, 100, "Bánh pía nhân đậu xanh, trứng muối"]]},
+  "banh_tet": {"serving": "1 khoanh (~201.5 g)", "items": [
+    [169711, 125, "Gạo nếp nấu chín"], [174257, 40, "Đậu xanh"], [167812, 35, "Thịt ba chỉ"], [173468, 1.5, "Muối"]]},
+  "banh_trang_nuong": {"serving": "1 cái (~101 g)", "items": [
+    [2708166, 25, "Bánh tráng"], [172191, 30, "Trứng cút"], [2706366, 8, "Tôm khô"], [173856, 15, "Chả lụa, xúc xích"], [170005, 8, "Hành lá"], [2710204, 10, "Sốt mayonnaise"], [171411, 5, "Mỡ hành (dầu ăn)"]]},
+  "bun_dau_mam_tom": {"serving": "1 mẹt (~445 g)", "items": [
+    [168914, 150, "Bún lá"], [172451, 120, "Đậu phụ chiên"], [168223, 60, "Thịt heo luộc"], [2706457, 20, "Mắm tôm (tính theo nước mắm)"], [169249, 60, "Rau sống, kinh giới, tía tô"], [168409, 30, "Dưa leo"], [169655, 5, "Đường (pha mắm)"]]},
+  "bun_mam": {"serving": "1 tô (~725 g)", "items": [
+    [168914, 200, "Bún gạo"], [175166, 60, "Cá (tính theo cá da trơn)"], [175180, 30, "Tôm"], [174223, 30, "Mực"], [167812, 40, "Thịt ba chỉ"], [169229, 50, "Cà tím"], [172923, 250, "Nước dùng"], [2706457, 20, "Mắm cá (tính theo nước mắm)"], [169655, 5, "Đường"], [169957, 40, "Giá, rau sống"]]},
+  "bun_thit_nuong": {"serving": "1 tô (~437 g)", "items": [
+    [168914, 180, "Bún gạo"], [167831, 100, "Thịt heo nướng"], [169249, 60, "Rau sống"], [168409, 30, "Dưa leo"], [170393, 20, "Đồ chua cà rốt"], [173806, 10, "Đậu phộng rang"], [171411, 5, "Mỡ hành (dầu ăn)"], [170005, 5, "Hành lá"], [2706457, 15, "Nước mắm"], [169655, 12, "Đường (nước mắm pha)"]]},
+  "cao_lau": {"serving": "1 tô (~403 g)", "items": [
+    [168914, 180, "Sợi cao lầu (tính theo bún gạo)"], [168259, 80, "Thịt xá xíu"], [169249, 50, "Rau sống"], [169957, 30, "Giá"], [173161, 15, "Bánh tráng chiên giòn"], [172923, 40, "Nước sốt xá xíu"], [2706457, 8, "Nước mắm"]]},
+  "chao_long": {"serving": "1 tô (~445 g)", "items": [
+    [2708418, 300, "Cháo trắng"], [167856, 40, "Lòng heo"], [167863, 30, "Gan heo"], [168268, 30, "Tim heo"], [171618, 30, "Dồi, tiết (tính theo dồi tiết)"], [170005, 5, "Hành lá"], [170499, 5, "Hành phi"], [2706457, 5, "Nước mắm"]]},
+  "mi_quang": {"serving": "1 tô (~461 g)", "items": [
+    [168914, 180, "Sợi mì Quảng"], [175180, 40, "Tôm"], [168223, 40, "Thịt heo"], [172191, 20, "Trứng cút"], [173806, 10, "Đậu phộng rang"], [173161, 15, "Bánh tráng mè nướng"], [172923, 100, "Nước dùng"], [169249, 40, "Rau sống"], [172231, 1, "Nghệ"], [171411, 5, "Dầu điều"], [2706457, 10, "Nước mắm"]]},
+  "nem_chua": {"serving": "5 cái nhỏ (~83 g)", "items": [
+    [167902, 75, "Thịt heo nạc lên men"], [169230, 3, "Tỏi"], [169655, 3, "Đường"], [2706457, 2, "Nước mắm"]]},
+  "xoi_xeo": {"serving": "1 gói (~246.5 g)", "items": [
+    [169711, 170, "Gạo nếp nấu chín"], [174257, 50, "Đậu xanh"], [170499, 10, "Hành phi"], [171411, 15, "Mỡ hành (dầu ăn)"], [173468, 1.5, "Muối"]]}
 }

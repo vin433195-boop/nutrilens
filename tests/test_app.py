@@ -37,7 +37,7 @@ class FakeModel:
         n = len(self.class_names)
         proba = np.full((batch.shape[0], n), 0.1 / (n - 2))
         proba[:, self.class_names.index("pho")] = 0.85
-        proba[:, self.class_names.index("ramen")] = 0.05
+        proba[:, self.class_names.index("bun_bo_hue")] = 0.05
         return proba
 
 
@@ -103,10 +103,10 @@ class AppTestCase(unittest.TestCase):
 class PageTests(AppTestCase):
     def test_library_pagination_and_filters(self):
         html = self.client.get("/mon-an").get_data(as_text=True)
-        self.assertIn("Hiển thị 1–12 trong 35 món", html)
+        self.assertIn("Hiển thị 1–12 trong 54 món", html)
         self.assertIn('rel="next"', html)
-        html = self.client.get("/mon-an?trang=3").get_data(as_text=True)
-        self.assertIn("Hiển thị 25–35 trong 35 món", html)
+        html = self.client.get("/mon-an?trang=5").get_data(as_text=True)
+        self.assertIn("Hiển thị 49–54 trong 54 món", html)
         html = self.client.get("/mon-an?danh-muc=Món nước&sap-xep=calo-tang").get_data(as_text=True)
         self.assertLess(html.index("Canh chua cá"), html.index("Mì ramen"))
         self.assertIn("Không tìm thấy món phù hợp", self.client.get("/mon-an?q=xyzabc").get_data(as_text=True))
@@ -149,7 +149,7 @@ class PageTests(AppTestCase):
         food.is_published = False
         db.session.commit()
         self.assertEqual(self.client.get("/mon-an/donuts").status_code, 404)
-        self.assertEqual(self.client.get("/api/foods").get_json()["count"], 34)
+        self.assertEqual(self.client.get("/api/foods").get_json()["count"], 53)
 
     def test_header_shows_login_for_guests_and_menu_for_users(self):
         self.assertIn("Đăng ký", self.client.get("/").get_data(as_text=True))
@@ -162,7 +162,7 @@ class PageTests(AppTestCase):
 
 class SeedTests(AppTestCase):
     def test_seed_loads_all_data(self):
-        self.assertEqual(db.session.scalar(select(func.count(Food.id))), 35)
+        self.assertEqual(db.session.scalar(select(func.count(Food.id))), 54)
         self.assertEqual(len(self.app.extensions["articles"].all()), 6)
 
     def test_nutrition_comes_from_usda(self):
@@ -189,7 +189,8 @@ class SeedTests(AppTestCase):
         self.assertEqual(self.app.extensions["catalog"].get("pho").calories, 424)
 
     def test_model_label_mapping(self):
-        self.assertEqual(self.app.extensions["catalog"].by_label("spring_rolls").name_vi, "Chả giò")
+        self.assertEqual(self.app.extensions["catalog"].by_label("banh_xeo").name_vi, "Bánh xèo")
+        self.assertIsNone(self.app.extensions["catalog"].by_label("pizza"))  # Món Âu không còn trong model
 
     def test_search_and_related(self):
         catalog = self.app.extensions["catalog"]
@@ -656,7 +657,7 @@ class AdminTests(AppTestCase):
         return self.client.post(url, data={"csrf_token": self.csrf("/"), **(data or {})}, **kw)
 
     def food_form(self, **override):
-        data = {"name_vi": "Bún đậu mắm tôm", "name_en": "Bun dau", "slug": "", "category": "Món chính", "new_category": "",
+        data = {"name_vi": "Bún cá Hải Phòng", "name_en": "Bun ca", "slug": "", "category": "Món chính", "new_category": "",
                 "cuisine": "Việt Nam", "serving": "1 suất (~400 g)", "serving_grams": "400", "description": "Bún chả Hà Nội",
                 "highlights": "Nhiều rau\nĐạm từ thịt", "tips": "Ăn nhiều rau sống", "tags": "Việt Nam, nướng",
                 "calories": "450", "carbohydrate": "55", "protein": "22", "lipid": "15", "fiber": "3", "sugar": "8",
@@ -691,12 +692,12 @@ class AdminTests(AppTestCase):
         data["image"] = (make_image(), "bun.jpg")
         res = self.post("/quan-tri/mon-an/them", data, content_type="multipart/form-data")
         self.assertEqual(res.status_code, 302, res.get_data(as_text=True)[:500])
-        food = self.app.extensions["catalog"].get("bun_dau_mam_tom")
+        food = self.app.extensions["catalog"].get("bun_ca_hai_phong")
         self.assertIsNotNone(food)
         self.assertEqual((food.calories, food.serving_grams, food.category), (450, 400, "Món chính"))
         self.assertEqual(food.highlights, ["Nhiều rau", "Đạm từ thịt"])
         self.assertEqual(set(food.tags), {"việt nam", "nướng"})
-        self.assertTrue(food.image_path.startswith("uploads/foods/bun_dau_mam_tom-"))
+        self.assertTrue(food.image_path.startswith("uploads/foods/bun_ca_hai_phong-"))
         path = Path(self.app.static_folder) / food.image_path
         self.assertTrue(path.exists())
         with Image.open(path) as im:

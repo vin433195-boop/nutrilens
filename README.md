@@ -27,7 +27,7 @@ Website Flask giúp người dùng tra cứu dinh dưỡng của 35 món Việt 
 |---|---|
 | Thư viện món ăn | 35 món, ảnh thật, tìm kiếm không dấu, lọc danh mục, sắp xếp, phân trang, món yêu thích |
 | Trang món ăn | Nhãn dinh dưỡng, tỉ lệ macro, điểm sức khỏe, bảng thành phần kèm link tra cứu USDA, dữ liệu schema.org |
-| Nhận dạng AI | 20 món, top-3, chế độ TTA, người dùng chọn lại món đúng để làm dữ liệu huấn luyện |
+| Nhận dạng AI | 30 món Việt (EfficientNetV2-B0, 87,6% top-1, 96,3% top-3), chế độ TTA, người dùng chọn lại món đúng để làm dữ liệu huấn luyện |
 | Nhật ký | Ghi theo khẩu phần hoặc gram, món tự thêm, mục tiêu cá nhân, đồng bộ từ trình duyệt khi đăng nhập |
 | Báo cáo | Calo 7/30/90 ngày, macro trung bình, món ăn nhiều nhất, biểu đồ cân nặng |
 | Tài khoản | Đăng ký, xác thực email, quên mật khẩu, đăng xuất mọi thiết bị, tải dữ liệu JSON/CSV, xóa tài khoản |
@@ -76,7 +76,7 @@ docker compose up -d --build
 DOMAIN=nutrilens.vn COOKIE_SECURE=1 docker compose --profile https up -d
 ```
 
-Image mặc định chạy AI bằng LiteRT với `food_model.tflite` (khoảng 150 MB RAM). Dùng TensorFlow đầy đủ: `docker compose build --build-arg ML=full`; không có AI: `--build-arg ML=none`. Sau khi huấn luyện lại `food_model.h5`, tạo lại bản .tflite bằng `python scripts/convert_tflite.py`.
+Image mặc định chạy AI bằng LiteRT với `food_model.tflite` (khoảng 150 MB RAM). Dùng TensorFlow đầy đủ: `docker compose build --build-arg ML=full`; không có AI: `--build-arg ML=none`. Model được huấn luyện bằng notebook `training/train_vietnamese_food.ipynb` trên Google Colab (GPU T4); notebook xuất thẳng `food_model.tflite` và `class_names.json` để chép vào thư mục gốc, kết quả đánh giá ở `training/metrics.json`. Thêm món vào danh sách nhận dạng thì cũng cần thêm món đó vào `nutrilens/data/` rồi chạy `flask --app app seed`.
 
 ### Đưa lên Render (miễn phí)
 
