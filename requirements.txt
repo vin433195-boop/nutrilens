@@ -11,3 +11,4 @@ Markdown>=3.5
 numpy
 pillow
 waitress>=3.0
+dnspython>=2.6        # kiểm tra tên miền email có máy chủ nhận thư khi đăng ký

@@ -1,0 +1,22 @@
+{% extends "auth/_layout.html" %}
+{% from "partials/macros.html" import icon with context %}
+
+{% block title %}Kiểm tra hộp thư · {{ site_name }}{% endblock %}
+
+{% block form %}
+<h1>Kiểm tra hộp thư của bạn</h1>
+<p class="sub">Chúng tôi đã gửi link xác thực tới <b>{{ email }}</b>. Bấm vào link trong email để kích hoạt tài khoản, sau đó đăng nhập.</p>
+
+<ul class="small" style="margin:0 0 20px; padding-left:20px; line-height:1.7">
+  <li>Link có hiệu lực trong 3 ngày.</li>
+  <li>Không thấy email? Hãy xem thư mục <b>Spam</b> hoặc <b>Quảng cáo</b>.</li>
+  <li>Nhập sai email? <a href="{{ url_for('auth.register') }}">Đăng ký lại</a> với email đúng.</li>
+</ul>
+
+<form method="post" action="{{ url_for('auth.resend_verification_public') }}">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <input type="hidden" name="email" value="{{ email }}">
+  <button class="btn btn-primary btn-lg btn-block" type="submit">{{ icon("mail", 18) }} Gửi lại email xác thực</button>
+</form>
+<p class="switch-link">Đã xác thực xong? <a href="{{ url_for('auth.login', email=email) }}">Đăng nhập</a></p>
+{% endblock %}

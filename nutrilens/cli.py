@@ -86,11 +86,11 @@ def register(app):
     @app.cli.command("send-test-email")
     @click.argument("to")
     def send_test_email(to):
-        """Gửi email thử để kiểm tra cấu hình SMTP trong .env."""
+        """Gửi email thử để kiểm tra cấu hình Brevo hoặc SMTP trong .env."""
         _utf8_console()
         from .mail import mail_configured, send_template
         if not mail_configured():
-            raise click.ClickException("Chưa cấu hình MAIL_SERVER trong file .env.")
+            raise click.ClickException("Chưa cấu hình BREVO_API_KEY hoặc MAIL_SERVER trong file .env.")
         if send_template(to, "Email thử từ NutriLens", "test"):
             click.echo(f"Đã gửi email thử tới {to}.")
         else:

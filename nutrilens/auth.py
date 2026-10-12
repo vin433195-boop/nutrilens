@@ -14,13 +14,13 @@ from itsdangerous import BadSignature, SignatureExpired, URLSafeTimedSerializer
 from sqlalchemy import func, select
 from sqlalchemy.exc import IntegrityError
 
+from .email_check import EMAIL_RE, check_email
 from .extensions import db, limiter, login_manager
 from .mail import mail_configured, send_template
 from .models import ContactMessage, DiaryEntry, Recognition, User, utcnow
 
 bp = Blueprint("auth", __name__)
 
-EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 GENERIC_LOGIN_ERROR = "Email hoặc mật khẩu không đúng."
 
 
@@ -40,6 +40,10 @@ def load_user(user_id: str):
 def _login_key() -> str:
     """Giới hạn theo cặp IP + email: chặn dò mật khẩu mà không khóa được tài khoản của người khác."""
     return f"{get_remote_address()}|{request.form.get('email', '').strip().lower()}"
+
+
+def _email_key() -> str:
+    return f"email|{request.form.get('email', '').strip().lower()}"
 
 
 @login_manager.unauthorized_handler
@@ -110,6 +114,14 @@ def send_verification_email(user: User) -> bool:
     return send_template(user.email, "Xác thực email NutriLens", "verify", user=user, link=link)
 
 
+def verification_required() -> bool:
+    """Có bắt buộc xác thực email trước khi đăng nhập không. Mặc định chỉ khi đã cấu hình gửi mail."""
+    value = str(current_app.config.get("REQUIRE_EMAIL_VERIFICATION", "auto")).lower()
+    if value == "auto":
+        return mail_configured()
+    return value in ("1", "true", "yes", "on")
+
+
 def _dev_mail_note() -> str:
     if mail_configured():
         return ""
@@ -139,7 +151,7 @@ def register():
         password = request.form.get("password", "")
         confirm = request.form.get("confirm", "")
         for field, err in (("name", validate_name(form["name"])),
-                           ("email", validate_email(form["email"])),
+                           ("email", check_email(form["email"], current_app.config["EMAIL_CHECK_DNS"])),
                            ("password", validate_password(password))):
             if err:
                 errors[field] = err
@@ -161,8 +173,15 @@ def register():
                 db.session.rollback()
                 errors["email"] = "Email này đã được đăng ký."
             else:
+                sent = send_verification_email(user)
+                if verification_required():
+                    # Chưa đăng nhập: phải bấm link trong hộp thư để chứng minh email có thật
+                    session["pending_verify"] = user.email
+                    if not sent:
+                        flash("Tài khoản đã được tạo nhưng chưa gửi được email xác thực. "
+                              "Vui lòng bấm “Gửi lại email” sau ít phút.", "error")
+                    return redirect(url_for("auth.check_inbox"))
                 _start_session(user, remember=False)
-                send_verification_email(user)
                 flash(f"Chào mừng {user.name}! Chúng tôi đã gửi link xác thực tới {user.email}."
                       f"{_dev_mail_note()}", "success")
                 return redirect(next_url or url_for("main.diary"))
@@ -178,7 +197,7 @@ def register():
 def login():
     if current_user.is_authenticated:
         return redirect(url_for("main.index"))
-    email = ""
+    email = request.args.get("email", "").strip().lower()[:255]
     error = None
     next_url = safe_next(request.values.get("next"))
 
@@ -191,6 +210,12 @@ def login():
             error = GENERIC_LOGIN_ERROR
         elif not user.active:
             error = "Tài khoản này đã bị vô hiệu hóa."
+        elif not user.email_verified and verification_required():
+            # Mật khẩu đúng nhưng chưa xác thực: cho biết lý do và cách gửi lại email
+            session["pending_verify"] = user.email
+            flash("Email của bạn chưa được xác thực. Hãy bấm link trong email chúng tôi đã gửi, "
+                  "hoặc gửi lại email bên dưới.", "error")
+            return redirect(url_for("auth.check_inbox"))
         else:
             user.register_login()
             db.session.commit()
@@ -273,8 +298,37 @@ def verify_email(token):
     if not user.email_verified:
         user.email_verified_at = utcnow()
         db.session.commit()
-    flash("Email của bạn đã được xác thực. Cảm ơn bạn!", "success")
-    return redirect(url_for("auth.account" if current_user.is_authenticated else "auth.login"))
+    session.pop("pending_verify", None)
+    if current_user.is_authenticated:
+        flash("Email của bạn đã được xác thực. Cảm ơn bạn!", "success")
+        return redirect(url_for("auth.account"))
+    flash("Email của bạn đã được xác thực. Bây giờ bạn có thể đăng nhập.", "success")
+    return redirect(url_for("auth.login", email=user.email))
+
+
+@bp.get("/xac-thuc-email")
+def check_inbox():
+    """Trang “Kiểm tra hộp thư” sau khi đăng ký, có nút gửi lại email."""
+    email = session.get("pending_verify")
+    if not email:
+        return redirect(url_for("auth.login"))
+    return render_template("auth/check_inbox.html", email=email)
+
+
+@bp.post("/xac-thuc-email/gui-lai")
+@limiter.limit("5 per hour", methods=["POST"])
+@limiter.limit("3 per hour", methods=["POST"], key_func=_email_key)
+def resend_verification_public():
+    email = (request.form.get("email") or session.get("pending_verify") or "").strip().lower()
+    user = db.session.scalar(select(User).where(User.email == email)) if email else None
+    if user is not None and user.active and not user.email_verified:
+        send_verification_email(user)
+    # Cùng một thông báo cho mọi trường hợp để không lộ email nào đã đăng ký
+    flash(f"Nếu {email} có tài khoản chưa xác thực, chúng tôi đã gửi lại link xác thực. "
+          "Hãy kiểm tra cả thư mục Spam/Quảng cáo.", "info")
+    if email:
+        session["pending_verify"] = email
+    return redirect(url_for("auth.check_inbox"))
 
 
 @bp.post("/tai-khoan/gui-lai-xac-thuc")

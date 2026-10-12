@@ -50,7 +50,9 @@ Thêm hoặc sửa món qua trang quản trị, hoặc sửa file dữ liệu r�
 
 ## Email
 
-Để trống `MAIL_SERVER` thì link xác thực và đặt lại mật khẩu được in ra cửa sổ dòng lệnh. Dùng Gmail: bật xác minh 2 bước, tạo mật khẩu ứng dụng, điền vào `.env` theo hướng dẫn trong `.env.example`, rồi kiểm tra:
+Web gửi mail qua **Brevo** (API HTTPS, gói miễn phí) khi có `BREVO_API_KEY`, hoặc qua SMTP khi có `MAIL_SERVER`. Không cấu hình gì thì link xác thực và đặt lại mật khẩu được in ra cửa sổ dòng lệnh. Trên Render bản miễn phí phải dùng Brevo vì cổng SMTP bị chặn. Cách lấy key xem trong `.env.example`.
+
+Khi đăng ký, email được kiểm tra định dạng, lỗi gõ tên miền phổ biến (`gmial.com`), email dùng một lần và tên miền có máy chủ nhận thư (bản ghi MX). Khi đã cấu hình gửi mail, tài khoản mới phải bấm link trong email mới đăng nhập được (`REQUIRE_EMAIL_VERIFICATION`). Kiểm tra cấu hình:
 
 ```bash
 flask --app app send-test-email ban@gmail.com

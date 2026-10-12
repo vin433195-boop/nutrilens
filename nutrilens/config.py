@@ -64,7 +64,8 @@ class Config:
     PASSWORD_RESET_MAX_AGE = 3600  # giây
     EMAIL_VERIFY_MAX_AGE = 3 * 24 * 3600
 
-    # ── Email (để trống MAIL_SERVER thì email được in ra log, dùng khi phát triển) ──
+    # ── Email: Brevo (API HTTPS) hoặc SMTP. Không cấu hình cả hai thì link được in ra log ──
+    BREVO_API_KEY = os.environ.get("BREVO_API_KEY", "")
     MAIL_SERVER = os.environ.get("MAIL_SERVER", "")
     MAIL_PORT = int(os.environ.get("MAIL_PORT", 587))
     MAIL_USE_TLS = _bool("MAIL_USE_TLS", "1")
@@ -72,7 +73,10 @@ class Config:
     MAIL_USERNAME = os.environ.get("MAIL_USERNAME", "")
     MAIL_PASSWORD = os.environ.get("MAIL_PASSWORD", "")
     MAIL_SENDER = os.environ.get("MAIL_SENDER", "NutriLens <no-reply@nutrilens.local>")
-
+    # Kiểm tra tên miền email có máy chủ nhận thư (bản ghi MX) khi đăng ký
+    EMAIL_CHECK_DNS = _bool("EMAIL_CHECK_DNS", "1")
+    # Bắt buộc bấm link xác thực trước khi đăng nhập. "auto": chỉ bật khi đã cấu hình gửi mail
+    REQUIRE_EMAIL_VERIFICATION = os.environ.get("REQUIRE_EMAIL_VERIFICATION", "auto")
 
     # ── Vận hành ──
     ENVIRONMENT = os.environ.get("ENVIRONMENT", "development")
@@ -92,3 +96,5 @@ class TestConfig(Config):
     # Một kết nối dùng chung để CSDL trong bộ nhớ không bị mất giữa các truy vấn
     SQLALCHEMY_ENGINE_OPTIONS = {"poolclass": StaticPool, "connect_args": {"check_same_thread": False}}
     MAIL_SERVER = ""
+    BREVO_API_KEY = ""
+    EMAIL_CHECK_DNS = False

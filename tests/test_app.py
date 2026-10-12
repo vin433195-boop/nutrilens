@@ -378,6 +378,135 @@ class EmailVerificationTests(AppTestCase):
         self.assertIn("Đặt lại mật khẩu", self.outbox()[-1]["html"])
 
 
+class RequiredVerificationTests(AppTestCase):
+    """Khi đã cấu hình gửi mail: phải bấm link trong hộp thư mới đăng nhập được."""
+
+    outbox = EmailVerificationTests.outbox
+    register = EmailVerificationTests.register
+
+    def setUp(self):
+        super().setUp()
+        self.app.config["REQUIRE_EMAIL_VERIFICATION"] = "1"
+
+    def link(self):
+        return re.search(r"http://localhost(/xac-thuc-email/\S+)", self.outbox()[-1]["text"]).group(1)
+
+    def test_register_does_not_log_in_until_verified(self):
+        token = self.csrf("/dang-ky")
+        res = self.client.post("/dang-ky", data={"csrf_token": token, "name": "Lê Chi", "email": "chi@example.com",
+                                                 "password": PASSWORD, "confirm": PASSWORD, "agree": "1"})
+        self.assertTrue(res.headers["Location"].endswith("/xac-thuc-email"))
+        page = self.client.get("/xac-thuc-email").get_data(as_text=True)
+        self.assertIn("chi@example.com", page)
+        self.assertNotIn("data-user-menu", self.client.get("/").get_data(as_text=True))
+
+        res = self.login(email="chi@example.com")  # Mật khẩu đúng nhưng chưa xác thực
+        self.assertTrue(res.headers["Location"].endswith("/xac-thuc-email"))
+        self.assertNotIn("data-user-menu", self.client.get("/").get_data(as_text=True))
+
+        res = self.client.get(self.link())
+        self.assertIn("email=chi@example.com", res.headers["Location"])
+        self.assertEqual(self.login(email="chi@example.com").status_code, 302)
+        self.assertIn("data-user-menu", self.client.get("/").get_data(as_text=True))
+
+    def test_public_resend_does_not_reveal_accounts(self):
+        self.register()
+        before = len(self.outbox())
+        token = self.csrf("/xac-thuc-email")
+        for email in ("chi@example.com", "khong-co@example.com"):
+            res = self.client.post("/xac-thuc-email/gui-lai", data={"csrf_token": token, "email": email},
+                                   follow_redirects=True)
+            self.assertIn("Nếu " + email, res.get_data(as_text=True))
+        self.assertEqual(len(self.outbox()), before + 1)  # Chỉ gửi cho tài khoản có thật
+
+    def test_existing_verified_user_logs_in_normally(self):
+        user = self.make_user()
+        from nutrilens.models import utcnow
+        user.email_verified_at = utcnow()
+        db.session.commit()
+        self.login()
+        self.assertIn("data-user-menu", self.client.get("/").get_data(as_text=True))
+
+
+class EmailCheckTests(unittest.TestCase):
+    def test_format_typo_and_disposable(self):
+        from nutrilens.email_check import check_email
+        self.assertIsNone(check_email("ngoc.vi+nutri@gmail.com", check_dns=False))
+        for bad in ("khong-hop-le", "a..b@gmail.com", "a@b", ".a@gmail.com", "a@-x.com"):
+            with self.subTest(email=bad):
+                self.assertEqual(check_email(bad, check_dns=False), "Địa chỉ email không hợp lệ.")
+        self.assertIn("an@gmail.com", check_email("an@gmial.com", check_dns=False))
+        self.assertIn("email tạm thời", check_email("an@mailinator.com", check_dns=False))
+
+    def test_domain_without_mail_server_rejected(self):
+        from unittest import mock
+
+        from nutrilens import email_check
+        with mock.patch.object(email_check, "domain_accepts_mail", return_value=False):
+            self.assertIn("không nhận được thư", email_check.check_email("an@khong-co-that.vn"))
+        with mock.patch.object(email_check, "domain_accepts_mail", return_value=None):  # Lỗi mạng: không chặn
+            self.assertIsNone(email_check.check_email("an@khong-ro.vn"))
+
+    def test_doh_fallback_parses_answers(self):
+        import json as _json
+        from unittest import mock
+
+        from nutrilens import email_check
+
+        def fake(answers_by_type):
+            def urlopen(url, timeout):
+                rtype = url.rsplit("type=", 1)[1]
+                status, answers = answers_by_type[rtype]
+                return io.BytesIO(_json.dumps({"Status": status, "Answer": answers}).encode())
+            return urlopen
+
+        mx = {"MX": (0, [{"type": 15, "data": "10 mx.example.vn."}])}
+        with mock.patch("urllib.request.urlopen", fake(mx)):
+            self.assertTrue(email_check._doh_accepts_mail("example.vn", 1))
+        with mock.patch("urllib.request.urlopen", fake({"MX": (3, [])})):
+            self.assertFalse(email_check._doh_accepts_mail("khong-co.vn", 1))
+        none = {"MX": (0, []), "A": (0, []), "AAAA": (0, [])}
+        with mock.patch("urllib.request.urlopen", fake(none)):
+            self.assertFalse(email_check._doh_accepts_mail("trong.vn", 1))
+
+
+class BrevoMailTests(AppTestCase):
+    def setUp(self):
+        super().setUp()
+        self.app.config.update(BREVO_API_KEY="xkeysib-test", MAIL_REAL_IN_TESTS=True,
+                               MAIL_SENDER="NutriLens <gui@example.com>")
+
+    def test_sends_json_to_brevo_api(self):
+        import json as _json
+        from unittest import mock
+
+        from nutrilens.mail import send_mail
+
+        class Res(io.BytesIO):
+            status = 201
+
+        with mock.patch("nutrilens.mail.urllib.request.urlopen", return_value=Res(b"{}")) as urlopen:
+            self.assertTrue(send_mail("khach@example.com", "Chào", "Nội dung", "<p>Nội dung</p>"))
+        req = urlopen.call_args.args[0]
+        self.assertEqual(req.full_url, "https://api.brevo.com/v3/smtp/email")
+        self.assertEqual(req.get_header("Api-key"), "xkeysib-test")
+        body = _json.loads(req.data)
+        self.assertEqual(body["sender"], {"name": "NutriLens", "email": "gui@example.com"})
+        self.assertEqual(body["to"], [{"email": "khach@example.com"}])
+        self.assertEqual((body["subject"], body["htmlContent"]), ("Chào", "<p>Nội dung</p>"))
+
+    def test_brevo_error_returns_false(self):
+        import urllib.error
+        from unittest import mock
+
+        from nutrilens.mail import send_mail
+        err = urllib.error.HTTPError("https://api.brevo.com", 400, "Bad", {}, io.BytesIO(b'{"message":"sender invalid"}'))
+        with mock.patch("nutrilens.mail.urllib.request.urlopen", side_effect=err), \
+                self.assertLogs(self.app.logger, "ERROR") as logs:
+            self.assertFalse(send_mail("khach@example.com", "Chào", "Nội dung"))
+        self.assertIn("sender invalid", "\n".join(logs.output))
+
+
 class PasswordResetTests(AppTestCase):
     def setUp(self):
         super().setUp()
