@@ -1,6 +1,6 @@
 # NutriLens: website ẩm thực và dinh dưỡng
 
-Website Flask giúp người dùng tra cứu dinh dưỡng của 35 món Việt Nam và quốc tế, nhận dạng món ăn bằng AI, tính nhu cầu calo, ghi nhật ký ăn uống và theo dõi cân nặng. Dữ liệu lưu trên MySQL/MariaDB, số liệu dinh dưỡng lấy từ USDA FoodData Central, ảnh món ăn từ Wikimedia Commons.
+Website Flask giúp người dùng tra cứu dinh dưỡng của 54 món ăn (36 món Việt Nam, 18 món quốc tế), nhận dạng 30 món Việt bằng AI, tính nhu cầu calo, ghi nhật ký ăn uống và theo dõi cân nặng. Dữ liệu lưu trên MySQL/MariaDB, số liệu dinh dưỡng lấy từ USDA FoodData Central, ảnh món ăn từ Wikimedia Commons.
 
 ## Cài đặt trên máy (Windows + XAMPP)
 
@@ -25,7 +25,7 @@ Website Flask giúp người dùng tra cứu dinh dưỡng của 35 món Việt 
 
 | Nhóm | Nội dung |
 |---|---|
-| Thư viện món ăn | 35 món, ảnh thật, tìm kiếm không dấu, lọc danh mục, sắp xếp, phân trang, món yêu thích |
+| Thư viện món ăn | 54 món, ảnh thật, tìm kiếm không dấu, lọc danh mục, sắp xếp, phân trang, món yêu thích |
 | Trang món ăn | Nhãn dinh dưỡng, tỉ lệ macro, điểm sức khỏe, bảng thành phần kèm link tra cứu USDA, dữ liệu schema.org |
 | Nhận dạng AI | 30 món Việt (EfficientNetV2-B0, 87,6% top-1, 96,3% top-3), chế độ TTA, người dùng chọn lại món đúng để làm dữ liệu huấn luyện |
 | Nhật ký | Ghi theo khẩu phần hoặc gram, món tự thêm, mục tiêu cá nhân, đồng bộ từ trình duyệt khi đăng nhập |
@@ -78,13 +78,16 @@ docker compose up -d --build
 DOMAIN=nutrilens.vn COOKIE_SECURE=1 docker compose --profile https up -d
 ```
 
-Image mặc định chạy AI bằng LiteRT với `food_model.tflite` (khoảng 150 MB RAM). Dùng TensorFlow đầy đủ: `docker compose build --build-arg ML=full`; không có AI: `--build-arg ML=none`. Model được huấn luyện bằng notebook `training/train_vietnamese_food.ipynb` trên Google Colab (GPU T4); notebook xuất thẳng `food_model.tflite` và `class_names.json` để chép vào thư mục gốc, kết quả đánh giá ở `training/metrics.json`. Thêm món vào danh sách nhận dạng thì cũng cần thêm món đó vào `nutrilens/data/` rồi chạy `flask --app app seed`.
+Image mặc định chạy AI bằng LiteRT với `food_model.tflite` (khoảng 150 MB RAM). Dùng TensorFlow đầy đủ: `docker compose build --build-arg ML=full`; không có AI: `--build-arg ML=none`. Model được huấn luyện bằng notebook `training/train_vietnamese_food.ipynb` trên Google Colab (GPU T4); notebook xuất thẳng `food_model.tflite` và `class_names.json` để chép vào thư mục gốc, kết quả đánh giá ở `training/metrics.json`. Thêm món vào danh sách nhận dạng thì cũng cần thêm món đó vào `nutrilens/data/` rồi chạy `flask --app app seed`. Model chỉ biết 30 món Việt nên ảnh món nước ngoài vẫn bị gán vào món Việt gần giống nhất (ví dụ hamburger thành bánh mì).
 
 ### Đưa lên Render (miễn phí)
 
 1. Tạo database MySQL trên mạng, ví dụ TiDB Cloud Serverless, rồi chạy `flask --app app setup-db` và `create-admin` từ máy với `DATABASE_URL` trỏ tới đó.
 2. Đẩy code lên GitHub. Trên https://dashboard.render.com chọn **New → Blueprint**, chọn repo. Render đọc `render.yaml` và tạo dịch vụ.
 3. Điền `DATABASE_URL` khi được hỏi. Với TiDB dùng `ssl_ca=/etc/ssl/certs/ca-certificates.crt&ssl_verify_cert=true&ssl_verify_identity=true`.
+4. Muốn gửi email xác thực thật: trong **Environment** thêm `BREVO_API_KEY` và `MAIL_SENDER` (email người gửi đã xác minh trên Brevo).
+
+Bản đang chạy: https://nutrilens-juer.onrender.com
 
 Gói miễn phí tự ngủ sau 15 phút không có truy cập; lần mở lại chờ khoảng 1 phút. Ảnh tải lên qua trang quản trị mất khi dịch vụ khởi động lại.
 
@@ -105,7 +108,7 @@ Test dùng SQLite trong bộ nhớ và model giả nên không cần MySQL hay T
 | `flask --app app setup-db` | Tạo database, chạy migration, nạp dữ liệu mẫu |
 | `flask --app app seed [--overwrite]` | Nạp món ăn, ảnh, bài viết từ file |
 | `flask --app app create-admin` | Tạo tài khoản quản trị |
-| `flask --app app send-test-email <email>` | Kiểm tra cấu hình SMTP |
+| `flask --app app send-test-email <email>` | Gửi email thử để kiểm tra cấu hình Brevo hoặc SMTP |
 | `flask --app app backup-db` | Sao lưu MySQL |
 | `flask --app app db migrate -m "..."` / `db upgrade` | Tạo và áp dụng migration |
 
